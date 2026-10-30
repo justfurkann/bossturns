@@ -31,15 +31,23 @@ Exe imzasız olduğu için Windows ilk açılışta "Bilgisayarınız korundu" d
 | Patron **bakarken** basılıysan | Yakalanırsın: cepteki puan gider, bir can gider. Tekrar oynamak için önce bırakman gerekir. |
 | Saat **18:00** | Mesai biter, kalan her can +100 puan. |
 
-- **4 oyuncu: ALP, FURKAN, BARANSEL, BULUT.** "Mesaiye başla" deyince karakterini seçersin. Her gün sırayla biri **günün karakteri** olur; günlük görevde herkes onunla oynar, böylece skorlar adil karşılaştırılır.
+- **4 oyuncu, her birinin yeteneği var** (ana menü → 👥 KARAKTERLER; seçimin hatırlanır):
+  | Karakter | Yetenek |
+  |---|---|
+  | ALP | ⚡ **Hızlı El:** Yağmur bakınca kaçış payı %25 daha geniş |
+  | FURKAN | 👂 **Kulağı Delik:** blöflerin çoğunu sezer, ünlem gri **?** olur |
+  | BARANSEL | 🔥 **Risk Aşığı:** çarpan %18 daha hızlı artar |
+  | BULUT | ☁️ **Soğukkanlı:** yakalanınca cebin yarısı kasaya girer |
+
+  Yetenekler simülasyonla dengelendi (her biri ortalama ≈ +%5). Her gün sırayla biri **günün karakteri** olur; günlük görevde herkes onunla oynar, böylece skorlar adil karşılaştırılır.
 - **3 can** var. Her tur sıfırdan başlar. Kalıcı olarak saklanan tek şey en iyi skor.
 - Puan arttıkça **Yağmur'un ruh hali değişir**: 🙂 Sakin, 😴 Kahvesiz (yavaş döner, uzun bakar), 📱 Telaşlı (hızlı döner, kısa bakar), 🤨 Şüpheci (blöf ustası, bazen çifte döner), 😎 Patron Modu (her seferinde başka taktik).
 - **Yağmur'un kombini her gün değişir** (ceket, alt parça, saç, aksesuar). Aynı gün herkes aynı kombini görür.
 - **Kahve molası:** 250, 800 ve 1600 puanda 3 avantajdan birini seçersin. Seçim yalnızca o tur için geçerli. Parlayan kart sırayla değişir: basınca parlayan seçilir ya da istediğin karta doğrudan dokunabilirsin.
 - **📅 Günlük görev:** Seçenekler tarihe bağlı. Aynı gün oynayan herkes aynı patron sırasını ve aynı rastgele diziyi görür. Tur sonunda Wordle tarzı emoji özetini **Kopyala** ile paylaşabilirsin
   (🟩 kasaya attın · 🟨 kıl payı · 🟥 yakalandın · 🟦 kalkan kurtardı).
-- **🫣 / Esc = patron tuşu:** Ekranı sahte bir tabloyla kaplar ve oyunu durdurur. Tekrar Esc'e ya da ↩'ye basınca geri dönersin.
-- **Ses varsayılan olarak kapalı** (sağ üstteki 🔇). Sayfa her açıldığında yine kapalı başlar.
+- **GİZLE (sağ alttaki kırmızı buton) / Esc = patron tuşu:** Ekranı sahte bir tabloyla kaplar ve oyunu durdurur. Tekrar Esc'e ya da ↩'ye basınca geri dönersin.
+- **Ses varsayılan olarak kapalı** (sağ alttaki SES butonu). Sayfa her açıldığında yine kapalı başlar.
 - Sistemde "hareketi azalt" ayarı açıksa sarsıntı, parçacıklar ve yanıp sönmeler kapanır.
 
 ## Geliştirici notları

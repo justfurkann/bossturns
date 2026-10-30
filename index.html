@@ -101,8 +101,9 @@ html, body {
 #action { width: 380px; height: 100px; text-align: center; font-size: 48px; line-height: 84px; border-width: 5px; border-radius: 22px; pointer-events: none !important; transition: none; }
 #action small { display: block; font-size: 26px; line-height: 0; margin-top: -18px; }
 #btns { display: flex; gap: 18px; }
-#btns .btn { width: 96px; height: 96px; border-radius: 22px; display: grid; place-items: center; }
-#btns svg { width: 56px; height: 56px; }
+#btns .btn { width: 104px; height: 104px; border-radius: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+#btns svg { width: 50px; height: 50px; }
+#btns .cap { font-size: 19px; line-height: 1; }
 #banner { left: 50%; transform: translateX(-50%); text-align: center; opacity: 0; transition: opacity .2s, transform .2s; white-space: nowrap; }
 #banner.on { opacity: 1; }
 #banner .ribbon { font-size: 46px; }
@@ -135,7 +136,7 @@ html, body {
 #hud.tall #pocket { left: 30px; right: 30px; width: auto; bottom: 230px; }
 #hud.tall #action { left: 50%; margin-left: -240px; width: 480px; height: 110px; font-size: 54px; line-height: 94px; bottom: 56px; }
 #hud.tall #btns   { right: 30px; top: 420px; flex-direction: column; }
-#hud.tall #btns .btn { width: 104px; height: 104px; }
+#hud.tall #btns .btn { width: 112px; height: 112px; }
 #hud.tall #banner { top: 470px; }
 #hud.tall #banner .ribbon { font-size: 52px; }
 #hud.tall #banner .sub { font-size: 32px; }
@@ -179,6 +180,9 @@ html, body {
 .menu .rules b { color: var(--gold1); font-weight: 800; }
 .menu .btn.big { width: 100%; height: 120px; font-size: 56px; margin: 12px 0; }
 .menu .btn.mid { height: 100px; font-size: 42px; }
+#btnFree { height: 140px; line-height: 1.05; }
+#btnFree small { display: block; font-size: 26px; color: #5a3300; text-shadow: none; margin-top: 4px; }
+.menu .dailyInfo { font-size: 24px; color: #dbe5ff; margin-top: 4px; }
 .menu .meta { font-size: 28px; margin-top: 20px; color: #e6ecff; }
 .menu .kombin { display: inline-block; margin-top: 18px; padding: 8px 22px; border-radius: 14px; background: rgba(0,0,0,.25); font-size: 26px; color: #ffe8f2; }
 .menu .tiny { font-size: 22px; color: #c6d0f0; margin-top: 18px; }
@@ -199,16 +203,20 @@ html, body {
 #chars h2 { margin: 0; font-size: 72px; }
 #chars > p { margin: 10px 0 44px; padding: 0 40px; text-align: center; font-size: 30px; color: #e6ecff; }
 #charCards { display: flex; gap: 34px; }
-.charCard { width: 360px; height: 500px; padding: 0; position: relative; border-radius: 30px; display: flex; flex-direction: column; align-items: center; }
+.charCard { width: 370px; height: 560px; padding: 0; position: relative; border-radius: 30px; display: flex; flex-direction: column; align-items: center; }
 .charCard img, .charCard .ph { width: 280px; height: 280px; margin-top: 28px; border-radius: 26px; border: 5px solid var(--ink);
   background: radial-gradient(circle at 50% 35%, #8fb4ff, #3d5bd0 70%); box-shadow: inset 0 -8px 0 rgba(0,0,0,.2); }
-.charCard .nm { font-size: 54px; margin-top: 18px; }
+.charCard .nm { font-size: 50px; margin-top: 14px; }
 .charCard .ab { font-size: 23px; color: #e6ecff; padding: 4px 22px 0; line-height: 1.3; text-shadow: none; }
 .charCard.gold .ab { color: #4a2a00; }
-.charCard .today { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 24px; padding: 4px 18px 7px; }
-#btnCharsBack { margin-top: 46px; width: 340px; height: 96px; font-size: 40px; }
+.charCard .sel { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 24px; padding: 4px 18px 7px; }
+.charCard .star { position: absolute; top: 14px; right: 14px; font-size: 22px; padding: 4px 10px; border-radius: 12px; background: rgba(18,13,43,.55); color: #ffe36b; text-shadow: none; }
+.charCard .abn { font-size: 30px; margin-top: 4px; }
+#charsBtns { margin-top: 46px; width: 760px; }
+#charsBtns .btn { height: 100px; font-size: 40px; }
 #hud.tall #charCards { display: grid; grid-template-columns: 1fr 1fr; gap: 44px 34px; }
-#hud.tall .charCard { width: 460px; height: 560px; }
+#hud.tall .charCard { width: 470px; height: 640px; }
+#hud.tall #charsBtns { width: 960px; }
 #hud.tall .charCard img, #hud.tall .charCard .ph { width: 330px; height: 330px; }
 #hud.tall #chars > p { font-size: 36px; }
 
@@ -284,9 +292,12 @@ html, body {
       <svg viewBox="0 0 50 50"><path d="M8 18h9l11-9v32l-11-9H8z" fill="#fff" stroke="#120d2b" stroke-width="4" stroke-linejoin="round"/>
         <g id="sndOff"><path d="M34 18l10 14M44 18L34 32" stroke="#ff4d5e" stroke-width="6" stroke-linecap="round"/></g>
         <g id="sndOn" style="display:none"><path d="M34 17c4 4 4 12 0 16M39 12c7 7 7 19 0 26" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/></g></svg>
+      <span class="cap h">SES</span>
     </button>
-    <button class="btn green" id="btnPanic" aria-label="Patron tuşu: ekranı tabloyla kapla (Esc)" title="Patron tuşu (Esc)">
-      <svg viewBox="0 0 50 50"><rect x="7" y="9" width="36" height="32" rx="4" fill="#fff" stroke="#120d2b" stroke-width="4"/><path d="M7 19h36M7 29h36M19 9v32M31 9v32" stroke="#16955a" stroke-width="3"/></svg>
+    <button class="btn red" id="btnPanic" aria-label="Patron tuşu: ekranı sahte bir tabloyla gizle (Esc)" title="Patron tuşu: ekranı sahte tabloyla gizle (Esc)">
+      <svg viewBox="0 0 50 50"><path d="M4 25c6-10 13-15 21-15s15 5 21 15c-6 10-13 15-21 15S10 35 4 25z" fill="#fff" stroke="#120d2b" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="25" cy="25" r="7" fill="#120d2b"/><path d="M9 41L41 9" stroke="#120d2b" stroke-width="9" stroke-linecap="round"/><path d="M9 41L41 9" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+      <span class="cap h">GİZLE</span>
     </button>
   </div>
   <div id="banner"><div class="ribbon h" id="bannerTitle"></div><div class="sub body" id="bannerSub"></div></div>
@@ -310,18 +321,25 @@ html, body {
         <div><span>❗</span><span><b>Yağmur dönüyor:</b> hemen bırak! Bazen blöftür.</span></div>
         <div><span>👀</span><span><b>Sana bakarken basılıysan</b> yakalanırsın: cep ve bir can gider.</span></div>
       </div>
-      <button class="btn gold big h" id="btnFree">MESAİYE BAŞLA</button>
-      <button class="btn blue big mid h" id="btnDaily">📅 GÜNLÜK GÖREV</button>
+      <button class="btn gold big h" id="btnFree">MESAİYE BAŞLA<small id="freeWho" class="body"></small></button>
+      <div class="row2">
+        <button class="btn blue big mid h" id="btnChars">👥 KARAKTERLER</button>
+        <button class="btn blue big mid h" id="btnDaily">📅 GÜNLÜK</button>
+      </div>
+      <div class="dailyInfo body" id="dailyInfo"></div>
       <div class="meta num" id="titleBest"></div>
       <div class="tiny body">Boşluk tuşu da olur · Esc = patron tuşu · Masaüstü sürümünde Ctrl+Shift+Boşluk</div>
     </div>
   </div>
 
   <div id="chars" class="overlay hidden">
-    <h2 class="h">KİMİNLE MESAİYE?</h2>
+    <h2 class="h">KARAKTERLER</h2>
     <p class="body" id="charsSub"></p>
     <div id="charCards"></div>
-    <button class="btn gray mid h" id="btnCharsBack">GERİ</button>
+    <div class="row2" id="charsBtns">
+      <button class="btn gray mid h" id="btnCharsBack">GERİ</button>
+      <button class="btn gold mid h" id="btnCharsPlay">SEÇ VE OYNA</button>
+    </div>
   </div>
 
   <div id="summary" class="overlay hidden" aria-live="polite">
@@ -379,6 +397,14 @@ const CONFIG = {
   pickGrace: 0.45,                           // seçim ekranı açıldıktan sonra yanlışlıkla seçmeyi önler
   shift: { seconds: 180, score: 5000, lifeBonus: 100 }, // saat = süre/180 + kasa/5000 (≤3 dk garanti)
   startHour: 9, endHour: 18,
+  // karakter yetenekleri — tools/sim.js ile dengelendi: ortalama oyuncuya her biri ≈ +%5.
+  // Dikkat: oyun zamanlamaya çok duyarlı; tolerans/uyarıda 0,03 sn bile ≈ +%5 eder.
+  abilities: {
+    alp:      { tolerance: 0.15 },   // Hızlı El: bakıştan sonra bırakma payı 0,12 → 0,15 sn
+    furkan:   { fakeSense: 0.67 },   // Kulağı Delik: blöflerin 3'te 2'sini sezer (ünlem gri "?" olur)
+    baransel: { growth: 1.18 },      // Risk Aşığı: çarpan %18 daha hızlı artar
+    bulut:    { saveRatio: 0.5 },    // Soğukkanlı: yakalanınca cebin yarısı kasaya girer (can yine gider)
+  },
 };
 
 /* Patron: Yağmur (her zaman sarışın, 20'li yaşlarında bir kadın). "Tipler" onun ruh halleri;
@@ -445,12 +471,12 @@ function dailyNumber(key) {
 }
 
 /* Oynanabilir karakterler (sırası önemli: günün karakteri bu sırayla döner).
-   Yetenekler henüz yok; görünümler app bloğundaki LOOKS tablosunda. */
+   Yetenek etkileri CONFIG.abilities'te; görünümler app bloğundaki LOOKS tablosunda. */
 const CHARACTERS = [
-  { id: 'alp', name: 'ALP' },
-  { id: 'furkan', name: 'FURKAN' },
-  { id: 'baransel', name: 'BARANSEL' },
-  { id: 'bulut', name: 'BULUT' },
+  { id: 'alp',      name: 'ALP',      ability: { icon: '⚡', name: 'Hızlı El',     desc: 'Yağmur bakınca kaçış payı %25 daha geniş.' } },
+  { id: 'furkan',   name: 'FURKAN',   ability: { icon: '👂', name: 'Kulağı Delik', desc: 'Topuk sesinden blöfü sezer: çoğu blöfte ünlem gri "?" olur.' } },
+  { id: 'baransel', name: 'BARANSEL', ability: { icon: '🔥', name: 'Risk Aşığı',   desc: 'Çarpan %18 daha hızlı artar.' } },
+  { id: 'bulut',    name: 'BULUT',    ability: { icon: '☁️', name: 'Soğukkanlı',   desc: 'Yakalanınca cebin yarısı kasaya girer (can yine gider).' } },
 ];
 const CHAR_BY_ID = Object.fromEntries(CHARACTERS.map(c => [c.id, c]));
 function dailyCharFor(dateKey) {
@@ -498,7 +524,8 @@ function createRun(mode = 'free', opts = {}) {
   const run = {
     mode, dateKey, seed, outfit: outfitFor(dateKey),
     // günlük görevde herkes günün karakteriyle oynar (karşılaştırma adil olsun); serbestte seçim oyuncunun
-    charId: mode === 'daily' || !CHAR_BY_ID[opts.charId] ? dailyCharFor(dateKey).id : opts.charId,
+    // 'none' yalnızca araçlar içindir (tools/sim.js: yeteneksiz taban çizgisi)
+    charId: opts.charId === 'none' ? 'none' : mode === 'daily' || !CHAR_BY_ID[opts.charId] ? dailyCharFor(dateKey).id : opts.charId,
     rng: { boss: makeRng(seed + ':boss'), type: makeRng(seed + ':type'), mods: makeRng(seed + ':mods') },
     state: 'play', endReason: null, events: [],
     t: 0, clockOffset: 0,
@@ -524,9 +551,16 @@ function clockProgress(run) {
 }
 
 function recomputeMods(run) {
-  const m = { growth: 1, awayMul: 1, fakeMul: 1, warnAdd: 0, tolerance: CONFIG.tolerance, bankMul: 1, insurance: false };
+  const m = { growth: 1, awayMul: 1, fakeMul: 1, warnAdd: 0, tolerance: CONFIG.tolerance, bankMul: 1, insurance: false, saveRatio: 0, fakeSense: 0 };
+  // önce karakter yeteneği, sonra tur içi modifier'lar (ör. Faiz toleransı yine sıfırlar)
+  const ab = CONFIG.abilities[run.charId] || {};
+  if (ab.tolerance != null) m.tolerance = ab.tolerance;
+  if (ab.warnAdd) m.warnAdd += ab.warnAdd;
+  if (ab.growth) m.growth *= ab.growth;
+  if (ab.saveRatio) m.saveRatio = ab.saveRatio;
+  if (ab.fakeSense) m.fakeSense = ab.fakeSense;
   for (const id of run.mods) {
-    if (id === 'insurance') { m.growth *= 0.65; m.insurance = true; }
+    if (id === 'insurance') { m.growth *= 0.65; m.insurance = true; m.saveRatio = Math.max(m.saveRatio, 0.5); }
     if (id === 'espresso') m.growth *= 1.5;
     if (id === 'mirror') m.warnAdd += 0.2;
     if (id === 'overtime') m.awayMul *= 0.85;
@@ -564,7 +598,10 @@ function startCycle(run, opts = {}) {
   }
   if (opts.minAway) away = Math.max(away, opts.minAway);
   b.phase = 'away'; b.t = 0; b.dur = away;
-  b.next = { fake: u[1] < fakeP, warn: warn + m.warnAdd, look, doubleTake: !!st.doubleTake && u[2] < st.doubleTake };
+  const fake = u[1] < fakeP;
+  // sezme zarı u[2]'den türetilir: döngü başına çekilen sayı 5'te kalır (günlük görev dizisi bozulmaz)
+  b.next = { fake, warn: warn + m.warnAdd, look, doubleTake: !!st.doubleTake && u[2] < st.doubleTake,
+             sensed: fake && (u[2] * 7.31) % 1 < m.fakeSense };
   if (run.pendingPick && !run.holding && run.state === 'play') openPick(run);
 }
 
@@ -594,7 +631,7 @@ function bank(run) {
 function catchPlayer(run) {
   const b = run.boss;
   const lost = Math.round(run.pocket);
-  const saved = run.mod.insurance ? Math.round(lost * 0.5) : 0;
+  const saved = Math.round(lost * run.mod.saveRatio);
   run.score += saved;
   const shielded = run.shields > 0;
   if (shielded) run.shields--; else run.lives--;
@@ -726,7 +763,7 @@ function shareText(run, tries) {
     ? `BOSS TURNS 📅 Günlük #${dailyNumber(run.dateKey)} (${date})${tries > 1 ? ` · ${tries}. deneme` : ''}`
     : `BOSS TURNS · Serbest mesai`;
   const hearts = '❤️'.repeat(Math.max(0, run.lives)) + '🖤'.repeat(Math.max(0, CONFIG.lives - run.lives));
-  const lines = [head, `👤 ${CHAR_BY_ID[run.charId].name} · 💼 ${fmt(run.score)} · ⏰ ${clockString(clockProgress(run))} · ${hearts}`];
+  const lines = [head, `👤 ${(CHAR_BY_ID[run.charId] || { name: '?' }).name} · 💼 ${fmt(run.score)} · ⏰ ${clockString(clockProgress(run))} · ${hearts}`];
   const cells = run.log.map(k => em[k]);
   const MAX = 50;
   const shown = cells.length > MAX ? cells.slice(0, MAX) : cells;
@@ -738,7 +775,7 @@ function shareText(run, tries) {
   return lines.join('\n');
 }
 
-const BT = { CONFIG, BOSSES, MODS, OUTFITS, outfitFor, CHARACTERS, dailyCharFor, createRun, updateRun, choosePick, clockProgress, clockString, shareText, makeRng, todayKey, dailyNumber };
+const BT = { CONFIG, BOSSES, MODS, OUTFITS, outfitFor, CHARACTERS, CHAR_BY_ID, dailyCharFor, createRun, updateRun, choosePick, clockProgress, clockString, shareText, makeRng, todayKey, dailyNumber };
 if (typeof module === 'object' && module.exports) module.exports = BT;
 </script>
 <script id="three">/*VENDOR:THREE*//* three.js r186 (MIT) — tools/vendor.js ile üretildi, elle düzenleme */
@@ -5363,8 +5400,14 @@ void main() {
   const badgeMat = M('#ffcf2e', { emissive: '#ff9f00', emissiveIntensity: 0.4 });
   mesh(cyl(0.42, 0.42, 0.16).rotateX(Math.PI / 2), badgeMat, 0, 0, 0, badge);
   mesh(new T.TorusGeometry(0.42, 0.06, 12, 40), '#120d2b', 0, 0, 0, badge);
-  mesh(rbox(0.13, 0.36, 0.1, 0.05), '#120d2b', 0, 0.09, 0.08, badge);
-  mesh(sph(0.075), '#120d2b', 0, -0.22, 0.08, badge);
+  const bang = new T.Group(); badge.add(bang);
+  mesh(rbox(0.13, 0.36, 0.1, 0.05), '#120d2b', 0, 0.09, 0.08, bang);
+  mesh(sph(0.075), '#120d2b', 0, -0.22, 0.08, bang);
+  // FURKAN'ın sezdiği blöf: "?"
+  const qmark = new T.Group(); badge.add(qmark);
+  mesh(new T.TorusGeometry(0.12, 0.05, 10, 24, Math.PI * 1.25), '#120d2b', 0, 0.13, 0.08, qmark).rotation.z = -Math.PI * 0.25;
+  mesh(rbox(0.09, 0.13, 0.09, 0.04), '#120d2b', 0, -0.05, 0.08, qmark);
+  mesh(sph(0.065), '#120d2b', 0, -0.23, 0.08, qmark);
   badge.traverse(o => { o.castShadow = false; });
   badge.visible = false;
   const badgeLight = new T.PointLight('#ffb020', 0, 3); scene.add(badgeLight);
@@ -5566,6 +5609,8 @@ void main() {
     const B = BOSSES[run.boss.typeId];
     setText('moodIcon', B.emoji); setText('moodName', B.name); setText('moodDesc', B.desc);
     let ch = '';
+    const me = CHAR_BY_ID[run.charId];
+    if (me) ch += `<span class="panel gold" title="${me.name}: ${me.ability.name}">${me.ability.icon}</span>`;
     for (let i = 0; i < run.shields; i++) ch += '<span class="panel">🛡️</span>';
     run.mods.filter(id => id !== 'shield' && id !== 'overtime' && id !== 'lunch').forEach(id => { ch += `<span class="panel">${MOD_BY_ID[id].icon}</span>`; });
     setHTML('chips', ch);
@@ -5585,11 +5630,12 @@ void main() {
     let cls = 'btn gold h', txt = 'BASILI TUT';
     if (run.locked && b.phase === 'scold') { cls = 'btn gray h'; txt = 'YAKALANDIN!'; }
     else if (run.locked) { cls = 'btn gray h'; txt = 'BIRAK'; }
+    else if (run.holding && b.phase === 'warn' && b.next.sensed) { cls = 'btn blue h'; txt = 'BLÖF! 👂'; }
     else if (run.holding && (b.phase === 'warn' || b.phase === 'look')) { cls = 'btn red h'; txt = 'BIRAK!'; }
     else if (run.holding) { cls = 'btn green h'; txt = 'OYNUYORSUN'; }
     else if (b.phase === 'look' || b.phase === 'warn') { cls = 'btn blue h'; txt = 'BEKLE…'; }
     setClass('action', cls); setText('action', txt);
-    const danger = run.holding && b.phase === 'warn' ? 0.35 + 0.45 * clamp(b.t / b.dur, 0, 1) : 0;
+    const danger = run.holding && b.phase === 'warn' && !b.next.sensed ? 0.35 + 0.45 * clamp(b.t / b.dur, 0, 1) : 0;
     const pulse = RM ? 1 : 0.85 + Math.sin(view.time * (5 + heat * 10)) * 0.15;
     $('vignette').style.opacity = Math.min(1, Math.max(heat * 0.55, danger) * pulse).toFixed(3);
     $('flash').style.opacity = (view.flash * (RM ? 0.15 : 0.35)).toFixed(3);
@@ -5711,7 +5757,10 @@ void main() {
           else burstCoins(Math.min(22, 4 + Math.floor(ev.gain / 12)), ev.gain);
           if (ev.close) setBanner('KIL PAYI!', '', 1.0);
           break;
-        case 'warn': Sound.play('warn'); announce('Yağmur dönüyor!'); break;
+        case 'warn':
+          if (run.boss.next.sensed) { Sound.play('fake'); announce('Blöf! Furkan topuk sesinden anladı.'); }
+          else { Sound.play('warn'); announce('Yağmur dönüyor!'); }
+          break;
         case 'fake': Sound.play('fake'); break;
         case 'caught':
           Sound.play(ev.shielded ? 'shield' : 'caught');
@@ -5719,7 +5768,7 @@ void main() {
           view.scoldLine = SCOLD_LINES[Math.floor(Math.random() * SCOLD_LINES.length)];
           if (!RM) burstPapers(14);
           if (ev.shielded) setBanner('KALKAN!', 'Can gitmedi', 1.4);
-          else if (ev.saved) setBanner('SİGORTA', '+' + fmt(ev.saved) + ' kurtarıldı', 1.4);
+          else if (ev.saved) setBanner(run.charId === 'bulut' ? '☁️ SOĞUKKANLI' : 'SİGORTA', '+' + fmt(ev.saved) + ' kasaya kurtarıldı', 1.4);
           announce('Yakalandın! Kalan can: ' + run.lives);
           break;
         case 'newboss':
@@ -5826,7 +5875,10 @@ void main() {
       badge.position.set(_v.x, _v.y + 1.45 + (RM ? 0 : Math.sin(view.time * 30) * 0.03 * k), _v.z);
       badge.scale.setScalar((RM ? 1 : 0.7 + 0.5 * Math.min(1, k * 3)) * (1 + 0.25 * k));
       badge.lookAt(camera.position);
-      badgeMat.color.set(k < 0.5 ? '#ffcf2e' : '#ff7a2e').lerp(new T.Color('#ff3d4f'), Math.max(0, k * 2 - 1));
+      const sensed = !!b.next.sensed;
+      bang.visible = !sensed; qmark.visible = sensed;
+      if (sensed) { badgeMat.color.set('#b9c2d8'); badgeMat.emissive.set('#000000'); }
+      else { badgeMat.emissive.set('#ff9f00'); badgeMat.color.set(k < 0.5 ? '#ffcf2e' : '#ff7a2e').lerp(new T.Color('#ff3d4f'), Math.max(0, k * 2 - 1)); }
       badgeLight.position.copy(badge.position); badgeLight.intensity = 2 + 3 * k;
     } else { badge.visible = false; badgeLight.intensity = 0; }
   }
@@ -6037,31 +6089,44 @@ void main() {
   function refreshTitle() {
     const key = todayKey(), daily = store.get('bossturns.daily.' + key, null), o = outfitFor(key), today = dailyCharFor(key);
     ensureYagmur(o);
-    setPlayer(CHAR_BY_ID[chosenChar] ? chosenChar : today.id);
-    $('btnDaily').textContent = `📅 GÜNLÜK GÖREV #${dailyNumber(key)} · ${today.name}`;
+    const me = CHAR_BY_ID[chosenChar] || today;
+    setPlayer(me.id);
+    $('freeWho').textContent = `${me.name} ile · ${me.ability.icon} ${me.ability.name}`;
+    $('btnDaily').textContent = `📅 GÜNLÜK #${dailyNumber(key)}`;
+    $('dailyInfo').textContent = `Günlük görevde bugün herkes ${today.name} ile oynar`;
     $('kombin').textContent = `👗 Yağmur bugün: ${o.name}`;
     $('titleBest').textContent = `En iyi: ${fmt(store.get('bossturns.best', 0))}` + (daily ? ` · Bugünkü günlük: ${fmt(daily.best)}` : '');
+  }
+  // KARAKTERLER sekmesi: kart seçer (kaydedilir), "SEÇ VE OYNA" başlatır
+  let charsSel = null;
+  function renderChars() {
+    const today = dailyCharFor(todayKey());
+    $('charCards').innerHTML = CHARACTERS.map(c =>
+      `<button class="charCard btn ${c.id === charsSel ? 'gold' : 'blue'}" data-id="${c.id}" aria-pressed="${c.id === charsSel}" aria-label="${c.name}: ${c.ability.name}">` +
+      (c.id === charsSel ? '<span class="sel ribbon h">✔ SEÇİLİ</span>' : '') +
+      (c.id === today.id ? '<span class="star body" title="Bugünün karakteri">⭐ Bugün</span>' : '') +
+      (PORTRAITS[c.id] ? `<img src="${PORTRAITS[c.id]}" alt="">` : '<span class="ph"></span>') +
+      `<span class="nm h">${c.name}</span><span class="abn h">${c.ability.icon} ${c.ability.name}</span>` +
+      `<span class="ab body">${c.ability.desc}</span></button>`).join('');
+    $('btnCharsPlay').textContent = `${CHAR_BY_ID[charsSel].name} İLE OYNA`;
   }
   function showChars() {
     const today = dailyCharFor(todayKey());
     if (!Object.keys(PORTRAITS).length) makePortraits();
-    const sel = CHAR_BY_ID[chosenChar] ? chosenChar : today.id;
-    $('charsSub').textContent = `Bugünün karakteri: ${today.name} · Günlük görevde herkes onunla oynar`;
-    $('charCards').innerHTML = CHARACTERS.map(c =>
-      `<button class="charCard btn ${c.id === sel ? 'gold' : 'blue'}" data-id="${c.id}" aria-label="${c.name} ile oyna">` +
-      (c.id === today.id ? '<span class="today ribbon h">⭐ BUGÜNÜN KARAKTERİ</span>' : '') +
-      (PORTRAITS[c.id] ? `<img src="${PORTRAITS[c.id]}" alt="">` : '<span class="ph"></span>') +
-      `<span class="nm h">${c.name}</span><span class="ab body">Yetenek: yakında</span></button>`).join('');
+    charsSel = CHAR_BY_ID[chosenChar] ? chosenChar : today.id;
+    $('charsSub').textContent = `Bugünün karakteri ⭐ ${today.name} · Günlük görevde herkes onunla oynar`;
+    renderChars();
     $('title').classList.add('hidden'); $('summary').classList.add('hidden'); $('chars').classList.remove('hidden');
-    const b = $('charCards').querySelector(`[data-id="${sel}"]`); if (b) b.focus({ preventScroll: true });
+    const b = $('charCards').querySelector(`[data-id="${charsSel}"]`); if (b) b.focus({ preventScroll: true });
   }
   $('charCards').addEventListener('click', e => {
     const b = e.target.closest('.charCard'); if (!b) return;
-    chosenChar = b.dataset.id; store.set('bossturns.char', chosenChar);
-    $('chars').classList.add('hidden');
-    start('free', chosenChar);
+    charsSel = chosenChar = b.dataset.id; store.set('bossturns.char', chosenChar);
+    setPlayer(chosenChar);
+    renderChars();
   });
-  $('btnCharsBack').addEventListener('click', () => { $('chars').classList.add('hidden'); $('title').classList.remove('hidden'); });
+  $('btnCharsBack').addEventListener('click', () => { $('chars').classList.add('hidden'); $('title').classList.remove('hidden'); refreshTitle(); });
+  $('btnCharsPlay').addEventListener('click', () => { $('chars').classList.add('hidden'); start('free', chosenChar || charsSel); });
 
   function start(mode, charId) {
     run = createRun(mode, { charId: charId || chosenChar });
@@ -6125,7 +6190,9 @@ void main() {
     }
     $('btnCopy').textContent = ok ? '✅ KOPYALANDI' : '⚠️ ELLE SEÇ';
   }
-  $('btnFree').addEventListener('click', showChars);
+  // ilk kez oynayan önce karakterini seçsin; sonra doğrudan seçili karakterle başlar
+  $('btnFree').addEventListener('click', () => (CHAR_BY_ID[chosenChar] ? start('free', chosenChar) : showChars()));
+  $('btnChars').addEventListener('click', showChars);
   $('btnDaily').addEventListener('click', () => start('daily'));
   $('btnAgain').addEventListener('click', () => start(run ? run.mode : 'free', run ? run.charId : null));
   $('btnMenu').addEventListener('click', () => { run = null; $('summary').classList.add('hidden'); $('title').classList.remove('hidden'); refreshTitle(); });

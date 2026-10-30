@@ -46,11 +46,14 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     // karakter seçimi
     await page.click('#btnFree');
     await page.waitForSelector('#chars:not(.hidden) .charCard');
-    const cards = await page.evaluate(() => [...document.querySelectorAll('.charCard')].map(b => ({ id: b.dataset.id, img: !!b.querySelector('img'), today: !!b.querySelector('.today') })));
-    check('karakter seçimi: 4 karakter, 3D portreler, "bugünün karakteri" rozeti',
-      cards.map(c => c.id).join() === 'alp,furkan,baransel,bulut' && cards.every(c => c.img) && cards.filter(c => c.today).length === 1, JSON.stringify(cards.map(c => c.id + (c.today ? '*' : ''))));
-    await page.screenshot({ path: `${OUT}/smoke-chars.png` });
+    const cards = await page.evaluate(() => [...document.querySelectorAll('.charCard')].map(b => ({ id: b.dataset.id, img: !!b.querySelector('img'), today: !!b.querySelector('.star'), ab: !!b.querySelector('.abn') })));
+    check('karakterler sekmesi: 4 karakter, 3D portre, yetenek, "bugün" rozeti',
+      cards.map(c => c.id).join() === 'alp,furkan,baransel,bulut' && cards.every(c => c.img && c.ab) && cards.filter(c => c.today).length === 1, JSON.stringify(cards.map(c => c.id + (c.today ? '*' : ''))));
     await page.click('.charCard[data-id="bulut"]');
+    check('karta basınca seçilir ve kaydedilir (oyun başlamaz)', await page.evaluate(() => !document.getElementById('chars').classList.contains('hidden') &&
+      document.querySelector('.charCard[data-id="bulut"]').classList.contains('gold') && localStorage.getItem('bossturns.char') === '"bulut"'));
+    await page.screenshot({ path: `${OUT}/smoke-chars.png` });
+    await page.click('#btnCharsPlay');
     await waitGame(page, 0.1);
     check('seçilen karakterle tur başlar (BULUT)', (await page.evaluate(() => __bt.run.charId)) === 'bulut');
     await freezeAway(page);
@@ -148,6 +151,12 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     await waitGame(page, 2.8);
     check('son can gidince "Eve gönderildin" özeti', (await page.isVisible('#summary')) && (await page.evaluate(() => __bt.run.endReason)) === 'fired');
 
+    // seçili karakter hatırlanır: "Mesaiye başla" doğrudan onunla başlar
+    await page.click('#btnMenu'); await wait(100);
+    const who = await page.textContent('#freeWho');
+    await page.click('#btnFree'); await waitGame(page, 0.1);
+    check('"Mesaiye başla" seçili karakterle doğrudan başlar', (await page.evaluate(() => __bt.run.charId)) === 'bulut' && /BULUT/.test(who), who);
+    await page.evaluate(() => { __bt.run.t = 999; }); await waitGame(page, 1.8);
     // günlük mod
     await page.click('#btnMenu'); await wait(100);
     await page.click('#btnDaily'); await waitGame(page, 0.1);
@@ -168,7 +177,7 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     await open(page);
     check('dar ekranda dikey yerleşim', (await page.evaluate(() => document.getElementById('hud').className)) === 'tall');
     await page.tap('#btnFree'); await page.waitForSelector('#chars:not(.hidden) .charCard');
-    await page.tap('.charCard[data-id="alp"]'); await waitGame(page, 0.1);
+    await page.tap('.charCard[data-id="alp"]'); await page.tap('#btnCharsPlay'); await waitGame(page, 0.1);
     await freezeAway(page);
     const cdp = await ctxM.newCDPSession(page);
     const pt = { x: 200, y: 520 };
@@ -232,7 +241,7 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     const page = await ctxR.newPage();
     const errs = errorsOf(page);
     await open(page);
-    await page.click('#btnFree'); await page.click('.charCard'); await waitGame(page, 0.1);
+    await page.click('#btnFree'); await page.click('.charCard'); await page.click('#btnCharsPlay'); await waitGame(page, 0.1);
     await freezeAway(page);
     await page.mouse.move(400, 300); await page.mouse.down(); await waitGame(page, 0.7); await page.mouse.up(); await waitGame(page, 0.1);
     const parts = await page.evaluate(() => __bt.view.particles.filter(p => p.kind !== 'text').length);

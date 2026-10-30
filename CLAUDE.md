@@ -12,7 +12,9 @@
 - 4 oynanabilir karakter, bu sırayla: **ALP, FURKAN, BARANSEL, BULUT** (`CHARACTERS`, logic bloğu).
 - Serbest modda oyuncu seçer; **günlük görevde herkes "günün karakteri" ile oynar** (tarihe göre sırayla döner, `dailyCharFor`).
 - Görünümler `LOOKS` tablosunda (app bloğu); gerçek kişilerin fotoğraflarına göre stilize edilecek. Fotoğrafları repoya koyma, yalnızca tablodaki parametreleri güncelle.
-- Yetenekler henüz yok; eklenecekse çekirdek döngüyü değiştirmeyen pasif etkiler olmalı ve `tools/sim.js` ile dengelenmeli.
+- Yetenekler (pasif, çekirdek döngüyü değiştirmez): ALP ⚡ Hızlı El (tolerans 0,15 sn) · FURKAN 👂 Kulağı Delik (blöflerin ~3'te 2'sini sezer, ünlem gri "?") · BARANSEL 🔥 Risk Aşığı (çarpan %18 hızlı) · BULUT ☁️ Soğukkanlı (yakalanınca cebin yarısı kasaya). Sayılar `CONFIG.abilities`'te; hedef her birinin ortalama oyuncuya ≈ +%5 vermesi (`node tools/sim.js` tablosu). Oyun zamanlamaya çok duyarlı: tolerans/uyarıya 0,03 sn bile ≈ +%5 eder.
+- Ana menüde "KARAKTERLER" sekmesi: seçim kaydedilir, "Mesaiye başla" doğrudan seçili karakterle başlar.
+- Sağ alttaki kırmızı "GİZLE" butonu = patron tuşu (Esc). Orijinal tasarımın parçası, kaldırma.
 
 ## Kısıtlar
 - Tek giriş: basılı tut / bırak. Yeni kontrol ekleme.
