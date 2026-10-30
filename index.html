@@ -18,7 +18,9 @@
 * { box-sizing: border-box; }
 html, body {
   margin: 0; height: 100%; overflow: hidden; background: #1b1f4a; color: #fff;
-  font-family: 'Nunito', system-ui, sans-serif; font-weight: 700;
+  font-family: 'Nunito', system-ui, sans-serif; font-weight: 600;
+  font-synthesis: none;            /* gömülü olmayan kalınlığı tarayıcı sahte üretmesin (harfler bulanıklaşıyordu) */
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
   touch-action: none; overscroll-behavior: none;
   -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
 }
@@ -34,16 +36,18 @@ html, body {
 #hud button, #hud .overlay, #hud .overlay * { pointer-events: auto; }
 
 /* ---------- Cut the Rope / Om Nom Run tarzı şeker & ahşap yapı taşları ---------- */
+/* Kontur: gerçek çizgi (stroke), harfin ARKASINA çizilir (paint-order). Eskiden metin 4 yöne kaydırılıp
+   kopyalanıyordu; köşelerde çentik ve harf içinde incelme yapıyordu. */
 .h { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 700; color: #fff; letter-spacing: .01em;
-  text-shadow: -2px -2px 0 var(--ink), 2px -2px 0 var(--ink), -2px 2px 0 var(--ink), 2px 2px 0 var(--ink), 0 4px 0 rgba(59,29,8,.65); }
+  -webkit-text-stroke: 6px var(--ink); paint-order: stroke fill; text-shadow: 0 4px 0 rgba(59,29,8,.55); }
 .num { font-family: 'Nunito', sans-serif; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums;
-  text-shadow: -1.5px -1.5px 0 var(--ink), 1.5px -1.5px 0 var(--ink), -1.5px 1.5px 0 var(--ink), 1.5px 1.5px 0 var(--ink), 0 3px 0 rgba(59,29,8,.55); }
-.body { font-family: 'Nunito', sans-serif; font-weight: 700; letter-spacing: 0; }
-.t { font-family: 'Lilita', sans-serif; color: #fff; text-shadow:
-  -3px -3px 0 var(--ink), 3px -3px 0 var(--ink), -3px 3px 0 var(--ink), 3px 3px 0 var(--ink),
-  0 -3px 0 var(--ink), 0 3px 0 var(--ink), -3px 0 0 var(--ink), 3px 0 0 var(--ink), 0 8px 0 var(--ink); }
-.t2 { color: #fff; text-shadow:
-  -2px -2px 0 var(--ink), 2px -2px 0 var(--ink), -2px 2px 0 var(--ink), 2px 2px 0 var(--ink), 0 4px 0 var(--ink); }
+  -webkit-text-stroke: 5px var(--ink); paint-order: stroke fill; text-shadow: 0 3px 0 rgba(59,29,8,.5); }
+.body { font-family: 'Nunito', sans-serif; font-weight: 600; letter-spacing: 0; -webkit-text-stroke: 0; }
+.ic { -webkit-text-stroke: 0; }
+/* küçük yazıya ince kontur (kalın kontur küçük harfi boğuyor) */
+.qBarTxt, #mult, .qStreak, .qReward, #pfMult, .charCard .sel, .ribbon.small { -webkit-text-stroke-width: 3px; }
+.t { font-family: 'Lilita', sans-serif; font-weight: 400; color: #fff;   /* Lilita'nın tek kalınlığı 400 */
+  -webkit-text-stroke: 14px var(--ink); paint-order: stroke fill; text-shadow: 0 8px 0 var(--ink); }
 .panel { border: 4px solid rgba(255,255,255,.85); border-radius: 30px;
   background: rgba(24, 30, 68, .72); backdrop-filter: blur(8px);
   box-shadow: 0 8px 20px rgba(10,12,35,.38), inset 0 2px 0 rgba(255,255,255,.35); }
@@ -185,7 +189,7 @@ html, body {
 #hud.tall #questBox { left: 90px; top: 118px; transform: none; }
 #pocketFloat { position: absolute; transform: translate(-50%, -100%); display: none; white-space: nowrap; pointer-events: none;
   font-size: 76px; line-height: 1; color: var(--gold1);
-  text-shadow: -4px -4px 0 var(--ink), 4px -4px 0 var(--ink), -4px 4px 0 var(--ink), 4px 4px 0 var(--ink), 0 7px 0 var(--ink); }
+  -webkit-text-stroke: 10px var(--ink); paint-order: stroke fill; text-shadow: 0 7px 0 var(--ink); }
 #pocketFloat.lost { color: #ff6b7a; }
 #pocketFloat small { font-size: 34px; margin-left: 10px; color: #fff; vertical-align: 6px; }
 #hud.tall #pocketFloat { font-size: 88px; }
@@ -195,7 +199,7 @@ html, body {
 .card { width: 430px; height: 520px; padding: 0; position: relative; text-align: center; border-radius: 36px; }
 .card .ico { font-size: 136px; line-height: 1; margin-top: 58px; filter: drop-shadow(0 8px 0 rgba(0,0,0,.28)); }
 .card .nm { font-size: 42px; margin: 22px 0 10px; }
-.card .ds { font-family: 'Nunito', sans-serif; font-weight: 700; letter-spacing: 0; font-size: 25px; line-height: 1.35; color: #fff; padding: 0 32px; text-shadow: none; }
+.card .ds { font-family: 'Nunito', sans-serif; font-weight: 600; letter-spacing: 0; font-size: 25px; line-height: 1.35; color: #fff; padding: 0 32px; text-shadow: none; }
 .card.gold .ds { color: #4a2508; }
 .card.hi { transform: scale(1.06); filter: brightness(1.08); outline: 7px solid #fff; outline-offset: 5px; }
 .card.dim { opacity: .35; }
@@ -267,7 +271,7 @@ html, body {
 #title .row3 { display: flex; gap: 26px; justify-content: center; }
 #title .row3 .btn { width: 116px; height: 116px; border-radius: 50%; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 #title .row3 .ic { font-size: 50px; line-height: 1; text-shadow: none; }
-#title .row3 .lb { font-size: 17px; line-height: 1; margin-top: 4px; }
+#title .row3 .lb { font-size: 18px; line-height: 1; margin-top: 4px; -webkit-text-stroke-width: 4px; }
 #title .meta { color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.6); margin-top: 14px; }
 #title .tiny { color: #ffe9b0; text-shadow: 0 2px 0 rgba(0,0,0,.6); }
 #hud.tall #title .menu { width: 100%; padding: 120px 40px 70px; }
@@ -280,7 +284,7 @@ html, body {
 /* Özet ekranı */
 #sumTitle { position: absolute; left: 50%; top: -42px; transform: translateX(-50%); white-space: nowrap; font-size: 48px; }
 #sumReason { font-size: 24px; color: #6e380f; margin: 18px 0 0; }
-#sumScore { font-size: 104px; line-height: 1.0; color: #f08c00; text-shadow: -3px -3px 0 #fff, 3px -3px 0 #fff, -3px 3px 0 #fff, 3px 3px 0 #fff, 0 6px 0 rgba(90,45,12,.25); }
+#sumScore { font-size: 104px; line-height: 1.0; color: #f08c00; -webkit-text-stroke: 8px #fff; paint-order: stroke fill; text-shadow: 0 6px 0 rgba(90,45,12,.25); }
 #sumRecord { font-size: 26px; color: #209e09; min-height: 34px; text-shadow: none; }
 #sumSalary { font-size: 28px; color: #b85600; min-height: 34px; text-shadow: none; }
 #sumCareer { margin: 8px 0 10px; padding: 12px 18px; border-radius: 20px; background: #fffdf7; border: 4px solid #dec086; font-size: 21px; line-height: 1.35; color: #4a2508; text-align: left; }
@@ -6302,7 +6306,7 @@ void main() {
     const pf = $('pocketFloat');
     if (showPocket && PL.head) {
       const lost = view.catchFace > 0 && view.lastLost > 0 && !run.holding;
-      const sp = toScreen(PL.head, 1.75);
+      const sp = toScreen(PL.head, 1.35);
       pf.style.display = 'block'; pf.style.left = sp.x / view.hudScale + 'px'; pf.style.top = sp.y / view.hudScale + 'px';
       setText('pfVal', lost ? '−' + fmt(view.lastLost) : '+' + fmt(run.pocket));
       setText('pfMult', lost || !run.holding ? '' : '×' + mult.toFixed(1).replace('.', ','));
