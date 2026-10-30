@@ -165,6 +165,11 @@ html, body {
 .overlay { inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(12,10,40,.72); padding: 70px 0 24px; overflow-y: auto; touch-action: pan-y; }
 .overlay.hidden, #sheet.hidden, .hidden { display: none !important; }
 #pick h2, #pause h2 { margin: 0; font-size: 72px; }
+.menu .presents { font-size: 26px; color: #ffe36b; margin-bottom: 4px; letter-spacing: .04em; }
+.charCard .guest { position: absolute; top: 14px; left: 14px; font-size: 18px; padding: 4px 10px; border-radius: 12px; background: rgba(18,13,43,.55); color: #c9ffe0; text-shadow: none; }
+#bubble2 { transform: translate(-50%, -100%); padding: 8px 22px 12px; font-size: 32px; border: 4px solid var(--ink); border-radius: 24px; white-space: nowrap; display: none;
+  background: #fff; color: var(--ink); text-shadow: none; box-shadow: 0 7px 0 var(--ink); }
+#bubble2::after { content: ''; position: absolute; left: 50%; bottom: -20px; margin-left: -12px; border: 12px solid transparent; border-top: 16px solid var(--ink); }
 #pick p, #pause p { margin: 10px 0 40px; font-size: 30px; color: #e6ecff; }
 #pickCards { display: flex; gap: 40px; }
 .card { width: 470px; height: 560px; padding: 0; position: relative; text-align: center; border-radius: 30px; }
@@ -277,9 +282,9 @@ html, body {
 /* karakter seçimi */
 #chars h2 { margin: 0; font-size: 72px; }
 #chars > p { margin: 10px 0 44px; padding: 0 40px; text-align: center; font-size: 30px; color: #e6ecff; }
-#charCards { display: flex; gap: 34px; }
-.charCard { width: 370px; height: 560px; padding: 0; position: relative; border-radius: 30px; display: flex; flex-direction: column; align-items: center; }
-.charCard img, .charCard .ph { width: 280px; height: 280px; margin-top: 28px; border-radius: 26px; border: 5px solid var(--ink);
+#charCards { display: flex; gap: 26px; }
+.charCard { width: 330px; height: 560px; padding: 0; position: relative; border-radius: 30px; display: flex; flex-direction: column; align-items: center; }
+.charCard img, .charCard .ph { width: 260px; height: 260px; margin-top: 28px; border-radius: 26px; border: 5px solid var(--ink);
   background: radial-gradient(circle at 50% 35%, #8fb4ff, #3d5bd0 70%); box-shadow: inset 0 -8px 0 rgba(0,0,0,.2); }
 .charCard .nm { font-size: 50px; margin-top: 14px; }
 .charCard .ab { font-size: 23px; color: #e6ecff; padding: 4px 22px 0; line-height: 1.3; text-shadow: none; }
@@ -288,7 +293,7 @@ html, body {
 .charCard .star { position: absolute; top: 14px; right: 14px; font-size: 22px; padding: 4px 10px; border-radius: 12px; background: rgba(18,13,43,.55); color: #ffe36b; text-shadow: none; }
 .charCard .abn { font-size: 30px; margin-top: 4px; }
 #charsBtns { margin-top: 46px; width: 760px; }
-#charsBtns .btn { height: 100px; font-size: 40px; }
+#charsBtns .btn { height: 100px; font-size: 34px; white-space: nowrap; }
 #hud.tall #charCards { display: grid; grid-template-columns: 1fr 1fr; gap: 44px 34px; }
 #hud.tall .charCard { width: 470px; height: 640px; }
 #hud.tall #charsBtns { width: 960px; }
@@ -387,9 +392,10 @@ html, body {
   </div>
   <div id="banner"><div class="ribbon h" id="bannerTitle"></div><div class="sub body" id="bannerSub"></div></div>
   <div id="bubble" class="h"></div>
+  <div id="bubble2" class="h white"></div>
 
   <div id="pick" class="overlay hidden">
-    <h2 class="h">☕ Kahve molası!</h2>
+    <h2 class="h">☕ Bi kısa mola!</h2>
     <p class="body">Bir avantaj seç — sadece bu mesai geçerli</p>
     <div id="pickCards"></div>
     <p class="body" id="pickHint" style="margin-top:40px">Bas: parlayanı seç · ya da karta dokun</p>
@@ -398,6 +404,7 @@ html, body {
 
   <div id="title" class="overlay">
     <div class="menu panel">
+      <div class="presents h">🐒 KELEŞLİ MAYMUNLAR SUNAR</div>
       <h1 class="logo t">BOSS TURNS<span class="t">Çağrı Merkezi Edition</span></h1>
       <div class="kombin body" id="kombin"></div>
       <div class="careerBar h" id="titleCareer"></div>
@@ -422,7 +429,7 @@ html, body {
   </div>
 
   <div id="chars" class="overlay hidden">
-    <h2 class="h">KARAKTERLER</h2>
+    <h2 class="h">🐒 KELEŞLİ MAYMUNLAR</h2>
     <p class="body" id="charsSub"></p>
     <div id="charCards"></div>
     <div class="row2" id="charsBtns">
@@ -510,13 +517,16 @@ const CONFIG = {
   pickGrace: 0.45,                           // seçim ekranı açıldıktan sonra yanlışlıkla seçmeyi önler
   shift: { seconds: 180, score: 5000, lifeBonus: 100 }, // saat = süre/180 + kasa/5000 (≤3 dk garanti)
   startHour: 9, endHour: 18,
+  // "KAAN ATS BOZULDU": ATS ara sıra çöker, Yağmur uğraşırken uzun bir güvenli an olur
+  ats: { base: 0.03, away: [4.0, 2.0] },   // olasılık (döngü başına) · süre = 4 + rand*2 sn
   // karakter yetenekleri — tools/sim.js ile dengelendi: ortalama oyuncuya her biri ≈ +%5.
   // Dikkat: oyun zamanlamaya çok duyarlı; tolerans/uyarıda 0,03 sn bile ≈ +%5 eder.
   abilities: {
     alp:      { tolerance: 0.15 },   // Hızlı El: bakıştan sonra bırakma payı 0,12 → 0,15 sn
     furkan:   { fakeSense: 0.67 },   // Kulağı Delik: blöflerin 3'te 2'sini sezer (ünlem gri "?" olur)
-    baransel: { growth: 1.18 },      // Risk Aşığı: çarpan %18 daha hızlı artar
+    baransel: { awayMul: 1.05 },     // Yalaka: Yağmur ondan daha az şüphelenir, dönüşleri biraz seyrek
     bulut:    { saveRatio: 0.5 },    // Soğukkanlı: yakalanınca cebin yarısı kasaya girer (can yine gider)
+    kaan:     { atsP: 0.25 },        // ATS Bozuldu: onun olduğu yerde ATS daha sık çöker
   },
 };
 
@@ -588,8 +598,9 @@ function dailyNumber(key) {
 const CHARACTERS = [
   { id: 'alp',      name: 'ALP',      ability: { icon: '⚡', name: 'Hızlı El',     desc: 'Yağmur bakınca kaçış payı %25 daha geniş.' } },
   { id: 'furkan',   name: 'FURKAN',   ability: { icon: '👂', name: 'Kulağı Delik', desc: 'Topuk sesinden blöfü sezer: çoğu blöfte ünlem gri "?" olur.' } },
-  { id: 'baransel', name: 'BARANSEL', ability: { icon: '🔥', name: 'Risk Aşığı',   desc: 'Çarpan %18 daha hızlı artar.' } },
+  { id: 'baransel', name: 'BARANSEL', ability: { icon: '🙇', name: 'Yalaka',       desc: '"Hocam kombin efsane!" Yağmur ondan daha az şüphelenir, daha seyrek döner.' } },
   { id: 'bulut',    name: 'BULUT',    ability: { icon: '☁️', name: 'Soğukkanlı',   desc: 'Yakalanınca cebin yarısı kasaya girer (can yine gider).' } },
+  { id: 'kaan',     name: 'KAAN',     guest: true, ability: { icon: '🖥️', name: 'ATS Bozuldu', desc: 'Onun olduğu yerde ATS sık sık çöker; Yağmur uğraşırken oyna!' } },
 ];
 const CHAR_BY_ID = Object.fromEntries(CHARACTERS.map(c => [c.id, c]));
 function dailyCharFor(dateKey) {
@@ -828,7 +839,7 @@ function clockProgress(run) {
 }
 
 function recomputeMods(run) {
-  const m = { growth: 1, awayMul: 1, fakeMul: 1, warnAdd: 0, tolerance: CONFIG.tolerance, bankMul: 1, insurance: false, saveRatio: 0, fakeSense: 0 };
+  const m = { growth: 1, awayMul: 1, fakeMul: 1, warnAdd: 0, tolerance: CONFIG.tolerance, bankMul: 1, insurance: false, saveRatio: 0, fakeSense: 0, atsP: CONFIG.ats.base };
   // önce karakter yeteneği, sonra tur içi modifier'lar (ör. Faiz toleransı yine sıfırlar)
   const ab = CONFIG.abilities[run.charId] || {};
   if (ab.tolerance != null) m.tolerance = ab.tolerance;
@@ -836,6 +847,8 @@ function recomputeMods(run) {
   if (ab.growth) m.growth *= ab.growth;
   if (ab.saveRatio) m.saveRatio = ab.saveRatio;
   if (ab.fakeSense) m.fakeSense = ab.fakeSense;
+  if (ab.awayMul) m.awayMul *= ab.awayMul;
+  if (ab.atsP != null) m.atsP = ab.atsP;
   for (const id of run.mods) {
     if (id === 'insurance') { m.growth *= 0.65; m.insurance = true; m.saveRatio = Math.max(m.saveRatio, 0.5); }
     if (id === 'espresso') m.growth *= 1.5;
@@ -873,6 +886,9 @@ function startCycle(run, opts = {}) {
     b.quick = false;
     away = 0.45 + u[0] * 0.35; fakeP = 0; warn = Math.max(c.warnFloor, warn * 0.8);
   }
+  // ATS çöktü mü? (zar u[3]'ten türetilir; döngü başına çekilen sayı 5'te kalır)
+  b.ats = !opts.minAway && !b.swap && (u[3] * 5.17) % 1 < m.atsP;
+  if (b.ats) { away = c.ats.away[0] + u[0] * c.ats.away[1]; emit(run, 'ats'); }
   if (opts.minAway) away = Math.max(away, opts.minAway);
   b.phase = 'away'; b.t = 0; b.dur = away;
   const fake = u[1] < fakeP;
@@ -1052,7 +1068,7 @@ function shareText(run, tries) {
   const date = run.dateKey.split('-').reverse().join('.');
   const head = run.mode === 'daily'
     ? `BOSS TURNS 📅 Günlük #${dailyNumber(run.dateKey)} (${date})${tries > 1 ? ` · ${tries}. deneme` : ''}`
-    : `BOSS TURNS · Serbest mesai`;
+    : `BOSS TURNS 🐒 Keleşli Maymunlar · Serbest mesai`;
   const hearts = '❤️'.repeat(Math.max(0, run.lives)) + '🖤'.repeat(Math.max(0, CONFIG.lives - run.lives));
   const lines = [head, `👤 ${(CHAR_BY_ID[run.charId] || { name: '?' }).name} · 💼 ${fmt(run.score)} · ⏰ ${clockString(clockProgress(run))} · ${hearts}`];
   const cells = run.log.map(k => em[k]);
@@ -5385,7 +5401,8 @@ void main() {
     p: { bob: 0 },
     hud: {},
   };
-  const SCOLD_LINES = ['YAKALADIM!', 'Kuyrukta 47 çağrı var!', 'AHT\'n uçmuş!', 'Script\'i okudun mu?!', 'Hedef 10.000, sen oyunda!', 'Molan bitmedi mi?', 'Mute\'a basma!'];
+  const SCOLD_LINES = ['YAKALADIM!', 'Kuyrukta 47 çağrı var!', 'AHT\'n uçmuş!', 'Script\'i okudun mu?!', 'Hedef 10.000, sen oyunda!', 'Molan bitmedi mi?', 'Mute\'a basma!', 'Yine mi oyun?!', 'Ofiste oyun yok dedim!'];
+  const YALAKA_LINES = ['Hocam kombin efsane!', 'Hocam bugün çok enerjiksiniz!', 'Hocam hedefi biz yaparız!', 'Hocam kahve getireyim mi?', 'En iyi takım lideri sizsiniz!'];
 
   /* =================== RENDERER =================== */
   let renderer;
@@ -5481,8 +5498,8 @@ void main() {
   board.tex = new T.CanvasTexture(board.c); board.tex.colorSpace = T.SRGBColorSpace;
   mesh(rbox(2.55, 1.55, 0.12, 0.05), '#14182b', -1.6, 3.75, -3.48);
   mesh(new T.PlaneGeometry(2.38, 1.34), new T.MeshBasicMaterial({ map: board.tex, toneMapped: false }), -1.6, 3.75, -3.41).castShadow = false;
-  function drawBoard(queue, aht, done) {
-    const key = queue + '|' + aht + '|' + done;
+  function drawBoard(queue, aht, done, ats) {
+    const key = queue + '|' + aht + '|' + done + '|' + ats;
     if (key === board.last) return;
     board.last = key;
     const g = board.c.getContext('2d'), w = 640;
@@ -5497,6 +5514,12 @@ void main() {
     g.fillStyle = '#26304f'; g.fillRect(24, 290, 592, 36);
     g.fillStyle = '#3fe08f'; g.fillRect(24, 290, 592 * Math.min(1, done / 10000), 36);
     g.font = '800 26px Nunito, sans-serif'; g.fillStyle = '#ffffff'; g.textAlign = 'right'; g.fillText(fmt(done) + ' / 10.000', 616, 262);
+    if (ats) {
+      g.fillStyle = 'rgba(180,20,40,.92)'; g.fillRect(0, 0, w, 360);
+      g.textAlign = 'center'; g.fillStyle = '#fff';
+      g.font = '800 70px Fredoka, sans-serif'; g.fillText('⚠ ATS ÇÖKTÜ', w / 2, 150);
+      g.font = '700 32px Nunito, sans-serif'; g.fillText('Sistem yeniden başlatılıyor…', w / 2, 230);
+    }
     board.tex.needsUpdate = true;
   }
   // toplantı odası kapısı
@@ -5520,7 +5543,7 @@ void main() {
   const posterMesh = mesh(new T.PlaneGeometry(1.25, 1.0), new T.MeshBasicMaterial({ toneMapped: false }), 5.6, 3.65, -3.45);
   function paintLabels() { // yazı tipi yüklendikten sonra
     board.last = '';
-    signMesh.material.map = label(512, 128, 'MOLA ODASI', '#2a2f5c', '#ffd33d', 64); signMesh.material.needsUpdate = true;
+    signMesh.material.map = label(512, 128, 'TERAS ↗', '#2a2f5c', '#ffd33d', 70); signMesh.material.needsUpdate = true;
     posterMesh.material.map = canvasTex(512, 400, (g, w, h) => {
       g.fillStyle = '#fffdf6'; g.fillRect(0, 0, w, h);
       g.strokeStyle = '#ff4d5e'; g.lineWidth = 22; g.lineCap = 'round'; g.lineJoin = 'round';
@@ -5737,6 +5760,7 @@ void main() {
     furkan:   { skin: '#f0b88c', hair: '#3b2620', style: 'quiff', beard: 'none',    glasses: false, shirt: '#25b8a8', iris: '#5a3a24' },
     baransel: { skin: '#d9a27a', hair: '#2a1c14', style: 'curly', beard: 'none',    glasses: true,  shirt: '#7a4fd0', iris: '#3a2618' },
     bulut:    { skin: '#f2c29c', hair: '#6b4a2e', style: 'side',  beard: 'full',    glasses: false, shirt: '#f2a33a', iris: '#4a6a3a' },
+    kaan:     { skin: '#eab38c', hair: '#15100c', style: 'short', beard: 'stubble', glasses: false, shirt: '#3fae6e', iris: '#3a2618' },
   };
   // yüzün önünü (+z) ortalayan küre dilimi: phi = π/2 tam önü gösterir
   const frontShell = (r, width, t0, t1) => new T.SphereGeometry(r, 36, 24, Math.PI / 2 - width / 2, width, t0 * Math.PI, (t1 - t0) * Math.PI);
@@ -6101,11 +6125,20 @@ void main() {
     let bt = '', bc = '';
     if (b.phase === 'scold') { bt = view.scoldLine; bc = 'red h'; }
     else if (b.phase === 'away' && b.shrug > 0) { bt = b.quick ? '…?' : 'hmm…'; bc = 'white h'; }
+    else if (b.phase === 'away' && b.ats && b.t < 2.4) { bt = 'KAAN! ATS BOZULDU!'; bc = 'white h'; }
     if (bt && Y) {
       const sp = toScreen(Y.head, 1.25);
       bub.style.display = 'block'; bub.style.left = sp.x / view.hudScale + 'px'; bub.style.top = sp.y / view.hudScale + 'px';
       setText('bubble', bt); setClass('bubble', bc);
     } else bub.style.display = 'none';
+    // Baransel'in yalakalığı: Yağmur bakarken çalışıyor görünüyorsa
+    const bub2 = $('bubble2');
+    if (run.charId === 'baransel' && b.phase === 'look' && !run.holding && PL.head) {
+      if (!view.yalaka) view.yalaka = YALAKA_LINES[Math.floor(Math.random() * YALAKA_LINES.length)];
+      const sp = toScreen(PL.head, 1.25);
+      bub2.style.display = 'block'; bub2.style.left = sp.x / view.hudScale + 'px'; bub2.style.top = sp.y / view.hudScale + 'px';
+      setText('bubble2', view.yalaka);
+    } else { bub2.style.display = 'none'; view.yalaka = null; }
   }
   function setBanner(title, sub, dur) { view.banner = { t: 0, dur }; $('bannerTitle').textContent = title; $('bannerSub').textContent = sub || ''; $('banner').classList.add('on'); }
   function announce(msg) { $('live').textContent = msg; }
@@ -6209,6 +6242,15 @@ void main() {
           if (RM) { const lp = toScreen(PL.laptop, -0.15); floatText('+' + fmt(ev.gain), lp.x, lp.y, '#ffe36b'); }
           else burstCoins(Math.min(22, 4 + Math.floor(ev.gain / 12)), ev.gain);
           if (ev.close) setBanner('KIL PAYI!', '', 1.0);
+          else if (!run.primPromised && run.score >= 500) {
+            run.primPromised = true;
+            setBanner('📢 YÖNETİM: PRİMLER 5\'E KATLANACAK!', 'Bu sefer kesin. Söz. 🤞', 2.6);
+          }
+          break;
+        case 'ats':
+          Sound.play('ring');
+          setBanner('🖥️ ATS BOZULDU!', 'Yağmur sistemle uğraşıyor, fırsat bu fırsat!', 1.3);
+          announce('ATS bozuldu, Yağmur meşgul');
           break;
         case 'warn':
           if (run.boss.next.sensed) { Sound.play('fake'); announce('Blöf! Furkan topuk sesinden anladı.'); }
@@ -6222,6 +6264,7 @@ void main() {
           if (!RM) burstPapers(14);
           if (ev.shielded) setBanner('KALKAN!', 'Can gitmedi', 1.4);
           else if (ev.saved) setBanner(run.charId === 'bulut' ? '☁️ SOĞUKKANLI' : 'SİGORTA', '+' + fmt(ev.saved) + ' kasaya kurtarıldı', 1.4);
+          if (!ev.shielded && run.lives === 1) setBanner('DARALDIN MI?', 'Bi terasa çıkalım… 🚬☕', 2.0);
           announce('Yakalandın! Kalan can: ' + run.lives);
           break;
         case 'newboss':
@@ -6263,8 +6306,9 @@ void main() {
     const speed = (BOSSES[mood].walk || 1) * 1.6;
     // yürüme hedefi
     let walking = false;
+    if (phase === 'away' && b && b.ats) st.target = clamp(-1.6, LY.range[0], LY.range[1]);   // ATS: duvar ekranıyla uğraşır
     if (phase === 'away' && !shrug && !frozen) {
-      if (st.idle > 0) st.idle -= dt;
+      if (st.idle > 0 && !(b && b.ats)) st.idle -= dt;
       else {
         const d = st.target - st.x;
         if (Math.abs(d) < 0.05) { st.target = lerp(LY.range[0], LY.range[1], Math.random()); st.idle = Math.random() < 0.4 ? 0.4 + Math.random() * 1.2 : 0; }
@@ -6386,7 +6430,7 @@ void main() {
     // duvar ekranı: oyuncu kaytardıkça kuyruk büyür
     view.queue = clamp((view.queue == null ? 12 : view.queue) + dt * (run && run.holding ? 4 : -2.2), 3, 99);
     const ahtSec = 190 + Math.round(view.queue * 3);
-    drawBoard(Math.round(view.queue), `${Math.floor(ahtSec / 60)}:${String(ahtSec % 60).padStart(2, '0')}`, run ? Math.min(10000, Math.round(run.score)) : 0);
+    drawBoard(Math.round(view.queue), `${Math.floor(ahtSec / 60)}:${String(ahtSec % 60).padStart(2, '0')}`, run ? Math.min(10000, Math.round(run.score)) : 0, !!(run && run.boss.phase === 'away' && run.boss.ats));
     const bucket = Math.round(p * 40);
     if (bucket !== lastSkyBucket) { lastSkyBucket = bucket; drawSky(p); }
     const mins = CONFIG.startHour * 60 + p * (CONFIG.endHour - CONFIG.startHour) * 60;
@@ -6616,6 +6660,7 @@ void main() {
       `<button class="charCard btn ${c.id === charsSel ? 'gold' : 'blue'}" data-id="${c.id}" aria-pressed="${c.id === charsSel}" aria-label="${c.name}: ${c.ability.name}">` +
       (c.id === charsSel ? '<span class="sel ribbon h">✔ SEÇİLİ</span>' : '') +
       (c.id === today.id ? '<span class="star body" title="Bugünün karakteri">⭐ Bugün</span>' : '') +
+      (c.guest ? '<span class="guest body">misafir</span>' : '') +
       (PORTRAITS[c.id] ? `<img src="${PORTRAITS[c.id]}" alt="">` : '<span class="ph"></span>') +
       `<span class="nm h">${c.name}</span><span class="abn h">${c.ability.icon} ${c.ability.name}</span>` +
       `<span class="ab body">${c.ability.desc}</span></button>`).join('');
@@ -6694,6 +6739,7 @@ void main() {
     if (ev.achBonus > 0) bonusBreak.push(`Başarım +${fmt(ev.achBonus)} 💰`);
     parts.push(`<div>📊 ${bonusBreak.join(' · ')}</div>`);
     if (ev.unlockedAch.length) parts.push(`<div>🎖️ Yeni Başarım: <b>${ev.unlockedAch.map(a => `${a.icon} ${a.name}`).join(', ')}</b></div>`);
+    if (run.primPromised) parts.push('<div>📢 Primler 5\'e katlanacaktı: <b>❌ İPTAL EDİLDİ</b> (zaten vermeyecekleri belliydi)</div>');
     $('sumCareer').innerHTML = parts.join('');
     const s = run.stats, mm = Math.floor(run.t / 60), ss = Math.floor(run.t % 60);
     const prj = projectForScore(run.score);
