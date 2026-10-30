@@ -119,6 +119,7 @@ html, body {
 #hud.wide #kasa   { left: 40px; top: 34px; }
 #hud.wide #kasaLbl{ left: 84px; top: 140px; }
 #hud.wide #chips  { left: 40px; top: 196px; }
+#hud.wide #questBox { left: 40px; top: 274px; width: 456px; }
 #hud.wide #clock  { left: 50%; margin-left: -200px; top: 26px; }
 #hud.wide #lives  { right: 40px; top: 30px; }
 #hud.wide #mood   { right: 40px; top: 140px; }
@@ -130,6 +131,7 @@ html, body {
 #hud.tall #kasa   { left: 30px; top: 40px; }
 #hud.tall #kasaLbl{ left: 74px; top: 146px; }
 #hud.tall #chips  { left: 30px; top: 200px; }
+#hud.tall #questBox { left: 30px; top: 278px; width: 520px; transform-origin: left top; transform: scale(.86); }
 #hud.tall #lives  { right: 30px; top: 36px; }
 #hud.tall #clock  { left: 50%; margin-left: -200px; top: 150px; transform: scale(.9); }
 #hud.tall #mood   { right: 30px; top: 300px; transform-origin: right top; transform: scale(.9); }
@@ -140,6 +142,24 @@ html, body {
 #hud.tall #banner { top: 470px; }
 #hud.tall #banner .ribbon { font-size: 52px; }
 #hud.tall #banner .sub { font-size: 32px; }
+
+/* ---------- mesai hedefi, anlık görev ve gizli proje HUD kutusu ---------- */
+#questBox { padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 8px; }
+.qRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.qRank { font-size: 23px; color: var(--gold1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qStars { font-size: 22px; letter-spacing: 2px; white-space: nowrap; }
+.qBar { height: 26px; border-width: 4px; border-radius: 13px; }
+.qFill { background: linear-gradient(90deg, #ffcf2e, #2fd07a); }
+.qFill.contract { background: linear-gradient(90deg, #5fe0ff, #4d74f0); }
+.qBarTxt { position: absolute; inset: 0; font-size: 16px; line-height: 18px; text-align: center; }
+.qTaskBox { background: rgba(18,13,43,.42); border-radius: 14px; padding: 7px 11px 9px; display: flex; flex-direction: column; gap: 5px; }
+.qTaskHead { display: flex; align-items: center; justify-content: space-between; font-size: 19px; color: #fff; gap: 6px; }
+.qTaskTitle { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qReward { color: #ffe36b; font-size: 18px; white-space: nowrap; }
+.qBottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 2px; }
+.qProj { font-size: 18px; color: #dbe5ff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qStreak { font-size: 19px; padding: 2px 10px; border-radius: 11px; background: rgba(255,140,30,.28); border: 3px solid var(--ink); color: #ffe36b; white-space: nowrap; }
+.qStreak.hot { background: linear-gradient(180deg, #ff8a2e, #d62839); color: #fff; }
 
 /* ---------- katmanlar: seçim / duraklama / menü / özet ---------- */
 .overlay { inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(12,10,40,.72); padding: 70px 0 24px; overflow-y: auto; touch-action: pan-y; }
@@ -183,13 +203,17 @@ html, body {
 #btnFree { height: 140px; line-height: 1.05; }
 #btnFree small { display: block; font-size: 26px; color: #5a3300; text-shadow: none; margin-top: 4px; }
 .menu .dailyInfo { font-size: 24px; color: #dbe5ff; margin-top: 4px; }
-.menu .meta { font-size: 28px; margin-top: 20px; color: #e6ecff; }
-.menu .kombin { display: inline-block; margin-top: 18px; padding: 8px 22px; border-radius: 14px; background: rgba(0,0,0,.25); font-size: 26px; color: #ffe8f2; }
-.menu .tiny { font-size: 22px; color: #c6d0f0; margin-top: 18px; }
+.menu .meta { font-size: 28px; margin-top: 16px; color: #e6ecff; }
+.menu .kombin { display: inline-block; margin-top: 14px; padding: 8px 22px; border-radius: 14px; background: rgba(0,0,0,.25); font-size: 25px; color: #ffe8f2; }
+.menu .careerBar { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 14px 0 -14px; padding: 12px 22px; border-radius: 16px; background: rgba(18,13,43,.45); border: 4px solid var(--ink); font-size: 24px; color: #ffe36b; }
+.menu .careerBar span { color: #dbe5ff; font-size: 22px; }
+.menu .tiny { font-size: 22px; color: #c6d0f0; margin-top: 14px; }
 #sumTitle { position: absolute; left: 50%; top: -46px; transform: translateX(-50%); white-space: nowrap; font-size: 52px; }
 #sumReason { font-size: 26px; color: #e2e8ff; margin: 24px 0 0; }
-#sumScore { font-size: 120px; line-height: 1.05; color: var(--gold2); }
-#sumRecord { font-size: 32px; color: var(--green1); min-height: 42px; }
+#sumScore { font-size: 110px; line-height: 1.02; color: var(--gold2); }
+#sumRecord { font-size: 30px; color: var(--green1); min-height: 38px; }
+#sumCareer { margin: 8px 0 10px; padding: 12px 18px; border-radius: 16px; background: rgba(18,13,43,.45); border: 4px solid var(--ink); font-size: 23px; line-height: 1.35; color: #fff; text-align: left; }
+#sumCareer .promo { color: var(--gold1); font-size: 26px; margin-bottom: 4px; display: block; text-align: center; }
 #sumStats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 30px; margin: 10px 0; text-align: left;
   font-size: 24px; }
 #sumStats div { display: flex; justify-content: space-between; border-bottom: 3px solid rgba(0,0,0,.2); padding: 4px 0; }
@@ -199,9 +223,9 @@ html, body {
   background: rgba(0,0,0,.3); border-radius: 18px; padding: 18px 22px; -webkit-user-select: text; user-select: text; }
 .row2 { display: flex; gap: 24px; }
 .row2 .btn { flex: 1; }
-/* ana menü: üçlü buton satırı */
-.row3 { display: flex; gap: 18px; }
-.row3 .btn { flex: 1; font-size: 36px !important; }
+/* ana menü: dörtlü buton satırı */
+.row3 { display: flex; gap: 14px; }
+.row3 .btn { flex: 1; font-size: 30px !important; padding: 0 6px; }
 /* market: panel solda (geniş) / altta (dar), sağda/üstte oyuncu 3D önizleme olarak görünür */
 #shop { background: rgba(12,10,40,.35); align-items: flex-start; padding: 40px; }
 .shopPanel { width: 1060px; max-height: 100%; overflow-y: auto; padding: 26px 34px 30px; }
@@ -219,13 +243,36 @@ html, body {
 .item.poor { filter: saturate(.55) brightness(.85); }
 .item .on { position: absolute; top: 8px; right: 10px; font-size: 18px; padding: 2px 10px; border-radius: 10px; background: #2fd07a; color: #fff; text-shadow: none; }
 .shopMsg { min-height: 34px; font-size: 26px; text-align: center; margin: 14px 0 6px; color: #ffe36b; }
-#btnShopBack { width: 100%; height: 92px; font-size: 40px; }
+#btnShopBack, #btnCareerBack { width: 100%; height: 92px; font-size: 40px; margin-top: 14px; }
 #hud.tall #shop { align-items: center; justify-content: flex-end; padding: 30px 30px 40px; }
 #hud.tall .shopPanel { width: 100%; max-height: 50%; }
+/* kariyer ve başarımlar ekranı */
+.careerPanel { width: 1120px; max-width: calc(100% - 60px); max-height: 100%; overflow-y: auto; padding: 28px 36px 32px; }
+.careerHero { background: rgba(18,13,43,.45); border: 4px solid var(--ink); border-radius: 20px; padding: 16px 24px; margin: 14px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.careerHero .rk { font-size: 42px; color: var(--gold1); }
+.careerHero .sub { font-size: 22px; color: #dbe5ff; margin-top: 4px; }
+.ladderGrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+#hud.tall .ladderGrid { grid-template-columns: repeat(2, 1fr); }
+.ladItem { padding: 10px 10px 12px; border-radius: 16px; border: 4px solid var(--ink); background: rgba(18,13,43,.4); text-align: center; }
+.ladItem.done { background: linear-gradient(180deg, #2fd07a, #16955a); }
+.ladItem.curr { background: linear-gradient(180deg, var(--gold1), var(--gold3)); color: #4a2a00; outline: 4px solid #fff; }
+.ladItem .ic { font-size: 38px; line-height: 1.1; }
+.ladItem .nm { font-size: 21px; margin-top: 4px; }
+.ladItem .qt { font-size: 18px; color: #dbe5ff; margin-top: 2px; }
+.ladItem.curr .qt { color: #4a2a00; }
+.achGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+#hud.tall .achGrid { grid-template-columns: 1fr; }
+.achCard { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 16px; border: 4px solid var(--ink); background: rgba(18,13,43,.4); text-align: left; }
+.achCard.done { background: linear-gradient(180deg, rgba(47,208,122,.35), rgba(22,149,90,.45)); border-color: #8dfcb0; }
+.achCard .ic { font-size: 44px; min-width: 54px; text-align: center; }
+.achCard .info { flex: 1; }
+.achCard .nm { font-size: 24px; color: #fff; }
+.achCard .ds { font-size: 19px; color: #dbe5ff; }
+.achCard .rw { font-size: 22px; color: #ffe36b; white-space: nowrap; }
 /* menülerde oyun içi HUD gizlenir */
-#hud[data-menu="1"] :is(#kasa, #kasaLbl, #chips, #clock, #lives, #mood, #pocket, #action) { display: none; }
+#hud[data-menu="1"] :is(#kasa, #kasaLbl, #chips, #questBox, #clock, #lives, #mood, #pocket, #action) { display: none; }
 #hud.tall .shopRow { grid-template-columns: repeat(3, 1fr); }
-#sumSalary { font-size: 32px; color: #ffe36b; min-height: 40px; }
+#sumSalary { font-size: 30px; color: #ffe36b; min-height: 36px; }
 
 /* karakter seçimi */
 #chars h2 { margin: 0; font-size: 72px; }
@@ -303,6 +350,21 @@ html, body {
   </div>
   <div id="kasaLbl" class="h">KASA</div>
   <div id="chips"></div>
+  <div id="questBox" class="panel">
+    <div class="qRow">
+      <div id="qRank" class="qRank h">🌱 Stajyer</div>
+      <div id="qStars" class="qStars">☆☆☆</div>
+    </div>
+    <div class="bar qBar"><div id="qQuotaFill" class="fill qFill"></div><div id="qQuotaTxt" class="qBarTxt num">TERFİ KOTASI: 0 / 350</div></div>
+    <div class="qTaskBox">
+      <div class="qTaskHead"><span id="qTaskTitle" class="qTaskTitle h">📋 GÖREV: 3 kez kasaya puan at</span><span id="qTaskReward" class="qReward num">+40 💰</span></div>
+      <div class="bar qBar" style="height:20px"><div id="qTaskFill" class="fill qFill contract"></div><div id="qTaskTxt" class="qBarTxt num" style="font-size:14px;line-height:13px">0 / 3</div></div>
+    </div>
+    <div class="qBottom">
+      <div id="qProj" class="qProj body">🕹️ Lv.1 Solitaire Turnuvası</div>
+      <div id="qStreak" class="qStreak num">🔥 SERİ ×0</div>
+    </div>
+  </div>
   <div id="clock" class="panel"><div id="clockVal" class="num">09:00</div>
     <div class="bar"><div id="dayFill" class="fill"></div><div id="dayLbl" class="num">09 ➜ 18</div></div></div>
   <div id="lives"></div>
@@ -343,15 +405,17 @@ html, body {
     <div class="menu panel">
       <h1 class="logo t">BOSS TURNS<span class="t">Patron Dönüyor!</span></h1>
       <div class="kombin body" id="kombin"></div>
+      <div class="careerBar h" id="titleCareer"></div>
       <div class="rules body">
         <div><span>🖐️</span><span><b>Basılı tut:</b> gizlice oyna, cebin dolar. Uzun tuttukça hızlanır.</span></div>
         <div><span>✋</span><span><b>Bırak:</b> cepteki puan kasaya girer, güvende.</span></div>
-        <div><span>❗</span><span><b>Yağmur dönüyor:</b> hemen bırak! Bazen blöftür.</span></div>
+        <div><span>🎯</span><span><b>Kota &amp; Görevler:</b> mesai kotasını doldurup terfi al, anlık görevlerle ekstra maaş kazan!</span></div>
         <div><span>👀</span><span><b>Sana bakarken basılıysan</b> yakalanırsın: cep ve bir can gider.</span></div>
       </div>
       <button class="btn gold big h" id="btnFree">MESAİYE BAŞLA<small id="freeWho" class="body"></small></button>
       <div class="row3">
         <button class="btn blue big mid h" id="btnChars">👥 KARAKTER</button>
+        <button class="btn blue big mid h" id="btnCareer">🏆 KARİYER</button>
         <button class="btn green big mid h" id="btnShop">🛒 MARKET</button>
         <button class="btn blue big mid h" id="btnDaily">📅 GÜNLÜK</button>
       </div>
@@ -371,10 +435,22 @@ html, body {
     </div>
   </div>
 
+  <div id="career" class="overlay hidden">
+    <div class="careerPanel panel">
+      <div class="shopHead"><h2 class="h">🏆 KARİYER &amp; TERFİ</h2><div class="wallet num" id="careerStars">⭐ 0</div></div>
+      <div class="careerHero" id="careerHero"></div>
+      <div class="shopSlot h">🏢 ŞİRKET UNVAN MERDİVENİ (KOTAYI GEÇ → TERFİ AL)</div>
+      <div class="ladderGrid" id="careerLadder"></div>
+      <div class="shopSlot h">🎖️ OFİS BAŞARIMLARI (ÖDÜLLÜ HEDEFLER)</div>
+      <div class="achGrid" id="careerAch"></div>
+      <button class="btn gray mid h" id="btnCareerBack">GERİ</button>
+    </div>
+  </div>
+
   <div id="shop" class="overlay hidden">
     <div class="shopPanel panel">
       <div class="shopHead"><h2 class="h">🛒 MARKET</h2><div class="wallet num" id="shopWallet">💰 0</div></div>
-      <p class="body shopNote">Sadece görünüm satılır, oyuna avantaj vermez. Her tur sonunda kasanın onda biri maaş olarak cüzdanına girer.</p>
+      <p class="body shopNote">Sadece görünüm satılır, oyuna avantaj vermez. Her tur sonunda maaş + görev ve terfi primleri cüzdanına girer.</p>
       <div id="shopList"></div>
       <div class="shopMsg body" id="shopMsg"></div>
       <button class="btn gray mid h" id="btnShopBack">GERİ</button>
@@ -388,6 +464,7 @@ html, body {
       <div id="sumScore" class="num">0</div>
       <div id="sumRecord" class="h"></div>
       <div id="sumSalary" class="num"></div>
+      <div id="sumCareer" class="body"></div>
       <div id="sumStats" class="body"></div>
       <div id="sumEmoji" class="body"></div>
       <div class="row2">
@@ -536,17 +613,153 @@ const SHOP_ITEMS = [
   { id: 'cap',        slot: 'hat',     icon: '🧢', name: 'Kep',           price: 150 },
   { id: 'beanie',     slot: 'hat',     icon: '🧶', name: 'Bere',          price: 250 },
   { id: 'headphones', slot: 'hat',     icon: '🎧', name: 'Kulaklık',      price: 450 },
+  { id: 'vr',         slot: 'hat',     icon: '🥽', name: 'VR Gözlük',     price: 750 },
   { id: 'crown',      slot: 'hat',     icon: '👑', name: 'Taç',           price: 1500 },
   { id: 'heart',      slot: 'sticker', icon: '❤️', name: 'Kalp',          price: 100 },
   { id: 'bolt',       slot: 'sticker', icon: '⚡', name: 'Şimşek',        price: 200 },
   { id: 'planet',     slot: 'sticker', icon: '🪐', name: 'Gezegen',       price: 350 },
+  { id: 'fire',       slot: 'sticker', icon: '🔥', name: 'Alev',          price: 500 },
   { id: 'cactus',     slot: 'desk',    icon: '🌵', name: 'Kaktüs',        price: 150 },
   { id: 'duck',       slot: 'desk',    icon: '🦆', name: 'Lastik ördek',  price: 300 },
+  { id: 'cat',        slot: 'desk',    icon: '🐱', name: 'Şans Kedisi',   price: 600 },
   { id: 'trophy',     slot: 'desk',    icon: '🏆', name: 'Kupa',          price: 900 },
   { id: 'chairRed',   slot: 'chair',   icon: '🔴', name: 'Kırmızı koltuk', price: 200 },
   { id: 'chairGold',  slot: 'chair',   icon: '🟡', name: 'Altın koltuk',  price: 1000 },
+  { id: 'chairBoss',  slot: 'chair',   icon: '🟣', name: 'CEO Koltuğu',   price: 1800 },
 ];
 const SHOP_BY_ID = Object.fromEntries(SHOP_ITEMS.map(i => [i.id, i]));
+
+/* =====================================================================
+   2B. KARİYER MERDİVENİ, MESAİ KOTALARI, ANLIK GÖREVLER VE GİZLİ PROJELER
+   ===================================================================== */
+const CAREER_RANKS = [
+  { level: 1,  icon: '🌱', title: 'Stajyer',             quota: 350,  salaryMul: 1.0,  promoBonus: 80 },
+  { level: 2,  icon: '☕', title: 'Junior Kaytarıcı',    quota: 600,  salaryMul: 1.1,  promoBonus: 120 },
+  { level: 3,  icon: '⌨️', title: 'Tablo Sihirbazı',     quota: 900,  salaryMul: 1.2,  promoBonus: 170 },
+  { level: 4,  icon: '🎧', title: 'Kıdemli Oyuncu',      quota: 1250, salaryMul: 1.35, promoBonus: 230 },
+  { level: 5,  icon: '🕶️', title: 'Mesai Korsanı',       quota: 1650, salaryMul: 1.5,  promoBonus: 300 },
+  { level: 6,  icon: '🛋️', title: 'Ofis Hayaleti',       quota: 2100, salaryMul: 1.65, promoBonus: 400 },
+  { level: 7,  icon: '🎩', title: 'Departman Baronu',    quota: 2600, salaryMul: 1.85, promoBonus: 520 },
+  { level: 8,  icon: '🚀', title: 'Kaytarma Direktörü',  quota: 3200, salaryMul: 2.05, promoBonus: 650 },
+  { level: 9,  icon: '💎', title: 'Yönetim Kurulu Üyesi', quota: 3900, salaryMul: 2.3,  promoBonus: 850 },
+  { level: 10, icon: '🐐', title: 'Gizli CEO',           quota: 4800, salaryMul: 2.6,  promoBonus: 1200 },
+];
+function rankFor(level) {
+  const idx = clamp((Number(level) || 1) - 1, 0, CAREER_RANKS.length - 1);
+  return CAREER_RANKS[idx];
+}
+function quotaStarsFor(score, quota) {
+  if (score >= quota * 1.8) return 3;
+  if (score >= quota * 1.3) return 2;
+  if (score >= quota) return 1;
+  return 0;
+}
+
+/* Oyuncunun laptopta gizlice oynadığı oyunun bölümleri (tur içi görsel amaç) */
+const LAPTOP_PROJECTS = [
+  { min: 0,    lv: 1, icon: '🃏', name: 'Solitaire Turnuvası' },
+  { min: 300,  lv: 2, icon: '🐍', name: 'Retro Yılan Ligi' },
+  { min: 750,  lv: 3, icon: '🏎️', name: 'Gece Otoban Yarışı' },
+  { min: 1350, lv: 4, icon: '🏰', name: 'Kale Kuşatması' },
+  { min: 2100, lv: 5, icon: '🐉', name: 'Ejderha Zindanı' },
+  { min: 3100, lv: 6, icon: '🚀', name: 'Galaktik İmparatorluk' },
+];
+function projectForScore(score) {
+  let cur = LAPTOP_PROJECTS[0];
+  for (const p of LAPTOP_PROJECTS) if (score >= p.min) cur = p;
+  return cur;
+}
+
+/* Tur içi anlık görevler (Shift Contracts) — tamamlandıkça yenisi gelir ve cüzdana 💰 prim verir */
+const CONTRACTS = [
+  { id: 'banks_3',  icon: '📥', title: '3 kez kasaya puan at',            target: 3,   reward: 45,  kind: 'banks' },
+  { id: 'big_90',   icon: '💎', title: 'Tek seferde +90 puan kasaya at',  target: 90,  reward: 60,  kind: 'singleBank' },
+  { id: 'hold_20',  icon: '⏱️', title: 'Kesintisiz 2,0 sn basılı tut',    target: 2.0, reward: 65,  kind: 'singleHold' },
+  { id: 'streak_3', icon: '🔥', title: 'Yakalanmadan 3 seri kasa yap',    target: 3,   reward: 55,  kind: 'streak' },
+  { id: 'close_1',  icon: '⚡', title: '1 kez kıl payı (❗) kasaya at',    target: 1,   reward: 75,  kind: 'close' },
+  { id: 'fake_1',   icon: '🎭', title: '1 blöf (sahte dönüş) atlat',      target: 1,   reward: 65,  kind: 'fakes' },
+  { id: 'big_170',  icon: '💰', title: 'Tek seferde +170 puan kasaya at', target: 170, reward: 95,  kind: 'singleBank' },
+  { id: 'streak_5', icon: '🌟', title: 'Yakalanmadan 5 seri kasa yap',    target: 5,   reward: 110, kind: 'streak' },
+];
+
+function nextContract(run) {
+  const tpl = CONTRACTS[run.contractIdx % CONTRACTS.length];
+  run.contractIdx++;
+  const scale = 1 + Math.floor((run.contractIdx - 1) / CONTRACTS.length) * 0.25;
+  run.contract = {
+    id: tpl.id, icon: tpl.icon, title: tpl.title, kind: tpl.kind,
+    target: tpl.target, progress: 0, reward: Math.round(tpl.reward * scale),
+  };
+}
+
+function advanceContract(run, eventType, val = 0) {
+  const c = run.contract;
+  if (!c) return;
+  if (c.kind === 'banks' && eventType === 'bank') c.progress += 1;
+  else if (c.kind === 'singleBank' && eventType === 'bank') c.progress = Math.max(c.progress, val);
+  else if (c.kind === 'singleHold' && eventType === 'bankHold') c.progress = Math.max(c.progress, Number(val.toFixed(1)));
+  else if (c.kind === 'streak' && eventType === 'streak') c.progress = Math.max(c.progress, val);
+  else if (c.kind === 'close' && eventType === 'close') c.progress += 1;
+  else if (c.kind === 'fakes' && eventType === 'fake') c.progress += 1;
+  if (c.progress >= c.target) {
+    run.contractsDone++;
+    run.contractCash += c.reward;
+    emit(run, 'contract', { title: c.title, reward: c.reward, done: run.contractsDone });
+    nextContract(run);
+  }
+}
+
+/* Kalıcı Ofis Başarımları */
+const ACHIEVEMENTS = [
+  { id: 'first_shift', icon: '🏁', name: 'İlk Mesai',         desc: 'İlk kez bir tur tamamla ve puan kazan.',         reward: 100, check: (r, c) => r.score >= 100 },
+  { id: 'quota_1',     icon: '📈', name: 'Terfi Zamanı',      desc: 'Mesai kotasını doldurup ilk terfini al.',        reward: 150, check: (r, c) => c.level >= 2 },
+  { id: 'streak_6',    icon: '🔥', name: 'Dokunulmaz',        desc: 'Yakalanmadan üst üste 6 kez kasaya puan at.',    reward: 150, check: (r, c) => r.bestStreak >= 6 },
+  { id: 'big_250',     icon: '💣', name: 'Büyük Vurgun',      desc: 'Tek seferde kasaya en az 250 puan at.',          reward: 200, check: (r, c) => r.stats.bestBank >= 250 },
+  { id: 'close_3',     icon: '⚡', name: 'Çelik Sinir',       desc: 'Bir mesaide 3 kez kıl payı (❗) kasaya at.',     reward: 200, check: (r, c) => r.stats.close >= 3 },
+  { id: 'tasks_3',     icon: '📋', name: 'Görev Adamı',       desc: 'Tek mesaide 3 anlık görev tamamla.',             reward: 220, check: (r, c) => r.contractsDone >= 3 },
+  { id: 'shift_end',   icon: '🕕', name: '18:00 Çıkışlı',     desc: 'Kovulmadan saat 18:00\'e kadar mesaiyi bitir.',   reward: 300, check: (r, c) => r.endReason === 'shift' },
+  { id: 'proj_5',      icon: '🐉', name: 'Zindan Ustası',     desc: 'Laptop oyununda 5. Bölüme (2.100 puan) ulaş.',   reward: 350, check: (r, c) => r.projectLv >= 5 },
+  { id: 'rank_5',      icon: '🕶️', name: 'Mesai Korsanı',     desc: 'Kariyerde 5. kademeye (Mesai Korsanı) yüksel.',  reward: 450, check: (r, c) => c.level >= 5 },
+  { id: 'rank_10',     icon: '🐐', name: 'Gizli CEO',         desc: 'Şirketin zirvesi olan 10. kademeye ulaş.',       reward: 1000, check: (r, c) => c.level >= 10 },
+];
+
+function evaluateCareerRun(run, prevCareer) {
+  const c = {
+    level: clamp(Number(prevCareer && prevCareer.level) || 1, 1, CAREER_RANKS.length),
+    stars: Math.max(0, Number(prevCareer && prevCareer.stars) || 0),
+    totalShifts: Math.max(0, Number(prevCareer && prevCareer.totalShifts) || 0) + 1,
+    totalContracts: Math.max(0, Number(prevCareer && prevCareer.totalContracts) || 0) + (run.contractsDone || 0),
+    bestStreak: Math.max(Number(prevCareer && prevCareer.bestStreak) || 0, run.bestStreak || 0),
+    ach: Array.isArray(prevCareer && prevCareer.ach) ? prevCareer.ach.slice() : [],
+  };
+  const startRank = rankFor(c.level);
+  const starsEarned = quotaStarsFor(run.score, startRank.quota);
+  c.stars += starsEarned;
+  let promoted = false, promoBonus = 0;
+  if (run.score >= startRank.quota && c.level < CAREER_RANKS.length) {
+    promoted = true;
+    promoBonus = startRank.promoBonus;
+    c.level += 1;
+  }
+  const newRank = rankFor(c.level);
+  const unlockedAch = [];
+  let achBonus = 0;
+  for (const a of ACHIEVEMENTS) {
+    if (!c.ach.includes(a.id) && a.check(run, c)) {
+      c.ach.push(a.id);
+      unlockedAch.push(a);
+      achBonus += a.reward;
+    }
+  }
+  const baseSalary = salaryFor(run.score);
+  const rankBonus = Math.round(baseSalary * (startRank.salaryMul - 1));
+  const contractCash = run.contractCash || 0;
+  const totalPayout = baseSalary + rankBonus + contractCash + promoBonus + achBonus;
+  return {
+    career: c, startRank, newRank, starsEarned, promoted,
+    baseSalary, rankBonus, contractCash, promoBonus, achBonus, totalPayout, unlockedAch,
+  };
+}
 
 /* Yağmur'un günlük kombini: gerçek tarihe bağlı, aynı gün herkes aynı kombini görür */
 const OUTFITS = {
@@ -601,9 +814,12 @@ function createRun(mode = 'free', opts = {}) {
     boss: { typeId: 'lead', style: 'lead', phase: 'away', t: 0, dur: 0, next: null, quick: false, shrug: 0, swap: 0 },
     log: [],              // her basışın sonucu: ok | close | caught | shield
     bossesMet: ['lead'],
+    streak: 0, bestStreak: 0, projectLv: 1,
+    contractIdx: 0, contract: null, contractsDone: 0, contractCash: 0,
     stats: { presses: 0, banks: 0, caught: 0, close: 0, fakes: 0, bestBank: 0, longestHold: 0, firstCatchPress: 0, lifeBonus: 0 },
   };
   recomputeMods(run);
+  nextContract(run);
   startCycle(run, { minAway: CONFIG.firstAway });
   return run;
 }
@@ -682,7 +898,19 @@ function bank(run) {
   if (close) run.stats.close++;
   run.stats.bestBank = Math.max(run.stats.bestBank, gain);
   run.stats.longestHold = Math.max(run.stats.longestHold, held);
-  emit(run, 'bank', { gain, close });
+  run.streak = (run.streak || 0) + 1;
+  run.bestStreak = Math.max(run.bestStreak || 0, run.streak);
+  emit(run, 'bank', { gain, close, streak: run.streak });
+  // anlık görev ve laptop oyunu ilerlemesi
+  advanceContract(run, 'bank', gain);
+  advanceContract(run, 'bankHold', held);
+  advanceContract(run, 'streak', run.streak);
+  if (close) advanceContract(run, 'close', 1);
+  const proj = projectForScore(run.score);
+  if (proj.lv > (run.projectLv || 1)) {
+    run.projectLv = proj.lv;
+    emit(run, 'project', { lv: proj.lv, icon: proj.icon, name: proj.name });
+  }
   // kilometre taşları
   if (run.score >= run.nextBossAt) { run.pendingBoss = true; run.nextBossAt += CONFIG.bossEvery; }
   if (run.pickIdx < CONFIG.pickAt.length && run.score >= CONFIG.pickAt[run.pickIdx]) run.pendingPick = true;
@@ -701,6 +929,7 @@ function catchPlayer(run) {
   if (shielded) run.shields--; else run.lives--;
   run.log.push(shielded ? 'shield' : 'caught');
   run.stats.caught++;
+  run.streak = 0;
   if (!run.stats.firstCatchPress && !shielded) run.stats.firstCatchPress = run.stats.presses;
   run.stats.longestHold = Math.max(run.stats.longestHold, run.holdTime);
   run.pocket = 0; run.holdTime = 0; run.holding = false; run.locked = true;
@@ -793,6 +1022,7 @@ function updateRun(run, dt, held) {
           b.quick = b.next.doubleTake;
           b.shrug = c.shrugTime;
           emit(run, 'fake', { doubleTake: b.quick });
+          advanceContract(run, 'fake', 1);
           startCycle(run);
         } else { b.phase = 'look'; b.t = 0; b.dur = b.next.look; emit(run, 'look'); }
       }
@@ -839,7 +1069,7 @@ function shareText(run, tries) {
   return lines.join('\n');
 }
 
-const BT = { CONFIG, BOSSES, MODS, OUTFITS, outfitFor, CHARACTERS, CHAR_BY_ID, dailyCharFor, SHOP_ITEMS, salaryFor, createRun, updateRun, choosePick, clockProgress, clockString, shareText, makeRng, todayKey, dailyNumber };
+const BT = { CONFIG, BOSSES, MODS, OUTFITS, outfitFor, CHARACTERS, CHAR_BY_ID, dailyCharFor, SHOP_ITEMS, salaryFor, CAREER_RANKS, rankFor, quotaStarsFor, LAPTOP_PROJECTS, projectForScore, CONTRACTS, ACHIEVEMENTS, evaluateCareerRun, createRun, updateRun, choosePick, clockProgress, clockString, shareText, makeRng, todayKey, dailyNumber };
 if (typeof module === 'object' && module.exports) module.exports = BT;
 </script>
 <script id="three">/*VENDOR:THREE*//* three.js r186 (MIT) — tools/vendor.js ile üretildi, elle düzenleme */
@@ -5640,8 +5870,24 @@ void main() {
       mesh(cyl(0.13, 0.06, 0.2), gold, 0.72, 1.92, 0.3, d);
       for (const s of [-1, 1]) mesh(new T.TorusGeometry(0.05, 0.015, 8, 16), gold, 0.72 + s * 0.14, 1.94, 0.3, d);
     },
+    vr(h) {
+      mesh(rbox(0.72, 0.24, 0.32, 0.05), '#1e2238', 0, 0.56, 0.36, h);
+      mesh(rbox(0.64, 0.16, 0.06, 0.02), M('#38d6ff', { emissive: '#38d6ff', emissiveIntensity: 0.6 }), 0, 0.56, 0.5, h);
+      mesh(new T.TorusGeometry(0.51, 0.04, 8, 32), '#1e2238', 0, 0.56, 0, h).rotation.x = Math.PI / 2;
+    },
+    fire(l) {
+      mesh(new T.ConeGeometry(0.12, 0.28, 10), '#ff5e2e', -0.05, 0.26, 0.04, l);
+      mesh(new T.ConeGeometry(0.07, 0.18, 10), '#ffcf2e', -0.05, 0.22, 0.06, l);
+    },
+    cat(d) {
+      const w = M('#fff6e8', { roughness: 0.35 });
+      mesh(sph(0.13), w, 0.72, 1.76, 0.3, d);
+      mesh(sph(0.1), w, 0.72, 1.94, 0.3, d);
+      for (const s of [-1, 1]) mesh(new T.ConeGeometry(0.04, 0.08, 8), '#ff8a9e', 0.72 + s * 0.06, 2.04, 0.3, d);
+      mesh(rbox(0.08, 0.04, 0.02, 0.005), '#ffcf2e', 0.72, 1.85, 0.4, d);
+    },
   };
-  const CHAIR_COLORS = { chairRed: M('#d23a52'), chairGold: M('#ffcf2e', { metalness: 0.5, roughness: 0.3 }) };
+  const CHAIR_COLORS = { chairRed: M('#d23a52'), chairGold: M('#ffcf2e', { metalness: 0.5, roughness: 0.3 }), chairBoss: M('#7a4fd0', { metalness: 0.35, roughness: 0.3 }) };
   const CHAIR_DEFAULT = M('#2a2f5c', {});
   function applyCosmetics() {
     if (!PL.head) return;
@@ -5759,6 +6005,28 @@ void main() {
     for (let i = 0; i < run.shields; i++) ch += '<span class="panel">🛡️</span>';
     run.mods.filter(id => id !== 'shield' && id !== 'overtime' && id !== 'lunch').forEach(id => { ch += `<span class="panel">${MOD_BY_ID[id].icon}</span>`; });
     setHTML('chips', ch);
+    // kariyer kotası, anlık görev ve gizli laptop projesi
+    const rk = rankFor(careerState().level);
+    setText('qRank', `${rk.icon} Kademe ${rk.level}: ${rk.title}`);
+    const stCount = quotaStarsFor(run.score, rk.quota);
+    setText('qStars', '⭐'.repeat(stCount) + '☆'.repeat(3 - stCount));
+    const qPct = clamp(run.score / rk.quota, 0, 1) * 100;
+    $('qQuotaFill').style.width = qPct.toFixed(1) + '%';
+    setText('qQuotaTxt', run.score >= rk.quota ? `TERFİ HAZIR! (${fmt(run.score)} / ${fmt(rk.quota)})` : `TERFİ KOTASI: ${fmt(run.score)} / ${fmt(rk.quota)}`);
+    if (run.contract) {
+      const ct = run.contract;
+      setText('qTaskTitle', `${ct.icon} ${ct.title}`);
+      setText('qTaskReward', `+${ct.reward} 💰`);
+      const cPct = clamp(ct.progress / ct.target, 0, 1) * 100;
+      $('qTaskFill').style.width = cPct.toFixed(1) + '%';
+      const pStr = ct.kind === 'singleHold' ? ct.progress.toFixed(1).replace('.', ',') : fmt(ct.progress);
+      const tStr = ct.kind === 'singleHold' ? ct.target.toFixed(1).replace('.', ',') + ' sn' : fmt(ct.target);
+      setText('qTaskTxt', `${pStr} / ${tStr}`);
+    }
+    const prj = projectForScore(run.score);
+    setText('qProj', `${prj.icon} Bölüm ${prj.lv}: ${prj.name}`);
+    setText('qStreak', `🔥 SERİ ×${run.streak || 0}`);
+    setClass('qStreak', (run.streak || 0) >= 3 ? 'qStreak hot num' : 'qStreak num');
     // cep
     const heat = clamp(run.holdTime / 4, 0, 1);
     const showPocket = run.holding || run.pocket > 0 || view.catchFace > 0;
@@ -5924,6 +6192,16 @@ void main() {
           break;
         case 'pick': Sound.play('pick'); view.lastHi = -1; announce('Kahve molası, bir avantaj seç'); break;
         case 'chosen': Sound.play('chosen'); break;
+        case 'contract':
+          Sound.play('chosen');
+          setBanner('📋 GÖREV TAMAM!', `${ev.title} · +${ev.reward} 💰 prim!`, 1.8);
+          if (!RM && PL.laptop) { const lp = toScreen(PL.laptop, 0.35); floatText(`+${ev.reward} 💰`, lp.x, lp.y, '#8dfcb0'); }
+          announce(`Görev tamamlandı: ${ev.title}, artı ${ev.reward} altın`);
+          break;
+        case 'project':
+          Sound.play('boss');
+          if (! view.banner) setBanner(`${ev.icon} BÖLÜM ${ev.lv}!`, `Laptopta yeni oyun: ${ev.name}`, 2.0);
+          break;
         case 'over':
           Sound.play(ev.reason === 'shift' ? 'shift' : 'over');
           if (ev.reason === 'shift') setBanner('18:00 — MESAİ BİTTİ!', 'Kalan canlar bonus: +' + fmt(run.stats.lifeBonus), 2);
@@ -6117,7 +6395,7 @@ void main() {
     frameHeld() { const h = this.held() || this.tapped; this.tapped = false; return h; },
     clear() { this.pointers.clear(); this.key = false; this.tapped = false; },
   };
-  const menuOpen = () => ['title', 'summary', 'chars', 'shop'].some(id => !$(id).classList.contains('hidden'));
+  const menuOpen = () => ['title', 'summary', 'chars', 'shop', 'career'].some(id => !$(id).classList.contains('hidden'));
   function onPress(target) {
     if (Sound.on) Sound.ensure();
     if (!run || run.state === 'over') return;
@@ -6128,7 +6406,7 @@ void main() {
       run.pick.pointerIdx = card ? Number(card.dataset.idx) : -1;
     }
   }
-  const ignoreTarget = t => !!(t && t.closest && (t.closest('button') || t.closest('#sheet') || t.closest('#title') || t.closest('#summary') || t.closest('#chars') || t.closest('#shop')));
+  const ignoreTarget = t => !!(t && t.closest && (t.closest('button') || t.closest('#sheet') || t.closest('#title') || t.closest('#summary') || t.closest('#chars') || t.closest('#shop') || t.closest('#career')));
   window.addEventListener('pointerdown', e => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     if (view.sheetOpen || ignoreTarget(e.target) || menuOpen()) return;
@@ -6231,17 +6509,51 @@ void main() {
     setProps('lead');
   }
   let chosenChar = store.get('bossturns.char', null);
+  const careerState = () => {
+    const st = store.get('bossturns.career', null) || {};
+    return {
+      level: clamp(Number(st.level) || 1, 1, CAREER_RANKS.length),
+      stars: Math.max(0, Number(st.stars) || 0),
+      totalShifts: Math.max(0, Number(st.totalShifts) || 0),
+      totalContracts: Math.max(0, Number(st.totalContracts) || 0),
+      bestStreak: Math.max(0, Number(st.bestStreak) || 0),
+      ach: Array.isArray(st.ach) ? st.ach : [],
+    };
+  };
   function refreshTitle() {
     const key = todayKey(), daily = store.get('bossturns.daily.' + key, null), o = outfitFor(key), today = dailyCharFor(key);
     ensureYagmur(o);
     const me = CHAR_BY_ID[chosenChar] || today;
     setPlayer(me.id);
-    $('freeWho').textContent = `${me.name} ile · ${me.ability.icon} ${me.ability.name}`;
+    const cr = careerState(), rk = rankFor(cr.level);
+    $('titleCareer').innerHTML = `<div>${rk.icon} Kademe ${rk.level}: ${rk.title}</div><span>🎯 Terfi Kotası: <b>${fmt(rk.quota)}</b> puan · ⭐ ${cr.stars} · 🎖️ ${cr.ach.length}/${ACHIEVEMENTS.length}</span>`;
+    $('freeWho').textContent = `${me.name} ile · ${me.ability.icon} ${me.ability.name} · Hedef ${fmt(rk.quota)}`;
     $('btnDaily').textContent = `📅 GÜNLÜK #${dailyNumber(key)}`;
     $('dailyInfo').textContent = `Günlük görevde bugün herkes ${today.name} ile oynar`;
     $('kombin').textContent = `👗 Yağmur bugün: ${o.name}`;
     $('titleBest').textContent = `💰 ${fmt(wallet())} · En iyi: ${fmt(store.get('bossturns.best', 0))}` + (daily ? ` · Bugünkü günlük: ${fmt(daily.best)}` : '');
   }
+  function renderCareer() {
+    const cr = careerState(), rk = rankFor(cr.level);
+    $('careerStars').textContent = `⭐ ${cr.stars} · 🎖️ ${cr.ach.length}/${ACHIEVEMENTS.length}`;
+    $('careerHero').innerHTML = `<div><div class="rk h">${rk.icon} Kademe ${rk.level}: ${rk.title}</div>` +
+      `<div class="sub body">Maaş Çarpanı: <b>×${rk.salaryMul.toFixed(2).replace('.', ',')}</b> · Sonraki terfi kotası: <b>${fmt(rk.quota)} puan</b> (+${rk.promoBonus} 💰 terfi primi)</div></div>` +
+      `<div class="sub body" style="text-align:right">Toplam Mesai: <b>${cr.totalShifts}</b><br>Tamamlanan Görev: <b>${cr.totalContracts}</b> · En İyi Seri: <b>×${cr.bestStreak}</b></div>`;
+    $('careerLadder').innerHTML = CAREER_RANKS.map(r => {
+      const cls = r.level < cr.level ? 'done' : r.level === cr.level ? 'curr' : '';
+      return `<div class="ladItem ${cls}"><div class="ic">${r.icon}</div><div class="nm h">${r.level}. ${r.title}</div><div class="qt num">🎯 ${fmt(r.quota)} · ×${r.salaryMul.toString().replace('.', ',')}</div></div>`;
+    }).join('');
+    $('careerAch').innerHTML = ACHIEVEMENTS.map(a => {
+      const done = cr.ach.includes(a.id);
+      return `<div class="achCard ${done ? 'done' : ''}"><div class="ic">${done ? '✅' : a.icon}</div><div class="info"><div class="nm h">${a.name}</div><div class="ds body">${a.desc}</div></div><div class="rw num">+${a.reward} 💰</div></div>`;
+    }).join('');
+  }
+  function showCareer() {
+    $('title').classList.add('hidden'); $('summary').classList.add('hidden'); $('career').classList.remove('hidden');
+    renderCareer();
+  }
+  $('btnCareer').addEventListener('click', showCareer);
+  $('btnCareerBack').addEventListener('click', () => { $('career').classList.add('hidden'); $('title').classList.remove('hidden'); refreshTitle(); });
   // KARAKTERLER sekmesi: kart seçer (kaydedilir), "SEÇ VE OYNA" başlatır
   let charsSel = null;
   function renderChars() {
@@ -6286,9 +6598,10 @@ void main() {
     view.y.x = LY.range[0] + 0.3; view.y.target = view.y.x; view.y.yaw = Math.PI; view.y.idle = 0.3;
     for (const k in H) delete H[k];
     pickBuiltFor = null;
-    $('title').classList.add('hidden'); $('summary').classList.add('hidden');
+    $('title').classList.add('hidden'); $('summary').classList.add('hidden'); $('career').classList.add('hidden');
     Input.clear(); run.locked = true;
-    setBanner('YAĞMUR KORİDORDA', `${CHAR_BY_ID[run.charId].name}, basılı tut ve oyna. ❗ görünce bırak!`, 2.8);
+    const rk = rankFor(careerState().level);
+    setBanner(`${rk.icon} ${rk.title.toUpperCase()}`, `Hedef Kota: ${fmt(rk.quota)} puan · ❗ görünce bırak!`, 2.8);
     document.activeElement && document.activeElement.blur && document.activeElement.blur();
   }
   function showSummary() {
@@ -6308,15 +6621,34 @@ void main() {
       : `18:00! Kalan ${run.lives} can için +${fmt(run.stats.lifeBonus)} bonus.`;
     $('sumScore').textContent = fmt(run.score);
     $('sumRecord').textContent = isRecord ? '🏆 YENİ REKOR!' : dailyRecord ? '📅 GÜNÜN EN İYİSİ!' : `En iyi: ${fmt(Math.max(best, run.score))}`;
-    if (!run.paid) { run.paid = true; run.salary = salaryFor(run.score); store.set('bossturns.wallet', wallet() + run.salary); }
-    $('sumSalary').textContent = `💰 +${fmt(run.salary)} maaş · cüzdan ${fmt(wallet())}`;
+    if (!run.paid) {
+      run.paid = true;
+      run.careerEval = evaluateCareerRun(run, careerState());
+      store.set('bossturns.career', run.careerEval.career);
+      run.salary = run.careerEval.totalPayout;
+      store.set('bossturns.wallet', wallet() + run.salary);
+    }
+    const ev = run.careerEval || evaluateCareerRun(run, careerState());
+    $('sumSalary').textContent = `💰 +${fmt(run.salary)} toplam kazanç · cüzdan ${fmt(wallet())}`;
+    const starTxt = '⭐'.repeat(ev.starsEarned) + '☆'.repeat(3 - ev.starsEarned);
+    const parts = [];
+    if (ev.promoted) parts.push(`<span class="promo h">🎉 TERFİ ETTİN! ${ev.startRank.icon} ${ev.startRank.title} ➜ ${ev.newRank.icon} ${ev.newRank.title} (+${ev.promoBonus} 💰)</span>`);
+    else parts.push(`<div><b>${ev.startRank.icon} ${ev.startRank.title}</b> · Kota: ${fmt(run.score)} / ${fmt(ev.startRank.quota)} (${starTxt})</div>`);
+    const bonusBreak = [`Maaş +${fmt(ev.baseSalary)} 💰`];
+    if (ev.rankBonus > 0) bonusBreak.push(`Kademe farkı +${fmt(ev.rankBonus)} 💰`);
+    if (ev.contractCash > 0) bonusBreak.push(`${run.contractsDone} Görev +${fmt(ev.contractCash)} 💰`);
+    if (ev.achBonus > 0) bonusBreak.push(`Başarım +${fmt(ev.achBonus)} 💰`);
+    parts.push(`<div>📊 ${bonusBreak.join(' · ')}</div>`);
+    if (ev.unlockedAch.length) parts.push(`<div>🎖️ Yeni Başarım: <b>${ev.unlockedAch.map(a => `${a.icon} ${a.name}`).join(', ')}</b></div>`);
+    $('sumCareer').innerHTML = parts.join('');
     const s = run.stats, mm = Math.floor(run.t / 60), ss = Math.floor(run.t % 60);
+    const prj = projectForScore(run.score);
     const rows = [
       ['Süre', `${mm}:${String(ss).padStart(2, '0')}`], ['Saat', clockString(clockProgress(run))],
-      ['Basış', s.presses], ['Kasaya', s.banks],
-      ['Yakalanma', s.caught], ['Kıl payı', s.close],
+      ['Basış / Kasa', `${s.presses} / ${s.banks}`], ['En iyi seri', `🔥 ×${run.bestStreak || 0}`],
+      ['Yakalanma / Kıl payı', `${s.caught} / ${s.close}`], ['Tamamlanan görev', `📋 ${run.contractsDone || 0}`],
       ['En büyük vurgun', fmt(s.bestBank)], ['En uzun tutuş', s.longestHold.toFixed(1).replace('.', ',') + ' sn'],
-      ['Blöf gördün', s.fakes], ['Ruh hali', run.bossesMet.length], ['Oyuncu', CHAR_BY_ID[run.charId].name], ['Mod', run.mode === 'daily' ? 'Günlük' : 'Serbest'],
+      ['Laptop oyunu', `${prj.icon} Bölüm ${prj.lv}`], ['Ruh hali', run.bossesMet.length], ['Oyuncu', CHAR_BY_ID[run.charId].name], ['Mod', run.mode === 'daily' ? 'Günlük' : 'Serbest'],
     ];
     $('sumStats').innerHTML = rows.map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join('');
     $('sumEmoji').textContent = shareText(run, run.tries || 1);
@@ -6387,6 +6719,7 @@ void main() {
   /* =================== DÖNGÜ =================== */
   fit();
   refreshTitle();
+  if (new URLSearchParams(location.search).get('autostart') === '1') start('free', chosenChar || 'alp');
   let last = performance.now(), slow = 0;
   function frame(now) {
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
@@ -6395,6 +6728,8 @@ void main() {
     if (run) handleEvents();
     updateView(view.sheetOpen ? 0 : dt);
     updateHUD();
+    const bState = !run || menuOpen() ? (run && run.state === 'over' ? 'gameover' : 'title') : (view.hiddenPause || view.sheetOpen ? 'paused' : 'playing');
+    if (document.body.dataset.state !== bState) document.body.dataset.state = bState;
     drawParticles();
     if (!view.sheetOpen) renderer.render(scene, camera);
     // zayıf cihaz: kare süresi uzun süre yüksekse çözünürlüğü düşür
@@ -6406,7 +6741,7 @@ void main() {
   requestAnimationFrame(frame);
 
   // test kancası
-  window.__bt = { get run() { return run; }, view, start, showChars, showShop, applyCosmetics, PORTRAITS, get PL() { return PL; }, Input, Sound, get Y() { return Y; }, toScreen };
+  window.__bt = { get run() { return run; }, view, start, showChars, showShop, showCareer, careerState, applyCosmetics, PORTRAITS, get PL() { return PL; }, Input, Sound, get Y() { return Y; }, toScreen };
 })();
 </script>
 </body>

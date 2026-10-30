@@ -3,6 +3,8 @@
   "private": true,
   "description": "BOSS TURNS — geliştirme araçları (oyunun kendisi index.html, çalışmak için bunlara ihtiyacı yok)",
   "scripts": {
+    "dev": "node server.js",
+    "build": "node tools/build-dist.js",
     "vendor": "node tools/vendor.js",
     "sim": "node tools/sim.js 2000",
     "test": "node tools/smoke.js"
