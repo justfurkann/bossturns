@@ -15,6 +15,7 @@
 - Yetenekler (pasif, çekirdek döngüyü değiştirmez): ALP ⚡ Hızlı El (tolerans 0,15 sn) · FURKAN 👂 Kulağı Delik (blöflerin ~3'te 2'sini sezer, ünlem gri "?") · BARANSEL 🔥 Risk Aşığı (çarpan %18 hızlı) · BULUT ☁️ Soğukkanlı (yakalanınca cebin yarısı kasaya). Sayılar `CONFIG.abilities`'te; hedef her birinin ortalama oyuncuya ≈ +%5 vermesi (`node tools/sim.js` tablosu). Oyun zamanlamaya çok duyarlı: tolerans/uyarıya 0,03 sn bile ≈ +%5 eder.
 - Ana menüde "KARAKTERLER" sekmesi: seçim kaydedilir, "Mesaiye başla" doğrudan seçili karakterle başlar.
 - Sağ alttaki kırmızı "GİZLE" butonu = patron tuşu (Esc). Orijinal tasarımın parçası, kaldırma.
+- **Market (sahibinin kararı): yalnızca görünüm satar** (şapka, laptop çıkartması, masa süsü, sandalye). Oyun avantajı satma; günlük görev adil kalmalı. Para = maaş: her tur sonunda kasanın onda biri (`salaryFor`). Katalog `SHOP_ITEMS` (logic), 3D parçalar `COSMETIC` (app). Kalıcı veriler: `bossturns.wallet`, `bossturns.shop` (localStorage).
 
 ## Kısıtlar
 - Tek giriş: basılı tut / bırak. Yeni kontrol ekleme.
