@@ -372,8 +372,8 @@ html, body {
       <div id="qStreak" class="qStreak num">🔥 SERİ ×0</div>
     </div>
   </div>
-  <div id="clock" class="panel"><div id="clockVal" class="num">09:00</div>
-    <div class="bar"><div id="dayFill" class="fill"></div><div id="dayLbl" class="num">09 ➜ 18</div></div></div>
+  <div id="clock" class="panel"><div id="clockVal" class="num">08:00</div>
+    <div class="bar"><div id="dayFill" class="fill"></div><div id="dayLbl" class="num">08 ➜ 17</div></div></div>
   <div id="lives"></div>
   <div id="mood" class="panel"><div id="moodIcon">🙂</div><div><div id="moodName" class="h">Sakin Yağmur</div><div id="moodDesc" class="body">Dengeli. Klasik.</div></div></div>
   <div id="pocket" class="panel">
@@ -518,7 +518,7 @@ const CONFIG = {
   pickCycle: 0.95,                           // seçim ekranında vurgu kaç saniyede bir kayar
   pickGrace: 0.45,                           // seçim ekranı açıldıktan sonra yanlışlıkla seçmeyi önler
   shift: { seconds: 180, score: 5000, lifeBonus: 100 }, // saat = süre/180 + kasa/5000 (≤3 dk garanti)
-  startHour: 9, endHour: 18,
+  startHour: 8, endHour: 17,   // mesai 8-5
   // "KAAN ATS BOZULDU": ATS ara sıra çöker, Yağmur uğraşırken uzun bir güvenli an olur
   ats: { base: 0.03, away: [4.0, 2.0] },   // olasılık (döngü başına) · süre = 4 + rand*2 sn
   // karakter yetenekleri — tools/sim.js ile dengelendi: ortalama oyuncuya her biri ≈ +%5.
@@ -601,7 +601,7 @@ function dailyNumber(key) {
 const CHARACTERS = [
   { id: 'alp',      name: 'ALP',      ability: { icon: '⚡', name: 'Hızlı El',     desc: 'Yağmur bakınca kaçış payı %25 daha geniş.' } },
   { id: 'furkan',   name: 'FURKAN',   ability: { icon: '👂', name: 'Kulağı Delik', desc: 'Topuk sesinden blöfü sezer: çoğu blöfte ünlem gri "?" olur.' } },
-  { id: 'baransel', name: 'BARANSEL', ability: { icon: '🙇', name: 'Yalaka',       desc: '"Hocam kombin efsane!" Yağmur ondan daha az şüphelenir, daha seyrek döner.' } },
+  { id: 'baransel', name: 'BARANSEL', ability: { icon: '🙇', name: 'Yalaka',       desc: '"Şefim kombin efsane!" Yağmur ondan daha az şüphelenir, daha seyrek döner.' } },
   { id: 'bulut',    name: 'BULUT',    ability: { icon: '☁️', name: 'Soğukkanlı',   desc: 'Yakalanınca cebin yarısı kasaya girer (can yine gider).' } },
   { id: 'kaan',     name: 'KAAN',     nick: 'Cısdık', guest: true, ability: { icon: '🖥️', name: 'ATS Bozuldu', desc: 'Onun olduğu yerde ATS sık sık çöker; Yağmur uğraşırken oyna!' } },
   { id: 'gokberk',  name: 'GÖKBERK',  guest: true, ability: { icon: '🏋️', name: 'Basıyo',      desc: 'Mesaiye spordan geliyor: cep %12 daha hızlı dolar.' } },
@@ -729,7 +729,7 @@ const ACHIEVEMENTS = [
   { id: 'big_250',     icon: '💣', name: 'Büyük Vurgun',      desc: 'Tek seferde kasaya en az 250 puan at.',          reward: 200, check: (r, c) => r.stats.bestBank >= 250 },
   { id: 'close_3',     icon: '⚡', name: 'Çelik Sinir',       desc: 'Bir mesaide 3 kez kıl payı (❗) kasaya at.',     reward: 200, check: (r, c) => r.stats.close >= 3 },
   { id: 'tasks_3',     icon: '📋', name: 'Görev Adamı',       desc: 'Tek mesaide 3 anlık görev tamamla.',             reward: 220, check: (r, c) => r.contractsDone >= 3 },
-  { id: 'shift_end',   icon: '🕕', name: '18:00 Çıkışlı',     desc: 'Kovulmadan saat 18:00\'e kadar mesaiyi bitir.',   reward: 300, check: (r, c) => r.endReason === 'shift' },
+  { id: 'shift_end',   icon: '🕔', name: '17:00 Çıkışlı',     desc: 'Kovulmadan saat 17:00\'ye kadar mesaiyi bitir.',   reward: 300, check: (r, c) => r.endReason === 'shift' },
   { id: 'proj_5',      icon: '🐉', name: 'Zindan Ustası',     desc: 'Laptop oyununda 5. Bölüme (2.100 puan) ulaş.',   reward: 350, check: (r, c) => r.projectLv >= 5 },
   { id: 'rank_5',      icon: '⏱️', name: 'Kuyruk Ustası',     desc: 'Kariyerde 5. kademeye (Kuyruk Ustası) yüksel.',  reward: 450, check: (r, c) => c.level >= 5 },
   { id: 'rank_10',     icon: '🐐', name: 'Hedef 10.000',      desc: 'Zirve: 10. kademe, Hedef 10.000 Efsanesi.',      reward: 1000, check: (r, c) => c.level >= 10 },
@@ -780,7 +780,8 @@ const OUTFITS = {
   top:    ['#ffffff', '#f7d9e3', '#d8ecff', '#23232f', '#fff1c2'],
   bottom: [['pants', '#2b2346', 'lacivert pantolon'], ['pants', '#d9cbb4', 'bej pantolon'], ['skirt', '#23232f', 'siyah etek'],
            ['skirt', '#8a2a3b', 'bordo etek'], ['pants', '#3b5a8f', 'kot pantolon'], ['skirt', '#efe2c8', 'krem etek']],
-  hair:   [['ponytail', 'at kuyruğu'], ['bun', 'topuz'], ['long', 'açık saç'], ['bob', 'kısa kesim']],
+  // en sık: ortadan ayrık uzun açık saç; bazen dağınık topuz (bob yok: Yağmur'un saçı uzun)
+  hair:   [['long', 'açık saç'], ['long', 'açık saç'], ['bun', 'dağınık topuz'], ['ponytail', 'at kuyruğu']],
   acc:    [['none', ''], ['glasses', 'gözlük'], ['earrings', 'küpe'], ['scarf', 'fular']],
   shoes:  ['#1a1a1a', '#8a2a3b', '#efe2c8', '#d23a52'],
   scarf:  ['#ffd33d', '#4fd1c5', '#ff6b9a', '#ffffff'],
@@ -795,9 +796,16 @@ function outfitFor(dateKey) {
   if (Math.abs(lum(bottom[1]) - lum(blazer[0])) < 0.2) bottom = lum(blazer[0]) > 0.5 ? OUTFITS.bottom[0] : OUTFITS.bottom[5];
   let top = pick(OUTFITS.top);
   if (top === blazer[0]) top = '#ffffff';
+  const shoes = pick(OUTFITS.shoes), scarf = pick(OUTFITS.scarf), hairTone = 0.9 + r() * 0.15;
+  // haftanın ~üçte biri "ofis üniforması": siyah tişört, siyah bol pantolon, beyaz spor ayakkabı
+  if (r() < 0.34) return {
+    style: 'tee', blazer: '#1d1b22', top: '#1d1b22', bottom: 'wide', bottomColor: '#19171d', hair: hair[0], acc: acc[0] === 'scarf' ? 'none' : acc[0],
+    shoes: '#f4f3ee', scarf, hairTone,
+    name: ['siyah tişört', 'bol pantolon', hair[1], acc[0] === 'scarf' ? '' : acc[1]].filter(Boolean).join(' · '),
+  };
   return {
-    blazer: blazer[0], top, bottom: bottom[0], bottomColor: bottom[1], hair: hair[0], acc: acc[0],
-    shoes: pick(OUTFITS.shoes), scarf: pick(OUTFITS.scarf), hairTone: 0.9 + r() * 0.15,
+    style: 'blazer', blazer: blazer[0], top, bottom: bottom[0], bottomColor: bottom[1], hair: hair[0], acc: acc[0],
+    shoes, scarf, hairTone,
     name: [blazer[1], bottom[2], hair[1], acc[1]].filter(Boolean).join(' · '),
   };
 }
@@ -5406,7 +5414,7 @@ void main() {
     hud: {},
   };
   const SCOLD_LINES = ['YAKALADIM!', 'Kuyrukta 47 çağrı var!', 'AHT\'n uçmuş!', 'Script\'i okudun mu?!', 'Hedef 10.000, sen oyunda!', 'Molan bitmedi mi?', 'Mute\'a basma!', 'Yine mi oyun?!', 'Ofiste oyun yok dedim!'];
-  const YALAKA_LINES = ['Hocam kombin efsane!', 'Hocam bugün çok enerjiksiniz!', 'Hocam hedefi biz yaparız!', 'Hocam kahve getireyim mi?', 'En iyi takım lideri sizsiniz!'];
+  const YALAKA_LINES = ['Şefim kombin efsane!', 'Şefim bugün çok enerjiksiniz!', 'Şefim hedefi biz yaparız!', 'Şefim kahve getireyim mi?', 'En iyi şef sizsiniz şefim!', 'Emredersiniz şefim!', 'Şefim saçlar bugün ayrı güzel!'];
 
   /* =================== RENDERER =================== */
   let renderer;
@@ -5620,18 +5628,24 @@ void main() {
   function setMouth(m, which) { for (const k in m) m[k].visible = k === which; }
 
   /* =================== YAĞMUR =================== */
-  const HAIR = '#f4cf5c', SKIN = '#f6c9a6', LIPS = '#d63d5c';
+  const HAIR = '#f2d27a', HAIR_ROOT = '#d8ae62', HAIR_LIGHT = '#fcedb8', SKIN = '#f6c9a6', LIPS = '#d9737f';
   let Y = null;
   function buildYagmur(o) {
     const root = new T.Group(); scene.add(root);
     const body = new T.Group(); root.add(body);
+    const tee = o.style === 'tee';
     const skin = M(SKIN, { roughness: 0.65, emissive: '#ff2a2a', emissiveIntensity: 0 });
+    // saç: dipler koyu (kumral), boylar sarı, yüzü çevreleyen tutamlar en açık (balyaj)
     const hairM = M(new T.Color(HAIR).multiplyScalar(o.hairTone), { roughness: 0.6 });
-    const legMat = o.bottom === 'pants' ? M(o.bottomColor) : M('#efbf9c', { roughness: 0.5 });
+    const rootM = M(new T.Color(HAIR_ROOT).multiplyScalar(o.hairTone), { roughness: 0.7 });
+    const lightM = M(HAIR_LIGHT, { roughness: 0.55 });
+    const legMat = o.bottom === 'skirt' ? M('#efbf9c', { roughness: 0.5 }) : M(o.bottomColor);
+    const wide = o.bottom === 'wide';
     const legs = [];
     for (const s of [-1, 1]) {
       const hip = new T.Group(); hip.position.set(s * 0.15, 0.95, 0); body.add(hip);
-      mesh(cap(0.115, 0.62), legMat, 0, -0.45, 0, hip);
+      if (wide) mesh(cyl(0.12, 0.17, 0.86), legMat, 0, -0.45, 0, hip);   // bol paça
+      else mesh(cap(0.115, 0.62), legMat, 0, -0.45, 0, hip);
       const shoe = mesh(sph(0.14, 20, 14), o.shoes, 0, -0.88, 0.07, hip); shoe.scale.set(0.9, 0.55, 1.6);
       legs.push(hip);
     }
@@ -5639,14 +5653,29 @@ void main() {
     else { const h = mesh(sph(0.32, 24, 16), o.bottomColor, 0, 1.0, 0, body); h.scale.set(1, 0.6, 0.78); }
     const torso = new T.Group(); torso.position.y = 1.05; body.add(torso);
     const tb = mesh(cap(0.34, 0.36), o.blazer, 0, 0.32, 0, torso); tb.scale.set(1, 1, 0.72);
-    const blouse = mesh(rbox(0.26, 0.3, 0.04, 0.02), o.top, 0, 0.62, 0.235, torso); blouse.rotation.z = Math.PI / 4;
-    for (const s of [-1, 1]) { const lap = mesh(rbox(0.07, 0.42, 0.03, 0.015), new T.Color(o.blazer).multiplyScalar(0.8).getStyle(), s * 0.12, 0.5, 0.25, torso); lap.rotation.z = s * 0.38; }
-    mesh(sph(0.03), '#2a2030', 0, 0.3, 0.255, torso); mesh(sph(0.03), '#2a2030', 0, 0.14, 0.25, torso);
+    if (tee) {
+      // bisiklet yaka tişört
+      const neck = mesh(new T.TorusGeometry(0.115, 0.016, 8, 24), new T.Color(o.blazer).multiplyScalar(0.7).getStyle(), 0, 0.8, 0.04, torso); neck.rotation.x = Math.PI / 2 - 0.25;
+    } else {
+      const blouse = mesh(rbox(0.26, 0.3, 0.04, 0.02), o.top, 0, 0.62, 0.235, torso); blouse.rotation.z = Math.PI / 4;
+      for (const s of [-1, 1]) { const lap = mesh(rbox(0.07, 0.42, 0.03, 0.015), new T.Color(o.blazer).multiplyScalar(0.8).getStyle(), s * 0.12, 0.5, 0.25, torso); lap.rotation.z = s * 0.38; }
+      mesh(sph(0.03), '#2a2030', 0, 0.3, 0.255, torso); mesh(sph(0.03), '#2a2030', 0, 0.14, 0.25, torso);
+    }
+    // kırmızı boyun askısı + kart (çağrı merkezi)
+    for (const s of [-1, 1]) {
+      const from = new T.Vector3(s * 0.13, 0.82, 0.12), to = new T.Vector3(0, 0.36, 0.265);
+      const strap = mesh(rbox(0.04, from.distanceTo(to), 0.012, 0.004), '#d8323c', (from.x + to.x) / 2, (from.y + to.y) / 2, (from.z + to.z) / 2, torso);
+      strap.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), to.clone().sub(from).normalize());
+    }
+    mesh(rbox(0.15, 0.19, 0.015, 0.02), '#e9edf3', 0, 0.24, 0.275, torso);
+    mesh(rbox(0.11, 0.05, 0.004, 0.005), '#d8323c', 0, 0.3, 0.284, torso);
     if (o.acc === 'scarf') { const sc = mesh(new T.TorusGeometry(0.17, 0.06, 10, 24), o.scarf, 0, 0.83, 0.02, torso); sc.rotation.x = Math.PI / 2; mesh(cap(0.05, 0.2), o.scarf, 0.08, 0.66, 0.2, torso).rotation.z = 0.3; }
     const arms = [], hands = [];
     for (const s of [-1, 1]) {
       const sh = new T.Group(); sh.position.set(s * 0.38, 0.78, 0); torso.add(sh);
-      mesh(cap(0.095, 0.5), o.blazer, 0, -0.3, 0, sh);
+      if (tee) { mesh(cap(0.1, 0.16), o.blazer, 0, -0.12, 0, sh); mesh(cap(0.085, 0.38), skin, 0, -0.34, 0, sh); }   // kısa kol
+      else mesh(cap(0.095, 0.5), o.blazer, 0, -0.3, 0, sh);
+      if (s < 0) { const br = mesh(new T.TorusGeometry(0.09, 0.016, 8, 20), M('#e8c25a', { metalness: 0.8, roughness: 0.25 }), 0, -0.53, 0, sh); br.rotation.x = Math.PI / 2; }  // altın bileklik
       hands.push(mesh(sph(0.095, 18, 12), skin, 0, -0.62, 0.02, sh));
       arms.push(sh);
     }
@@ -5658,36 +5687,58 @@ void main() {
       if (o.acc === 'earrings') mesh(sph(0.045, 12, 10), M('#ffd23f', { metalness: 0.7, roughness: 0.25 }), s * 0.45, 0.29, 0.02, head);
     }
     mesh(sph(0.06, 14, 10), M(SKIN, { roughness: 0.6 }), 0, 0.38, 0.43, head);
-    const ey = eyes(head, { y: 0.52, x: 0.17, z: 0.37, iris: '#3b8ad8' });
+    const ey = eyes(head, { y: 0.52, x: 0.17, z: 0.37, iris: '#4a9be0' });
     const lashes = [], brows = [];
     for (const s of [-1, 1]) {
-      const l = mesh(rbox(0.15, 0.03, 0.03, 0.014), '#3a2416', s * 0.18, 0.62, 0.42, head); l.rotation.z = s * -0.2; lashes.push(l);
-      const b = mesh(rbox(0.19, 0.045, 0.045, 0.02), new T.Color(HAIR).multiplyScalar(0.72).getStyle(), s * 0.18, 0.71, 0.4, head); brows.push(b);
+      // uzun, kalkık kirpikler
+      const l = mesh(rbox(0.17, 0.045, 0.035, 0.016), '#2a1a10', s * 0.18, 0.62, 0.42, head); l.rotation.z = s * -0.24; lashes.push(l);
+      const b = mesh(rbox(0.19, 0.045, 0.045, 0.02), new T.Color(HAIR_ROOT).multiplyScalar(0.8).getStyle(), s * 0.18, 0.71, 0.4, head); brows.push(b);
     }
     for (const s of [-1, 1]) { const bl = mesh(sph(0.07, 12, 8), M('#ff8fa3', { transparent: true, opacity: 0.45 }), s * 0.26, 0.36, 0.38, head); bl.scale.set(1, 0.6, 0.3); bl.castShadow = false; }
     const mouth = mouths(head, LIPS, 0.24, 0.43);
-    // saç kabuğu: yüz için önde açıklık bırakır
+    // saç kabuğu (kök rengi): yüz için önde açıklık bırakır
     const shell = (r, thetaLen) => new T.SphereGeometry(r, 40, 28, Math.PI / 2 + 0.95, Math.PI * 2 - 1.9, 0, thetaLen);
-    const thetaLen = { ponytail: 0.6, bun: 0.6, long: 0.7, bob: 0.68 }[o.hair] * Math.PI;
-    const hs = mesh(shell(0.495, thetaLen), hairM, 0, 0.44, -0.01, head); hs.material.side = 2;
-    const bang = mesh(sph(0.27, 20, 14), hairM, 0.1, 0.8, 0.25, head); bang.scale.set(1.55, 0.5, 0.85); bang.rotation.z = -0.25;
-    const bang2 = mesh(sph(0.2, 18, 12), hairM, -0.24, 0.76, 0.24, head); bang2.scale.set(1.1, 0.55, 0.8); bang2.rotation.z = 0.5;
+    const thetaLen = { ponytail: 0.6, bun: 0.6, long: 0.7 }[o.hair] * Math.PI || 0.7 * Math.PI;
+    const hs = mesh(shell(0.495, thetaLen), rootM, 0, 0.44, -0.01, head); hs.material.side = 2;
+    // ortadan ayrık ön saç: iki yana yatan perdeler (kahkül yok)
+    for (const s of [-1, 1]) {
+      const sw = mesh(sph(0.24, 20, 14), rootM, s * 0.19, 0.79, 0.2, head); sw.scale.set(1.25, 0.45, 0.9); sw.rotation.z = s * -0.42;
+      // yüzü çevreleyen açık sarı tutamlar (balyaj)
+      const fr = mesh(cap(0.05, o.hair === 'long' ? 0.5 : 0.34), lightM, s * 0.4, o.hair === 'long' ? 0.3 : 0.4, 0.2, head);
+      fr.rotation.z = s * 0.1; fr.scale.z = 0.6;
+    }
     let pony = null;
     if (o.hair === 'ponytail') {
-      mesh(new T.TorusGeometry(0.085, 0.035, 10, 20), o.blazer, 0, 0.66, -0.46, head).rotation.x = 0.5;
+      mesh(new T.TorusGeometry(0.085, 0.035, 10, 20), '#1d1b22', 0, 0.66, -0.46, head).rotation.x = 0.5;
       pony = new T.Group(); pony.position.set(0, 0.64, -0.5); head.add(pony);
       const tail = mesh(cap(0.13, 0.48), hairM, 0, -0.3, -0.06, pony); tail.scale.z = 0.8;
-      const tip = mesh(sph(0.11, 16, 12), hairM, 0, -0.6, -0.1, pony); tip.scale.set(1, 1.3, 0.8);
+      const tip = mesh(sph(0.11, 16, 12), lightM, 0, -0.6, -0.1, pony); tip.scale.set(1, 1.3, 0.8);
       pony.rotation.x = 0.35;
     } else if (o.hair === 'bun') {
-      mesh(sph(0.2, 20, 14), hairM, 0, 0.78, -0.36, head);
-      mesh(new T.TorusGeometry(0.15, 0.03, 10, 20), o.blazer, 0, 0.7, -0.32, head).rotation.x = 1.0;
-    } else if (o.hair === 'long') {
+      // dağınık topuz: tepede, birkaç kaçak tutamla
+      const bn = mesh(sph(0.21, 20, 14), hairM, 0, 0.86, -0.22, head); bn.scale.set(1.1, 0.85, 1);
+      mesh(sph(0.12, 14, 10), lightM, 0.12, 0.96, -0.16, head);
+      mesh(sph(0.1, 14, 10), hairM, -0.13, 0.94, -0.3, head);
+      for (const s of [-1, 1]) { const w = mesh(cap(0.02, 0.22), lightM, s * 0.42, 0.62, 0.12, head); w.rotation.z = s * 0.5; }
+    } else {
+      // uzun açık saç: arkada sarı perde, uçlara doğru açılan hafif dalgalar; önde omza dökülen tutamlar
       pony = new T.Group(); pony.position.set(0, 0.5, -0.25); head.add(pony);
-      const curtain = mesh(cap(0.32, 0.5), hairM, 0, -0.35, -0.02, pony); curtain.scale.set(1.25, 1, 0.45);
-      for (const s of [-1, 1]) { const lock = mesh(cap(0.09, 0.42), hairM, s * 0.4, 0.12, 0.12, head); lock.scale.z = 0.8; }
-    } else if (o.hair === 'bob') {
-      for (const s of [-1, 1]) { const side = mesh(sph(0.2, 18, 12), hairM, s * 0.38, 0.22, 0.02, head); side.scale.set(0.7, 1.1, 1.1); }
+      const curtain = mesh(cap(0.32, 0.55), hairM, 0, -0.38, -0.02, pony); curtain.scale.set(1.3, 1, 0.45);
+      for (let i = -2; i <= 2; i++) { const w = mesh(sph(0.11, 14, 10), lightM, i * 0.15, -0.82, -0.04 + Math.abs(i) * 0.02, pony); w.scale.set(1, 1.3, 0.6); }
+      for (const s of [-1, 1]) {
+        const lock = mesh(cap(0.1, 0.55), hairM, s * 0.38, 0.02, 0.14, head); lock.scale.z = 0.75; lock.rotation.z = s * -0.08;
+        const end = mesh(sph(0.1, 14, 10), lightM, s * 0.4, -0.34, 0.16, head); end.scale.set(1, 1.3, 0.7);
+      }
+    }
+    // çağrı merkezi kulaklığı: ince taç + tek kulaklık + mikrofon
+    const hset = new T.Group(); head.add(hset);
+    const hb = mesh(new T.TorusGeometry(0.505, 0.022, 8, 32, Math.PI), '#1f1d26', 0, 0.44, 0.02, hset); hb.rotation.y = 0.12;
+    mesh(cyl(0.11, 0.11, 0.08).rotateZ(Math.PI / 2), '#1f1d26', -0.49, 0.42, 0.05, hset);
+    {
+      const from = new T.Vector3(-0.47, 0.38, 0.12), to = new T.Vector3(-0.15, 0.22, 0.44);
+      const boom = mesh(cap(0.015, from.distanceTo(to)), '#1f1d26', (from.x + to.x) / 2, (from.y + to.y) / 2, (from.z + to.z) / 2, hset);
+      boom.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), to.clone().sub(from).normalize());
+      mesh(sph(0.04), '#120d2b', to.x, to.y, to.z, hset);
     }
     let glasses = null;
     if (o.acc === 'glasses') {
@@ -6357,7 +6408,7 @@ void main() {
           break;
         case 'over':
           Sound.play(ev.reason === 'shift' ? 'shift' : 'over');
-          if (ev.reason === 'shift') setBanner('18:00 — MESAİ BİTTİ!', 'Kalan canlar bonus: +' + fmt(run.stats.lifeBonus), 2);
+          if (ev.reason === 'shift') setBanner('17:00 — MESAİ BİTTİ!', 'Kalan canlar bonus: +' + fmt(run.stats.lifeBonus), 2);
           view.overDelay = 1.4;
           break;
       }
@@ -6787,7 +6838,7 @@ void main() {
     $('sumTitle').className = 'ribbon h ' + (fired ? 'red' : 'green');
     $('sumReason').textContent = fired
       ? `Saat ${clockString(clockProgress(run))} — ${BOSSES[run.boss.typeId].name} seni üçüncü kez yakaladı.`
-      : `18:00! Kalan ${run.lives} can için +${fmt(run.stats.lifeBonus)} bonus.`;
+      : `17:00! Kalan ${run.lives} can için +${fmt(run.stats.lifeBonus)} bonus.`;
     $('sumScore').textContent = fmt(run.score);
     $('sumRecord').textContent = isRecord ? '🏆 YENİ REKOR!' : dailyRecord ? '📅 GÜNÜN EN İYİSİ!' : `En iyi: ${fmt(Math.max(best, run.score))}`;
     if (!run.paid) {
@@ -6911,7 +6962,7 @@ void main() {
   requestAnimationFrame(frame);
 
   // test kancası
-  window.__bt = { get run() { return run; }, view, start, showChars, showShop, showCareer, careerState, applyCosmetics, PORTRAITS, get PL() { return PL; }, Input, Sound, get Y() { return Y; }, toScreen };
+  window.__bt = { get run() { return run; }, view, start, showChars, showShop, showCareer, careerState, applyCosmetics, PORTRAITS, get PL() { return PL; }, Input, Sound, get Y() { return Y; }, toScreen, ensureYagmur, camera, renderer, scene };
 })();
 </script>
 </body>
