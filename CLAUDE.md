@@ -5,6 +5,9 @@
 2. **HTML sürümü her zaman kalacak.** Mobilden ve kurulum yapmadan linkten oynamak için. `index.html` tek başına, tarayıcıda çift tıklayınca çalışmaya devam etmeli.
 3. Tek kaynak: exe, aynı `index.html`'i paketlemeli. Oyunun ayrı bir kopyası (fork) olmamalı. Masaüstüne özel davranışlar (global patron tuşu, tepsi vb.) HTML'i bozmayacak şekilde, "masaüstündeysek" kontrolüyle eklenmeli.
 
+## Karakter kuralı (sahibinin kararı, değiştirme)
+- **Patron her zaman sarışın, 20'li yaşlarında bir kadındır.** Patron tipleri (davranış/taktik) değişebilir ama patron karakteri bu kalır.
+
 ## Kısıtlar
 - Tek giriş: basılı tut / bırak. Yeni kontrol ekleme.
 - Çekirdek döngüyü (tut/bırak/patron) değiştirmeden önce sahibine sor.
