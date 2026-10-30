@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "BOSS TURNS",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "identifier": "com.justfurkann.bossturns",
   "build": {
     "frontendDist": "../dist",
@@ -13,21 +13,35 @@
       {
         "label": "main",
         "title": "BOSS TURNS",
-        "width": 420,
+        "width": 1280,
         "height": 720,
-        "minWidth": 240,
-        "minHeight": 400,
+        "minWidth": 480,
+        "minHeight": 360,
         "resizable": true,
         "center": true
       }
     ],
-    "security": { "csp": null }
+    "security": {
+      "csp": null
+    }
   },
   "bundle": {
     "active": true,
-    "targets": ["nsis"],
+    "targets": [
+      "nsis"
+    ],
     "shortDescription": "Patron Dönüyor! Basılı tut, bırak, yakalanma.",
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.png", "icons/icon.ico"],
-    "windows": { "nsis": { "installMode": "currentUser" } }
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.png",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
   }
 }

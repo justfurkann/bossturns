@@ -9,7 +9,7 @@ const vm = require('vm');
 
 function loadGame(overrides) {
   const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
-  const src = html.match(/<script>([\s\S]*)<\/script>/)[1];
+  const src = html.match(/<script id="logic">([\s\S]*?)<\/script>/)[1];
   const sandbox = { module: { exports: {} }, console, Math, Date };
   vm.createContext(sandbox);
   vm.runInContext(src, sandbox);

@@ -1,6 +1,6 @@
 [package]
 name = "boss-turns"
-version = "0.1.0"
+version = "0.2.0"
 description = "BOSS TURNS — Patron Dönüyor! (masaüstü sürümü)"
 edition = "2021"
 
