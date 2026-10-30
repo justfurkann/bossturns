@@ -47,7 +47,7 @@ Exe imzasız olduğu için Windows ilk açılışta "Bilgisayarınız korundu" d
 - **Kahve molası:** 250, 800 ve 1600 puanda 3 avantajdan birini seçersin. Seçim yalnızca o tur için geçerli. Parlayan kart sırayla değişir: basınca parlayan seçilir ya da istediğin karta doğrudan dokunabilirsin.
 - **📅 Günlük görev:** Seçenekler tarihe bağlı. Aynı gün oynayan herkes aynı patron sırasını ve aynı rastgele diziyi görür. Tur sonunda Wordle tarzı emoji özetini **Kopyala** ile paylaşabilirsin
   (🟩 kasaya attın · 🟨 kıl payı · 🟥 yakalandın · 🟦 kalkan kurtardı).
-- **GİZLE (sağ alttaki kırmızı buton) / Esc = patron tuşu:** Ekranı sahte bir tabloyla kaplar ve oyunu durdurur. Tekrar Esc'e ya da ↩'ye basınca geri dönersin.
+- **Esc = patron tuşu:** Ekranı sahte bir tabloyla kaplar ve oyunu durdurur. Tekrar Esc'e basınca geri dönersin.
 - **Ses varsayılan olarak kapalı** (sağ alttaki SES butonu). Sayfa her açıldığında yine kapalı başlar.
 - Sistemde "hareketi azalt" ayarı açıksa sarsıntı, parçacıklar ve yanıp sönmeler kapanır.
 

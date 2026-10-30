@@ -109,10 +109,7 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     check('Esc: sahte tablo açılır, oyun durur, sekme başlığı değişir', sheetVis && t1 === t2 && title.includes('xlsx'));
     await page.keyboard.press('Escape'); await wait(100);
     check('Esc: tablo kapanır', !(await page.isVisible('#sheet')) && !(await page.title()).includes('xlsx'));
-    await page.click('#btnPanic'); await wait(80);
-    const viaBtn = await page.isVisible('#sheet');
-    await page.click('#sheetBack'); await wait(80);
-    check('patron tuşu butonu ve ↩ çalışır', viaBtn && !(await page.isVisible('#sheet')));
+    check('GİZLE butonu kaldırıldı', (await page.locator('#btnPanic').count()) === 0);
     await page.mouse.move(cx, cy);
 
     // seçim ekranı (kahve molası)
