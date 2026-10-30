@@ -43,8 +43,16 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     check('WebGL sahnesi açılır (hata ekranı yok)', !(await page.isVisible('#err')));
     const layout = await page.evaluate(() => ({ cls: document.getElementById('hud').className, kombin: document.getElementById('kombin').textContent }));
     check('geniş ekranda yatay yerleşim + günün kombini', layout.cls === 'wide' && /Yağmur bugün/.test(layout.kombin), layout.kombin);
+    // karakter seçimi
     await page.click('#btnFree');
+    await page.waitForSelector('#chars:not(.hidden) .charCard');
+    const cards = await page.evaluate(() => [...document.querySelectorAll('.charCard')].map(b => ({ id: b.dataset.id, img: !!b.querySelector('img'), today: !!b.querySelector('.today') })));
+    check('karakter seçimi: 4 karakter, 3D portreler, "bugünün karakteri" rozeti',
+      cards.map(c => c.id).join() === 'alp,furkan,baransel,bulut' && cards.every(c => c.img) && cards.filter(c => c.today).length === 1, JSON.stringify(cards.map(c => c.id + (c.today ? '*' : ''))));
+    await page.screenshot({ path: `${OUT}/smoke-chars.png` });
+    await page.click('.charCard[data-id="bulut"]');
     await waitGame(page, 0.1);
+    check('seçilen karakterle tur başlar (BULUT)', (await page.evaluate(() => __bt.run.charId)) === 'bulut');
     await freezeAway(page);
     const cx = 480, cy = 330;
     await page.mouse.move(cx, cy); await page.mouse.down();
@@ -128,7 +136,7 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     check('18:00 → mesai biter, özet ekranı', (await page.isVisible('#summary')) && (await page.evaluate(() => __bt.run.endReason)) === 'shift');
     await page.screenshot({ path: `${OUT}/smoke-summary.png` });
     const share = await page.textContent('#sumEmoji');
-    check('özet: emoji paylaşım metni', /BOSS TURNS/.test(share) && /[🟩🟨🟥🟦]/u.test(share) && /Yağmur/.test(share), share.split('\n')[2] || '');
+    check('özet: emoji paylaşım metni (oyuncu adıyla)', /BOSS TURNS/.test(share) && /[🟩🟨🟥🟦]/u.test(share) && /Yağmur/.test(share) && /👤 BULUT/.test(share), share.split('\n')[1] || '');
     const best = await page.evaluate(() => localStorage.getItem('bossturns.best'));
     check('en iyi skor localStorage\'a yazılır', Number(best) > 0, best);
 
@@ -145,6 +153,8 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     await page.click('#btnDaily'); await waitGame(page, 0.1);
     const d1 = await page.evaluate(() => ({ mode: __bt.run.mode, seed: __bt.run.seed }));
     check('günlük mod tarih seed\'i ile başlar', d1.mode === 'daily' && d1.seed.startsWith('bossturns:20'), d1.seed);
+    const dc = await page.evaluate(() => ({ got: __bt.run.charId, want: dailyCharFor(todayKey()).id }));
+    check('günlük görevde herkes günün karakteriyle oynar', dc.got === dc.want, JSON.stringify(dc));
 
     check('masaüstü: konsol/JS hatası yok', errs.length === 0, errs.join(' | '));
     await page.close();
@@ -157,7 +167,8 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     const errs = errorsOf(page);
     await open(page);
     check('dar ekranda dikey yerleşim', (await page.evaluate(() => document.getElementById('hud').className)) === 'tall');
-    await page.tap('#btnFree'); await waitGame(page, 0.1);
+    await page.tap('#btnFree'); await page.waitForSelector('#chars:not(.hidden) .charCard');
+    await page.tap('.charCard[data-id="alp"]'); await waitGame(page, 0.1);
     await freezeAway(page);
     const cdp = await ctxM.newCDPSession(page);
     const pt = { x: 200, y: 520 };
@@ -221,7 +232,7 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     const page = await ctxR.newPage();
     const errs = errorsOf(page);
     await open(page);
-    await page.click('#btnFree'); await waitGame(page, 0.1);
+    await page.click('#btnFree'); await page.click('.charCard'); await waitGame(page, 0.1);
     await freezeAway(page);
     await page.mouse.move(400, 300); await page.mouse.down(); await waitGame(page, 0.7); await page.mouse.up(); await waitGame(page, 0.1);
     const parts = await page.evaluate(() => __bt.view.particles.filter(p => p.kind !== 'text').length);

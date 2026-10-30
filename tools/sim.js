@@ -53,11 +53,12 @@ function makePlayer(P, r) {
   };
 }
 
-function simulate(BT, profile, n, seed = 1) {
+function simulate(BT, profile, n, seed = 1, setup = null) {
   const r = BT.makeRng('player' + seed);
   const res = { first: [], dur: [], score: [], shift: 0, presses: [] };
   for (let i = 0; i < n; i++) {
     const run = BT.createRun('free', { seed: seed * 100000 + i });
+    if (setup) setup(run);
     const player = makePlayer(PROFILES[profile], r);
     const dt = 1 / 60;
     let guard = 0;

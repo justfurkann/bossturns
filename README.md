@@ -31,6 +31,7 @@ Exe imzasız olduğu için Windows ilk açılışta "Bilgisayarınız korundu" d
 | Patron **bakarken** basılıysan | Yakalanırsın: cepteki puan gider, bir can gider. Tekrar oynamak için önce bırakman gerekir. |
 | Saat **18:00** | Mesai biter, kalan her can +100 puan. |
 
+- **4 oyuncu: ALP, FURKAN, BARANSEL, BULUT.** "Mesaiye başla" deyince karakterini seçersin. Her gün sırayla biri **günün karakteri** olur; günlük görevde herkes onunla oynar, böylece skorlar adil karşılaştırılır.
 - **3 can** var. Her tur sıfırdan başlar. Kalıcı olarak saklanan tek şey en iyi skor.
 - Puan arttıkça **Yağmur'un ruh hali değişir**: 🙂 Sakin, 😴 Kahvesiz (yavaş döner, uzun bakar), 📱 Telaşlı (hızlı döner, kısa bakar), 🤨 Şüpheci (blöf ustası, bazen çifte döner), 😎 Patron Modu (her seferinde başka taktik).
 - **Yağmur'un kombini her gün değişir** (ceket, alt parça, saç, aksesuar). Aynı gün herkes aynı kombini görür.
