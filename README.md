@@ -46,5 +46,5 @@ Exe imzasız olduğu için Windows ilk açılışta "Bilgisayarınız korundu" d
   Bir sabiti denemek için: `node tools/sim.js 2000 '{"warn":[0.85,0.38]}'`
 - `node tools/smoke.js` komutu Playwright ile masaüstü, mobil dokunmatik ve hareket azaltma testlerini koşturur ve `shots/` klasörüne ekran görüntüsü kaydeder. Playwright kurulu olmalı.
 - **Masaüstü sürümü (Tauri 2):** `src-tauri/` klasöründe. Aynı `index.html`'i paketler; oyunun ayrı bir kopyası yok.
-  - **Sürüm çıkarma:** `git tag v0.1.1 && git push origin v0.1.1` komutu GitHub Actions'ta Windows exe'lerini derler ve Releases sayfasına koyar. `main`'e oyunla ilgili her push'ta da exe, Actions sekmesinde "Artifacts" olarak oluşur.
+  - **Sürüm çıkarma:** GitHub'da Actions → "Masaüstü (Windows exe)" → **Run workflow** → sürüm kutusuna ör. `v0.2.0` yaz. Exe'ler derlenip Releases sayfasına konur. `git tag v0.2.0 && git push origin v0.2.0` de aynı işi yapar. `main`'e oyunla ilgili her push'ta da exe, Actions sekmesinde "Artifacts" olarak oluşur.
   - **Kendi makinende derlemek istersen:** Rust ve Node gerekir, sonra `npx @tauri-apps/cli@2 build`.

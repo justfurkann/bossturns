@@ -1,10 +1,16 @@
 # Windows .exe derlemesi. Oyunun kaynağı yine tek dosya: index.html.
 # - main'e oyunla ilgili bir push gelince ya da elle çalıştırınca: exe, "Artifacts" bölümünden indirilebilir.
-# - v* etiketi atılınca (ör. v0.1.0): exe'ler GitHub Releases sayfasına konur.
+# - v* etiketi atılınca (ör. v0.1.0) ya da Actions sekmesinde "Run workflow" ile sürüm
+#   yazılınca: exe'ler GitHub Releases sayfasına konur (etiket otomatik oluşur).
 name: Masaüstü (Windows exe)
 
 on:
   workflow_dispatch:
+    inputs:
+      surum:
+        description: "Yayınlanacak sürüm (ör. v0.2.0). Boş bırakırsan yalnızca exe derlenir."
+        required: false
+        default: ""
   push:
     branches: [main]
     tags: ['v*']
@@ -53,9 +59,12 @@ jobs:
           path: out/*.exe
 
       - name: Sürüm yayınla
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v') || inputs.surum != ''
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.surum || github.ref_name }}
+          name: BOSS TURNS ${{ inputs.surum || github.ref_name }}
+          target_commitish: ${{ github.sha }}
           files: out/*.exe
           body: |
             **BOSS-TURNS-tasinabilir.exe**: kurulumsuz; çift tıkla ve oyna.
