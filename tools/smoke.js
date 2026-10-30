@@ -133,7 +133,7 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     // tur sonu
     await page.evaluate(() => { __bt.run.t = 400; });
     await waitGame(page, 1.8);
-    check('18:00 → mesai biter, özet ekranı', (await page.isVisible('#summary')) && (await page.evaluate(() => __bt.run.endReason)) === 'shift');
+    check('17:00 → mesai biter, özet ekranı', (await page.isVisible('#summary')) && (await page.evaluate(() => __bt.run.endReason)) === 'shift');
     await page.screenshot({ path: `${OUT}/smoke-summary.png` });
     const share = await page.textContent('#sumEmoji');
     check('özet: emoji paylaşım metni (oyuncu adıyla)', /BOSS TURNS/.test(share) && /[🟩🟨🟥🟦]/u.test(share) && /Yağmur/.test(share) && /👤 BULUT/.test(share), share.split('\n')[1] || '');

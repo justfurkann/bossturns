@@ -7,12 +7,13 @@
 
 ## Karakter kuralı (sahibinin kararı, değiştirme)
 - **Patron her zaman sarışın, 20'li yaşlarında bir kadındır.** Patron tipleri (davranış/taktik) değişebilir ama patron karakteri bu kalır.
+- Yağmur'un görünümü gerçek kişiye göre (`buildYagmur`): ortadan ayrık uzun sarı saç (dipler koyu, yüzü çevreleyen açık tutamlar), mavi gözler, uzun kirpikler, çağrı merkezi kulaklığı, kırmızı boyun askısı, altın bileklik. Günlük kombin `outfitFor`: ceketli günler veya siyah tişört + bol pantolon + beyaz ayakkabı.
 
 ## Oyuncular (sahibinin kararı)
 - Takımın adı **🐒 Keleşli Maymunlar**: ALP, FURKAN, BARANSEL, BULUT. Misafirler: **KAAN** (namıdiğer Cısdık) ve **GÖKBERK** (sporcu). Sıra: ALP, FURKAN, BARANSEL, BULUT, KAAN, GÖKBERK (`CHARACTERS`, logic bloğu). Silah çizme; sadece isim ve 🐒.
 - Serbest modda oyuncu seçer; **günlük görevde herkes "günün karakteri" ile oynar** (tarihe göre sırayla döner, `dailyCharFor`).
 - Görünümler `LOOKS` tablosunda (app bloğu); gerçek kişilerin fotoğraflarına göre stilize edildi (ALP: fade + kısa sakal, siyah hırka · FURKAN: kalın siyah gözlük, dağınık kahve saç, yeşil · BARANSEL: ince tel gözlük, geriye taranmış saç, lacivert · BULUT: dolgun yüz, kahverengi polo · KAAN: fönlü kabarık saç, keçi sakal, beyaz · GÖKBERK: dalgalı saç, sakal, ter bandı, kırmızı). Fotoğrafları repoya koyma, yalnızca tablodaki parametreleri güncelle.
-- Yetenekler (pasif, çekirdek döngüyü değiştirmez): ALP ⚡ Hızlı El (tolerans 0,15 sn) · FURKAN 👂 Kulağı Delik (blöflerin ~3'te 2'sini sezer, ünlem gri "?") · BARANSEL 🙇 Yalaka (Yağmur %5 daha seyrek döner; bakarken çalışıyorsa "Hocam kombin efsane!" balonu) · BULUT ☁️ Soğukkanlı (yakalanınca cebin yarısı kasaya) · KAAN 🖥️ ATS Bozuldu (ATS çökme olasılığı %3 yerine %25) · GÖKBERK 🏋️ Basıyo (cep %12 daha hızlı dolar). Sayılar `CONFIG.abilities`'te; hedef her birinin ortalama oyuncuya ≈ +%5 vermesi (`node tools/sim.js` tablosu). Oyun zamanlamaya çok duyarlı: tolerans/uyarıya 0,03 sn bile ≈ +%5 eder.
+- Yetenekler (pasif, çekirdek döngüyü değiştirmez): ALP ⚡ Hızlı El (tolerans 0,15 sn) · FURKAN 👂 Kulağı Delik (blöflerin ~3'te 2'sini sezer, ünlem gri "?") · BARANSEL 🙇 Yalaka (Yağmur %5 daha seyrek döner; bakarken çalışıyorsa "Şefim kombin efsane!" balonu; Baransel herkese "şefim" der) · BULUT ☁️ Soğukkanlı (yakalanınca cebin yarısı kasaya) · KAAN 🖥️ ATS Bozuldu (ATS çökme olasılığı %3 yerine %25) · GÖKBERK 🏋️ Basıyo (cep %12 daha hızlı dolar). Sayılar `CONFIG.abilities`'te; hedef her birinin ortalama oyuncuya ≈ +%5 vermesi (`node tools/sim.js` tablosu). Oyun zamanlamaya çok duyarlı: tolerans/uyarıya 0,03 sn bile ≈ +%5 eder.
 - Ana menüde "KARAKTERLER" sekmesi: seçim kaydedilir, "Mesaiye başla" doğrudan seçili karakterle başlar.
 - Ekrandaki GİZLE butonu sahibinin isteğiyle kaldırıldı; patron tuşu yalnızca klavyede (Esc) ve masaüstünde (Ctrl+Shift+Boşluk) duruyor. Butonu geri ekleme.
 - **Market (sahibinin kararı): yalnızca görünüm satar** (şapka, laptop çıkartması, masa süsü, sandalye). Oyun avantajı satma; günlük görev adil kalmalı. Para = maaş: her tur sonunda kasanın onda biri (`salaryFor`). Katalog `SHOP_ITEMS` (logic), 3D parçalar `COSMETIC` (app). Kalıcı veriler: `bossturns.wallet`, `bossturns.shop` (localStorage).
@@ -29,7 +30,7 @@
 - Tek giriş: basılı tut / bırak. Yeni kontrol ekleme.
 - Çekirdek döngüyü (tut/bırak/patron) değiştirmeden önce sahibine sor.
 - Arayüz Türkçe. Telifli karakter veya marka yok. `prefers-reduced-motion`'a saygı göster.
-- Bir tur 1–3 dakikayı geçmemeli. Ses varsayılan olarak kapalı.
+- Bir tur 1–3 dakikayı geçmemeli. Ses varsayılan olarak kapalı. Mesai saati 08:00–17:00 (`CONFIG.startHour/endHour`).
 - `index.html` tek dosya ve internetsiz çalışır: CDN yok. Three.js (3D) ve Lilita One yazı tipi dosyanın İÇİNE gömülüdür (`npm install && npm run vendor` yeniden üretir; `/*VENDOR:…*/` işaretleri arasına elle dokunma).
 
 ## Yapı

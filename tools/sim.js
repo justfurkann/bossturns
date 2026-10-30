@@ -88,7 +88,7 @@ if (require.main === module) {
     console.log(
       `${p.padEnd(9)} ilk can: ort ${avg(s.first).toFixed(1)} basış (medyan ${pct(s.first, 0.5)}) | ` +
       `tur: ort ${avg(s.dur).toFixed(0)} sn, p90 ${pct(s.dur, 0.9).toFixed(0)} sn, max ${Math.max(...s.dur).toFixed(0)} sn | ` +
-      `skor ort ${avg(s.score).toFixed(0)} | 18:00'e varan %${(100 * s.shift / n).toFixed(0)}`);
+      `skor ort ${avg(s.score).toFixed(0)} | 17:00'ye varan %${(100 * s.shift / n).toFixed(0)}`);
   }
   // karakter yetenekleri: "ortalama" oyuncu, yeteneksiz tabana göre
   const base = avg(simulate(BT, 'ortalama', n).score);
