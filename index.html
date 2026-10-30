@@ -36,25 +36,27 @@ html, body {
 #hud button, #hud .overlay, #hud .overlay * { pointer-events: auto; }
 
 /* ---------- Cut the Rope / Om Nom Run tarzı şeker & ahşap yapı taşları ---------- */
-/* Kontur: yalnızca koyu/renkli zemin üzerindeki BEYAZ/ALTIN başlıklara ince kontur verilir.
+/* Kontur: 16 yönlü gölgeyle çizilir (her tarayıcıda aynı görünür; -webkit-text-stroke + paint-order
+   bazı tarayıcılarda harfin üstüne çizip yazıyı bozuyordu).
+   Yalnızca koyu/renkli zemin üzerindeki BEYAZ/ALTIN başlıklara ince kontur verilir.
    Açık krem kart veya beyaz konuşma balonundaki koyu yazılara ASLA kontur verilmez. */
 .h { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 700; color: #fff; letter-spacing: .01em;
-  -webkit-text-stroke: 3.5px var(--ink); paint-order: stroke fill; text-shadow: 0 3px 0 rgba(59,29,8,.5); }
+  text-shadow: 2.00px 0 0 var(--ink), 1.85px 0.77px 0 var(--ink), 1.41px 1.41px 0 var(--ink), 0.77px 1.85px 0 var(--ink), 0 2.00px 0 var(--ink), -0.77px 1.85px 0 var(--ink), -1.41px 1.41px 0 var(--ink), -1.85px 0.77px 0 var(--ink), -2.00px 0 0 var(--ink), -1.85px -0.77px 0 var(--ink), -1.41px -1.41px 0 var(--ink), -0.77px -1.85px 0 var(--ink), 0 -2.00px 0 var(--ink), 0.77px -1.85px 0 var(--ink), 1.41px -1.41px 0 var(--ink), 1.85px -0.77px 0 var(--ink), 0 3px 0 rgba(59,29,8,.5); }
 .num { font-family: 'Nunito', sans-serif; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums;
-  -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; text-shadow: 0 3px 0 rgba(59,29,8,.45); }
-.body, small, .ic { font-family: 'Nunito', sans-serif; font-weight: 700; letter-spacing: 0; -webkit-text-stroke: 0 !important; text-shadow: none; }
+  text-shadow: 2.00px 0 0 var(--ink), 1.85px 0.77px 0 var(--ink), 1.41px 1.41px 0 var(--ink), 0.77px 1.85px 0 var(--ink), 0 2.00px 0 var(--ink), -0.77px 1.85px 0 var(--ink), -1.41px 1.41px 0 var(--ink), -1.85px 0.77px 0 var(--ink), -2.00px 0 0 var(--ink), -1.85px -0.77px 0 var(--ink), -1.41px -1.41px 0 var(--ink), -0.77px -1.85px 0 var(--ink), 0 -2.00px 0 var(--ink), 0.77px -1.85px 0 var(--ink), 1.41px -1.41px 0 var(--ink), 1.85px -0.77px 0 var(--ink), 0 3px 0 rgba(59,29,8,.45); }
+.body, small, .ic { font-family: 'Nunito', sans-serif; font-weight: 600; letter-spacing: 0; text-shadow: none; }
 /* küçük yazıya çok ince kontur (kalın kontur küçük harfi boğar ve diken yapar) */
 .qBarTxt, #mult, .qStreak, .qReward, #pfMult, .charCard .sel, .charCard .abn, .item .nm, .item .pr, #title .row3 .lb, .ribbon.small {
-  -webkit-text-stroke-width: 2.2px; text-shadow: 0 2px 0 rgba(59,29,8,.4);
+  text-shadow: 1.25px 0 0 var(--ink), 1.08px 0.62px 0 var(--ink), 0.63px 1.08px 0 var(--ink), 0 1.25px 0 var(--ink), -0.62px 1.08px 0 var(--ink), -1.08px 0.62px 0 var(--ink), -1.25px 0 0 var(--ink), -1.08px -0.62px 0 var(--ink), -0.63px -1.08px 0 var(--ink), 0 -1.25px 0 var(--ink), 0.63px -1.08px 0 var(--ink), 1.08px -0.63px 0 var(--ink), 0 2px 0 rgba(59,29,8,.4);
 }
 /* açık zemin üzerindeki koyu/renkli metinlerde kontur tamamen sıfırlanır */
 #bubble.white, #bubble2, #action small, .shopSlot, .careerHero .rk,
 .ladItem:not(.done) .nm, .ladItem:not(.done) .qt, .achCard .nm, .achCard .rw,
 #sumRecord, #sumSalary, #sumCareer .promo, .item .on {
-  -webkit-text-stroke: 0 !important; text-shadow: none !important;
+  text-shadow: none !important;
 }
 .t { font-family: 'Lilita', sans-serif; font-weight: 400; color: #fff;
-  -webkit-text-stroke: 10px var(--ink); paint-order: stroke fill; text-shadow: 0 8px 0 var(--ink); }
+  text-shadow: 5.00px 0 0 var(--ink), 4.62px 1.91px 0 var(--ink), 3.54px 3.54px 0 var(--ink), 1.91px 4.62px 0 var(--ink), 0 5.00px 0 var(--ink), -1.91px 4.62px 0 var(--ink), -3.54px 3.54px 0 var(--ink), -4.62px 1.91px 0 var(--ink), -5.00px 0 0 var(--ink), -4.62px -1.91px 0 var(--ink), -3.54px -3.54px 0 var(--ink), -1.91px -4.62px 0 var(--ink), 0 -5.00px 0 var(--ink), 1.91px -4.62px 0 var(--ink), 3.54px -3.54px 0 var(--ink), 4.62px -1.91px 0 var(--ink), 2.50px 0 0 var(--ink), 2.31px 0.96px 0 var(--ink), 1.77px 1.77px 0 var(--ink), 0.96px 2.31px 0 var(--ink), 0 2.50px 0 var(--ink), -0.96px 2.31px 0 var(--ink), -1.77px 1.77px 0 var(--ink), -2.31px 0.96px 0 var(--ink), -2.50px 0 0 var(--ink), -2.31px -0.96px 0 var(--ink), -1.77px -1.77px 0 var(--ink), -0.96px -2.31px 0 var(--ink), 0 -2.50px 0 var(--ink), 0.96px -2.31px 0 var(--ink), 1.77px -1.77px 0 var(--ink), 2.31px -0.96px 0 var(--ink), 0 8px 0 var(--ink); }
 .panel { border: 4px solid rgba(255,255,255,.85); border-radius: 30px;
   background: rgba(24, 30, 68, .72); backdrop-filter: blur(8px);
   box-shadow: 0 8px 20px rgba(10,12,35,.38), inset 0 2px 0 rgba(255,255,255,.35); }
@@ -128,7 +130,7 @@ html, body {
   box-shadow: 0 7px 0 var(--ink); z-index: 14; }
 #bubble::after { content: ''; position: absolute; left: 50%; bottom: -22px; margin-left: -14px; border: 14px solid transparent; border-top: 18px solid var(--ink); }
 #bubble.white { background: #fffdf7; color: var(--ink); font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 700; }
-#bubble.red { color: #fff; -webkit-text-stroke: 3px var(--ink); }
+#bubble.red { color: #fff; text-shadow: 1.75px 0 0 var(--ink), 1.52px 0.87px 0 var(--ink), 0.88px 1.52px 0 var(--ink), 0 1.75px 0 var(--ink), -0.87px 1.52px 0 var(--ink), -1.52px 0.87px 0 var(--ink), -1.75px 0 0 var(--ink), -1.52px -0.87px 0 var(--ink), -0.88px -1.52px 0 var(--ink), 0 -1.75px 0 var(--ink), 0.88px -1.52px 0 var(--ink), 1.52px -0.88px 0 var(--ink); }
 
 /* ---------- geniş yerleşim (PC) ---------- */
 #hud.wide #kasa     { left: 36px; top: 26px; }
@@ -196,9 +198,9 @@ html, body {
 #hud.tall #questBox { left: 90px; top: 118px; transform: none; }
 #pocketFloat { position: absolute; transform: translate(-50%, -100%); display: none; white-space: nowrap; pointer-events: none;
   font-size: 72px; line-height: 1; color: var(--gold1);
-  -webkit-text-stroke: 5px var(--ink); paint-order: stroke fill; text-shadow: 0 5px 0 var(--ink); z-index: 13; }
+  text-shadow: 3.00px 0 0 var(--ink), 2.77px 1.15px 0 var(--ink), 2.12px 2.12px 0 var(--ink), 1.15px 2.77px 0 var(--ink), 0 3.00px 0 var(--ink), -1.15px 2.77px 0 var(--ink), -2.12px 2.12px 0 var(--ink), -2.77px 1.15px 0 var(--ink), -3.00px 0 0 var(--ink), -2.77px -1.15px 0 var(--ink), -2.12px -2.12px 0 var(--ink), -1.15px -2.77px 0 var(--ink), 0 -3.00px 0 var(--ink), 1.15px -2.77px 0 var(--ink), 2.12px -2.12px 0 var(--ink), 2.77px -1.15px 0 var(--ink), 1.50px 0 0 var(--ink), 1.30px 0.75px 0 var(--ink), 0.75px 1.30px 0 var(--ink), 0 1.50px 0 var(--ink), -0.75px 1.30px 0 var(--ink), -1.30px 0.75px 0 var(--ink), -1.50px 0 0 var(--ink), -1.30px -0.75px 0 var(--ink), -0.75px -1.30px 0 var(--ink), 0 -1.50px 0 var(--ink), 0.75px -1.30px 0 var(--ink), 1.30px -0.75px 0 var(--ink), 0 5px 0 var(--ink); z-index: 13; }
 #pocketFloat.lost { color: #ff6b7a; }
-#pocketFloat small { font-size: 32px; margin-left: 10px; color: #fff; vertical-align: 6px; -webkit-text-stroke: 2.5px var(--ink) !important; paint-order: stroke fill; }
+#pocketFloat small { font-size: 32px; margin-left: 10px; color: #fff; vertical-align: 6px; text-shadow: 1.50px 0 0 var(--ink), 1.30px 0.75px 0 var(--ink), 0.75px 1.30px 0 var(--ink), 0 1.50px 0 var(--ink), -0.75px 1.30px 0 var(--ink), -1.30px 0.75px 0 var(--ink), -1.50px 0 0 var(--ink), -1.30px -0.75px 0 var(--ink), -0.75px -1.30px 0 var(--ink), 0 -1.50px 0 var(--ink), 0.75px -1.30px 0 var(--ink), 1.30px -0.75px 0 var(--ink) !important; }
 #hud.tall #pocketFloat { font-size: 84px; }
 #pick p, #pause p { margin: 10px 0 36px; font-size: 28px; color: #fff4d6; }
 #pickCards { display: flex; gap: 32px; }
@@ -275,24 +277,26 @@ html, body {
 #hud.tall #title .row3 .ic { font-size: 62px; }
 #hud.tall #title .row3 .lb { font-size: 22px; }
 
-/* Özet ekranı (Cut the Rope 2 tarzı sade, görsel bölüm sonu kartı) */
-#sumTitle { position: absolute; left: 50%; top: -40px; transform: translateX(-50%); white-space: nowrap; font-size: 44px; padding: 8px 42px 12px; }
-#sumStars { display: flex; justify-content: center; gap: 14px; margin: 10px 0 4px; font-size: 58px; line-height: 1; filter: drop-shadow(0 5px 0 rgba(59,29,8,.2)); }
-#sumStars .stOff { opacity: .28; filter: grayscale(1); }
-#sumReason { font-size: 22px; color: #7a4419; margin: 4px 0 6px; }
-#sumScore { font-family: 'Lilita', sans-serif; font-weight: 400; font-size: 112px; line-height: .96; color: #ffca28;
-  -webkit-text-stroke: 7px var(--ink) !important; paint-order: stroke fill; text-shadow: 0 7px 0 var(--ink) !important; margin: 2px 0 6px; }
-#sumRecord { display: inline-block; font-size: 22px; color: #1b8a06; background: rgba(60,214,27,.14); border: 2px solid rgba(32,158,9,.3);
-  padding: 3px 18px; border-radius: 999px; margin-bottom: 10px; }
-#sumSalary { display: none; }
-#sumCareer { margin: 6px 0 12px; padding: 10px 18px; border-radius: 22px; background: #fffdf7; border: 3px solid #e0c389; font-size: 20px; line-height: 1.3; color: #4a2508; text-align: center; }
-#sumCareer .promo { color: #1b8a06; font-size: 23px; font-weight: 800; display: block; }
-#sumStats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 8px 0 18px; }
-#sumStats .sCard { background: #fffdf7; border: 3px solid #e0c389; border-radius: 22px; padding: 12px 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 4px 0 rgba(90,45,12,.08); }
-#sumStats .sCard .sIco { font-size: 32px; line-height: 1; margin-bottom: 2px; }
-#sumStats .sCard b { font-size: 25px; font-weight: 800; color: #3b1d08; line-height: 1.1; }
-#sumStats .sCard span { font-size: 17px; color: #7a4419; }
-#sumEmoji { display: none; }
+/* Özet ekranı: tek bakışta okunur. Başlık · yıldızlar · büyük skor · tek satır rozet · (terfi) · butonlar.
+   Ayrıntılı istatistik kartları ve uzun başarım listesi kaldırıldı (kariyer ekranında duruyor). */
+#summary .menu { width: 640px; padding: 70px 40px 30px; }
+#hud.tall #summary .menu { width: 860px; padding: 90px 50px 40px; }
+#sumTitle { position: absolute; left: 50%; top: -40px; transform: translateX(-50%); white-space: nowrap; font-size: 46px; padding: 8px 46px 12px; }
+#sumStars { display: flex; justify-content: center; gap: 16px; margin: 0 0 6px; font-size: 64px; line-height: 1; filter: drop-shadow(0 5px 0 rgba(59,29,8,.2)); }
+#sumStars .stOff { opacity: .25; filter: grayscale(1); }
+#sumReason { display: none; }
+#sumReason.fired { display: block; font-size: 22px; color: #b3341b; font-weight: 800; margin: 2px 0 0; }
+#sumScore { font-family: 'Lilita', sans-serif; font-weight: 400; font-size: 120px; line-height: .96; color: #ffca28; margin: 4px 0 12px;
+  text-shadow: 3.50px 0 0 var(--ink), 3.23px 1.34px 0 var(--ink), 2.47px 2.47px 0 var(--ink), 1.34px 3.23px 0 var(--ink), 0 3.50px 0 var(--ink), -1.34px 3.23px 0 var(--ink), -2.47px 2.47px 0 var(--ink), -3.23px 1.34px 0 var(--ink), -3.50px 0 0 var(--ink), -3.23px -1.34px 0 var(--ink), -2.47px -2.47px 0 var(--ink), -1.34px -3.23px 0 var(--ink), 0 -3.50px 0 var(--ink), 1.34px -3.23px 0 var(--ink), 2.47px -2.47px 0 var(--ink), 3.23px -1.34px 0 var(--ink), 1.75px 0 0 var(--ink), 1.52px 0.87px 0 var(--ink), 0.88px 1.52px 0 var(--ink), 0 1.75px 0 var(--ink), -0.87px 1.52px 0 var(--ink), -1.52px 0.87px 0 var(--ink), -1.75px 0 0 var(--ink), -1.52px -0.87px 0 var(--ink), -0.88px -1.52px 0 var(--ink), 0 -1.75px 0 var(--ink), 0.88px -1.52px 0 var(--ink), 1.52px -0.88px 0 var(--ink), 0 7px 0 var(--ink) !important; }
+.sumPills { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; }
+#sumRecord, #sumSalary { display: inline-block; font-size: 22px; font-weight: 800; padding: 5px 18px; border-radius: 999px; }
+#sumRecord { color: #1b7a06; background: rgba(60,214,27,.16); border: 2px solid rgba(32,158,9,.3); }
+#sumSalary { color: #8a4b00; background: rgba(255,202,40,.24); border: 2px solid rgba(240,140,0,.35); }
+#sumCareer { margin: 0 0 16px; padding: 10px 16px; border-radius: 20px; background: #fffdf7; border: 3px solid #e0c389; font-size: 21px; font-weight: 800; color: #1b7a06; text-align: center; }
+#sumStats, #sumEmoji { display: none; }
+#hud.tall #sumScore { font-size: 150px; }
+#hud.tall #sumRecord, #hud.tall #sumSalary { font-size: 28px; }
+#hud.tall #sumCareer { font-size: 26px; }
 .row2 { display: flex; gap: 16px; }
 .row2 .btn { flex: 1; }
 
@@ -535,8 +539,7 @@ html, body {
       <div id="sumStars" aria-hidden="true"></div>
       <div id="sumReason" class="body"></div>
       <div id="sumScore" class="num">0</div>
-      <div id="sumRecord" class="body"></div>
-      <div id="sumSalary" class="num"></div>
+      <div class="sumPills"><span id="sumRecord" class="body"></span><span id="sumSalary" class="body"></span></div>
       <div id="sumCareer" class="body"></div>
       <div id="sumStats" class="body"></div>
       <div id="sumEmoji" class="body"></div>
@@ -6920,9 +6923,9 @@ void main() {
     const fired = run.endReason === 'fired';
     $('sumTitle').textContent = fired ? 'EVE GÖNDERİLDİN!' : 'MESAİ BİTTİ!';
     $('sumTitle').className = 'ribbon h ' + (fired ? 'red' : 'green');
-    $('sumReason').textContent = fired
-      ? `Saat ${clockString(clockProgress(run))} — ${BOSSES[run.boss.typeId].name} seni yakaladı`
-      : `Saat 17:00 — Mesai tamamlandı (+${fmt(run.stats.lifeBonus)} can bonusu)`;
+    $('sumReason').textContent = fired ? `${BOSSES[run.boss.typeId].emoji} ${BOSSES[run.boss.typeId].name} yakaladı · ${clockString(clockProgress(run))}` : '';
+    $('sumReason').className = fired ? 'body fired' : 'body';
+    view.banner = null; $('banner').classList.remove('on');   // oyun içi "MESAİ BİTTİ" afişi kartın üstüne binmesin
     $('sumScore').textContent = fmt(run.score);
     $('sumRecord').textContent = isRecord ? '🏆 YENİ REKOR!' : dailyRecord ? '📅 GÜNÜN EN İYİSİ!' : `En iyi: ${fmt(Math.max(best, run.score))}`;
     if (!run.paid) {
@@ -6934,14 +6937,15 @@ void main() {
     }
     const ev = run.careerEval || evaluateCareerRun(run, careerState());
     $('sumStars').innerHTML = [0, 1, 2].map(i => `<span class="${i < ev.starsEarned ? 'stOn' : 'stOff'}">⭐</span>`).join('');
-    $('sumSalary').textContent = `💰 +${fmt(run.salary)}`;
+    $('sumSalary').textContent = `+${fmt(run.salary)} 💰`;
+    // tek satır: terfi ve/veya yeni başarım sayısı (ayrıntı kariyer ekranında)
     const highlights = [];
-    if (ev.promoted) highlights.push(`<span class="promo">🎉 TERFİ! ${ev.startRank.icon} ${ev.startRank.title} ➜ ${ev.newRank.icon} ${ev.newRank.title} (+${ev.promoBonus} 💰)</span>`);
-    if (ev.unlockedAch.length) highlights.push(`<div>🎖️ Yeni Başarım: <b>${ev.unlockedAch.map(a => `${a.icon} ${a.name}`).join(', ')}</b></div>`);
+    if (ev.promoted) highlights.push(`🎉 TERFİ: ${ev.newRank.icon} ${ev.newRank.title}`);
+    if (ev.unlockedAch.length) highlights.push(`🎖️ ${ev.unlockedAch.length} yeni başarım`);
     const sumCareerEl = $('sumCareer');
     if (highlights.length) {
       sumCareerEl.style.display = 'block';
-      sumCareerEl.innerHTML = highlights.join('');
+      sumCareerEl.textContent = highlights.join(' · ');
     } else {
       sumCareerEl.style.display = 'none';
       sumCareerEl.innerHTML = '';
