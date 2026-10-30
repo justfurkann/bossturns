@@ -194,7 +194,8 @@ html, body {
 #questBox { background: none !important; border: 0 !important; box-shadow: none !important; backdrop-filter: none !important; padding: 0 !important; width: 270px !important; }
 #questBox .qRow, #questBox .qTaskBox, #questBox #qTaskBarWrap, #questBox .qBottom { display: none !important; }
 #questBox .qBar { height: 26px; }
-#questBox .qBarTxt { font-size: 16px; line-height: 20px; }
+#questBox .qTick { position: absolute; top: 0; bottom: 0; width: 3px; background: rgba(59, 29, 8, .65); box-shadow: 1px 0 0 rgba(255,255,255,.35); pointer-events: none; z-index: 1; }
+#questBox .qBarTxt { font-size: 16px; line-height: 20px; z-index: 2; }
 #hud.wide #questBox { left: 96px; top: 112px; }
 #hud.tall #questBox { left: 90px; top: 118px; transform: none; }
 #pocketFloat { position: absolute; transform: translate(-50%, -100%); display: none; white-space: nowrap; pointer-events: none;
@@ -282,13 +283,16 @@ html, body {
 .lvHead { display: flex; align-items: center; gap: 30px; margin-bottom: 34px; text-align: center; }
 #lvChapter { font-size: 60px; line-height: 1.05; }
 #lvChapterName { font-size: 30px; color: #ffe9b0; text-shadow: 0 2px 0 rgba(0,0,0,.5); }
+#lvChapterDesc { font-size: 20px; color: rgba(255,244,214,.88); margin-top: 4px; text-shadow: 0 2px 0 rgba(0,0,0,.5); }
 .lvArrow { width: 96px; height: 96px; border-radius: 50%; font-size: 40px; }
 .lvArrow:disabled { opacity: .35; filter: grayscale(1); cursor: default; }
 #lvGrid { display: flex; gap: 26px; }
-.lvTile { width: 200px; height: 220px; border-radius: 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 0; }
-.lvTile .n { font-size: 84px; line-height: 1; }
-.lvTile .st { font-size: 34px; letter-spacing: 2px; line-height: 1; }
+.lvTile { width: 200px; height: 220px; border-radius: 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 0; }
+.lvTile .n { font-size: 78px; line-height: .95; }
+.lvTile .st { font-size: 32px; letter-spacing: 2px; line-height: 1; }
 .lvTile .st .off { opacity: .3; filter: grayscale(1); }
+.lvTile .qt { font-size: 17px; color: rgba(255,255,255,.92); line-height: 1; text-shadow: 0 2px 0 rgba(0,0,0,.45); }
+.lvTile.gold .qt { color: #5a2b06; text-shadow: none; font-weight: 800; }
 .lvTile.locked { cursor: default; }
 .lvTile.locked .n { font-size: 64px; }
 .lvTile.next { outline: 7px solid #fff; outline-offset: 5px; }
@@ -459,7 +463,7 @@ html, body {
       <div id="qRank" class="qRank h">🌱 Stajyer</div>
       <div id="qStars" class="qStars">☆☆☆</div>
     </div>
-    <div class="bar qBar"><div id="qQuotaFill" class="fill qFill"></div><div id="qQuotaTxt" class="qBarTxt num">HEDEF: 0 / 300</div></div>
+    <div class="bar qBar"><div id="qQuotaFill" class="fill qFill"></div><i class="qTick" style="left:76.9%" title="1★"></i><i class="qTick" style="left:88.5%" title="2★"></i><div id="qQuotaTxt" class="qBarTxt num">HEDEF: 0 / 300</div></div>
     <div class="qTaskBox">
       <div class="qTaskHead"><span id="qTaskTitle" class="qTaskTitle body">📋 3 kez kasaya at</span><span id="qTaskReward" class="qReward num">+45💰</span></div>
       <div id="qStreak" class="qStreak num">🔥 ×0</div>
@@ -537,7 +541,7 @@ html, body {
 
   <div id="levels" class="overlay hidden">
     <div class="lvHead"><button class="btn blue h lvArrow" id="lvPrev" aria-label="Önceki bölüm">◀</button>
-      <div><div id="lvChapter" class="h">BÖLÜM 1</div><div id="lvChapterName" class="body"></div></div>
+      <div><div id="lvChapter" class="h">BÖLÜM 1</div><div id="lvChapterName" class="body"></div><div id="lvChapterDesc" class="body"></div></div>
       <button class="btn blue h lvArrow" id="lvNext" aria-label="Sonraki bölüm">▶</button></div>
     <div id="lvGrid"></div>
     <div id="lvTotal" class="num"></div>
@@ -633,9 +637,9 @@ const CONFIG = {
   abilities: {
     alp:      { tolerance: 0.15 },   // Hızlı El: bakıştan sonra bırakma payı 0,12 → 0,15 sn
     furkan:   { fakeSense: 0.67 },   // Kulağı Delik: blöflerin 3'te 2'sini sezer (ünlem gri "?" olur)
-    baransel: { awayMul: 1.05 },     // Yalaka: Yağmur ondan daha az şüphelenir, dönüşleri biraz seyrek
+    baransel: { awayMul: 1.08 },     // Yalaka: Yağmur ondan daha az şüphelenir, dönüşleri biraz seyrek
     bulut:    { saveRatio: 0.5 },    // Soğukkanlı: yakalanınca cebin yarısı kasaya girer (can yine gider)
-    kaan:     { atsP: 0.25 },        // ATS Bozuldu: onun olduğu yerde ATS daha sık çöker
+    kaan:     { atsP: 0.28, growth: 1.04 }, // ATS Bozuldu: onun olduğu yerde ATS daha sık çöker
     gokberk:  { growth: 1.12 },      // Basıyo: cep %12 daha hızlı dolar (skor da saati ilerlettiği için etkisi ≈ +%5)
   },
 };
@@ -719,7 +723,7 @@ const LEVEL_QUOTAS = [
   700, 700, 700, 690, 690,   // Sakin Yağmur
   720, 700, 690, 690, 680,   // Şüpheci Yağmur
   660, 640, 650, 630, 610,   // Hedef Toplantısı Sonrası
-  740, 740, 730, 740, 720,   // Telaşlı Yağmur
+  680, 680, 670, 670, 660,   // Telaşlı Yağmur
 ];
 const LEVELS = CHAPTERS.flatMap((ch, ci) => [0, 1, 2, 3, 4].map(i => ({
   n: ci * 5 + i + 1, chapter: ch.id, boss: ch.boss, d: ch.d[0] + (ch.d[1] - ch.d[0]) * i / 4, quota: LEVEL_QUOTAS[ci * 5 + i],
@@ -863,9 +867,9 @@ const ACHIEVEMENTS = [
   { id: 'streak_6',    icon: '🔥', name: 'Dokunulmaz',        desc: 'Yakalanmadan üst üste 6 kez kasaya puan at.',    reward: 150, check: (r, c) => r.bestStreak >= 6 },
   { id: 'big_250',     icon: '💣', name: 'Büyük Vurgun',      desc: 'Tek seferde kasaya en az 250 puan at.',          reward: 200, check: (r, c) => r.stats.bestBank >= 250 },
   { id: 'close_3',     icon: '⚡', name: 'Çelik Sinir',       desc: 'Bir mesaide 3 kez kıl payı (❗) kasaya at.',     reward: 200, check: (r, c) => r.stats.close >= 3 },
-  { id: 'tasks_3',     icon: '📋', name: 'Görev Adamı',       desc: 'Tek mesaide 3 anlık görev tamamla.',             reward: 220, check: (r, c) => r.contractsDone >= 3 },
+  { id: 'tasks_3',     icon: '🌟', name: 'Yıldız Avcısı',     desc: 'Toplam 5 farklı leveli 3 yıldızla tamamla.',      reward: 220, check: (r, c) => c.threeStars >= 5 },
   { id: 'shift_end',   icon: '🕔', name: '17:00 Çıkışlı',     desc: 'Kovulmadan saat 17:00\'ye kadar mesaiyi bitir.',   reward: 150, check: (r, c) => r.endReason === 'shift' },
-  { id: 'proj_5',      icon: '🐉', name: 'Zindan Ustası',     desc: 'Laptop oyununda 5. Bölüme (2.100 puan) ulaş.',   reward: 350, check: (r, c) => r.projectLv >= 5 },
+  { id: 'proj_5',      icon: '🐉', name: 'Efsane Vardiya',    desc: 'Tek bir vardiyada 950 puana ulaş.',              reward: 350, check: (r, c) => r.score >= 950 },
   { id: 'rank_5',      icon: '⏱️', name: 'Kuyruk Ustası',     desc: 'Kariyerde 5. kademeye (Kuyruk Ustası) yüksel.',  reward: 450, check: (r, c) => c.level >= 5 },
   { id: 'rank_10',     icon: '🐐', name: 'Hedef 10.000',      desc: 'Zirve: 10. kademe, Hedef 10.000 Efsanesi.',      reward: 1000, check: (r, c) => c.level >= 10 },
 ];
@@ -6181,11 +6185,54 @@ void main() {
     PL.scr1 = new T.PointLight('#ff4fd8', 0, 3.2); PL.scr1.position.set(-0.3, 2.15, 0.95); g.add(PL.scr1);
     PL.scr2 = new T.PointLight('#38d6ff', 0, 3.2); PL.scr2.position.set(0.3, 2.05, 0.95); g.add(PL.scr2);
   })();
+  /* ---------- karaktere özel masa üstü 3D eşyaları (sol ön köşe) ---------- */
+  const CHAR_DESK_PROPS = {
+    alp(d) { // kıdemli kaşesi + kırmızı ıstampa
+      mesh(rbox(0.24, 0.05, 0.16, 0.015), '#d8323c', -1.42, 1.68, 0.28, d);
+      mesh(cyl(0.06, 0.075, 0.1), '#2a2f5c', -1.42, 1.75, 0.28, d);
+      mesh(sph(0.055), '#ffcf2e', -1.42, 1.84, 0.28, d);
+    },
+    furkan(d) { // çift antenli siyah modem + yeşil/mavi LED
+      mesh(rbox(0.28, 0.07, 0.2, 0.02), '#1e2238', -1.42, 1.69, 0.28, d);
+      for (const s of [-1, 1]) mesh(cyl(0.012, 0.012, 0.22), '#1e2238', -1.42 + s * 0.09, 1.82, 0.22, d).rotation.z = s * 0.18;
+      mesh(sph(0.022), M('#3fe08f', { emissive: '#3fe08f', emissiveIntensity: 0.9 }), -1.47, 1.73, 0.37, d);
+      mesh(sph(0.022), M('#38d6ff', { emissive: '#38d6ff', emissiveIntensity: 0.9 }), -1.39, 1.73, 0.37, d);
+    },
+    baransel(d) { // altın çerçeveli masa aynası + kalpli pembe not
+      const gold = M('#ffcf2e', { metalness: 0.6, roughness: 0.25 });
+      mesh(cyl(0.09, 0.11, 0.04), gold, -1.42, 1.67, 0.28, d);
+      mesh(cyl(0.02, 0.02, 0.12), gold, -1.42, 1.74, 0.28, d);
+      mesh(new T.TorusGeometry(0.11, 0.022, 8, 24), gold, -1.42, 1.88, 0.28, d);
+      mesh(cyl(0.1, 0.1, 0.015).rotateX(Math.PI / 2), M('#9fe8ff', { metalness: 0.4, roughness: 0.1 }), -1.42, 1.88, 0.28, d);
+      mesh(rbox(0.14, 0.015, 0.14, 0.005), '#ff6b9a', -1.24, 1.67, 0.34, d);
+    },
+    bulut(d) { // bitki çayı fincanı + 3 zen taşı
+      mesh(cyl(0.1, 0.08, 0.15), '#4fc47e', -1.44, 1.73, 0.28, d);
+      mesh(sph(0.07), '#7b849b', -1.25, 1.69, 0.32, d).scale.set(1.2, 0.55, 1);
+      mesh(sph(0.052), '#9aa3ba', -1.25, 1.75, 0.32, d).scale.set(1.15, 0.55, 1);
+      mesh(sph(0.036), '#b8c0d8', -1.25, 1.79, 0.32, d).scale.set(1.1, 0.6, 1);
+    },
+    kaan(d) { // kırmızı alarmlı mini ATS sunucu kutusu
+      mesh(rbox(0.24, 0.18, 0.2, 0.025), '#232748', -1.42, 1.74, 0.28, d);
+      mesh(sph(0.045), M('#ff384c', { emissive: '#ff384c', emissiveIntensity: 0.85 }), -1.42, 1.86, 0.28, d);
+      mesh(rbox(0.16, 0.025, 0.01, 0.005), M('#ffcf2e', { emissive: '#ffcf2e', emissiveIntensity: 0.6 }), -1.42, 1.76, 0.385, d);
+    },
+    gokberk(d) { // protein shaker şişesi + mini dambıl
+      mesh(cyl(0.085, 0.07, 0.26), '#2ca2f5', -1.45, 1.78, 0.26, d);
+      mesh(cyl(0.09, 0.09, 0.05), '#1e2238', -1.45, 1.93, 0.26, d);
+      mesh(sph(0.035), '#ff4d8a', -1.45, 1.97, 0.28, d);
+      const db = new T.Group(); db.position.set(-1.24, 1.7, 0.35); db.rotation.y = 0.4; d.add(db);
+      mesh(cyl(0.02, 0.02, 0.22).rotateZ(Math.PI / 2), '#c9d0dc', 0, 0, 0, db);
+      for (const s of [-1, 1]) mesh(cyl(0.055, 0.055, 0.04).rotateZ(Math.PI / 2), '#2a2f45', s * 0.09, 0, 0, db);
+    },
+  };
   function setPlayer(id) {
     if (PL.charId === id) return;
     if (PL.personG) PL.g.remove(PL.personG);
     PL.personG = new T.Group(); PL.g.add(PL.personG);
     Object.assign(PL, buildPerson(LOOKS[id] || LOOKS.furkan, PL.personG));
+    if (PL.charPropG) { PL.desk.remove(PL.charPropG); PL.charPropG = null; }
+    if (CHAR_DESK_PROPS[id]) { PL.charPropG = new T.Group(); PL.desk.add(PL.charPropG); CHAR_DESK_PROPS[id](PL.charPropG); }
     PL.charId = id;
     PL.cosmeticKey = null; applyCosmetics();
   }
@@ -6385,28 +6432,17 @@ void main() {
     for (let i = 0; i < run.shields; i++) ch += '<span class="panel">🛡️</span>';
     run.mods.filter(id => id !== 'shield' && id !== 'overtime' && id !== 'lunch').forEach(id => { ch += `<span class="panel">${MOD_BY_ID[id].icon}</span>`; });
     setHTML('chips', ch);
-    // kariyer kotası, anlık görev ve gizli laptop projesi
+    // level kotası (1★ / 2★ / 3★ çentikli Cut the Rope barı)
     $('questBox').style.display = run.level ? '' : 'none';
     if (run.level) {
-      const q = run.level.quota, top = Math.round(q * CONFIG.level.stars[2]);
+      const q = run.level.quota, s2 = Math.round(q * CONFIG.level.stars[1]), top = Math.round(q * CONFIG.level.stars[2]);
       const stCount = levelStarsFor(run.level, run.score);
+      if (view.lastLvStars != null && stCount > view.lastLvStars) Sound.play('chosen');
+      view.lastLvStars = stCount;
+      const nextQ = stCount === 0 ? q : stCount === 1 ? s2 : top;
       $('qQuotaFill').style.width = (clamp(run.score / top, 0, 1) * 100).toFixed(1) + '%';
-      setText('qQuotaTxt', `L${run.level.n} · ${fmt(run.score)} / ${fmt(q)} ` + '★'.repeat(stCount) + '☆'.repeat(3 - stCount));
+      setText('qQuotaTxt', `L${run.level.n} · ${fmt(run.score)} / ${fmt(nextQ)} ` + '★'.repeat(stCount) + '☆'.repeat(3 - stCount));
     }
-    if (run.contract) {
-      const ct = run.contract;
-      const pStr = ct.kind === 'singleHold' ? ct.progress.toFixed(1).replace('.', ',') : fmt(ct.progress);
-      const tStr = ct.kind === 'singleHold' ? ct.target.toFixed(1).replace('.', ',') + 's' : fmt(ct.target);
-      setText('qTaskTitle', `${ct.icon} ${ct.title} (${pStr}/${tStr})`);
-      setText('qTaskReward', `+${ct.reward}💰`);
-      const cPct = clamp(ct.progress / ct.target, 0, 1) * 100;
-      $('qTaskFill').style.width = cPct.toFixed(1) + '%';
-      setText('qTaskTxt', `${pStr} / ${tStr}`);
-    }
-    const prj = projectForScore(run.score);
-    setText('qProj', `${prj.icon} Bölüm ${prj.lv}: ${prj.name}`);
-    setText('qStreak', `🔥 ×${run.streak || 0}`);
-    setClass('qStreak', (run.streak || 0) >= 3 ? 'qStreak hot num' : 'qStreak num');
     // cep
     const heat = clamp(run.holdTime / 4, 0, 1);
     const showPocket = run.holding || run.pocket > 0 || (view.catchFace > 0 && view.lastLost > 0);
@@ -6452,7 +6488,7 @@ void main() {
     const bub = $('bubble');
     let bt = '', bc = '';
     if (b.phase === 'scold') { bt = view.scoldLine; bc = 'red h'; }
-    else if (b.phase === 'away' && b.shrug > 0) { if (!view.shrugLine) view.shrugLine = b.quick ? '…?' : pick(SHRUG_LINES); bt = view.shrugLine; bc = 'white h'; }
+    else if (b.phase === 'away' && b.shrug > 0) { if (!view.shrugLine) view.shrugLine = b.quick ? '👀 Bi dakika…' : pick(SHRUG_LINES); bt = view.shrugLine; bc = 'white h'; }
     else if (b.phase === 'away' && b.ats && b.t < 2.4) { bt = 'KAAN! ATS BOZULDU!'; bc = 'white h'; }
     if (!(b.phase === 'away' && b.shrug > 0)) view.shrugLine = null;
     if (bt && Y) {
@@ -6473,7 +6509,9 @@ void main() {
       setText('bubble2', view.yalaka);
     } else if (view.charLine && view.charLine.t > 0 && !run.holding && PL.head) {
       const sp = toScreen(PL.head, 1.25);
-      bub2.style.display = 'block'; bub2.style.left = sp.x / view.hudScale + 'px'; bub2.style.top = sp.y / view.hudScale + 'px';
+      bub2.style.display = 'block';
+      bub2.style.left = clamp(sp.x / view.hudScale, 260, refW - 260) + 'px';
+      bub2.style.top = Math.max(110, sp.y / view.hudScale) + 'px';
       setText('bubble2', view.charLine.text); view.yalaka = null;
     } else { bub2.style.display = 'none'; view.yalaka = null; }
   }
@@ -6613,19 +6651,11 @@ void main() {
           break;
         case 'pick': Sound.play('pick'); view.lastHi = -1; announce('Kahve molası, bir avantaj seç'); break;
         case 'chosen': Sound.play('chosen'); break;
-        case 'contract':
-          Sound.play('chosen');
-          setBanner('📋 GÖREV TAMAM!', `${ev.title} · +${ev.reward} 💰 prim!`, 1.8);
-          if (!RM && PL.laptop) { const lp = toScreen(PL.laptop, 0.35); floatText(`+${ev.reward} 💰`, lp.x, lp.y, '#8dfcb0'); }
-          announce(`Görev tamamlandı: ${ev.title}, artı ${ev.reward} altın`);
-          break;
-        case 'project':
-          Sound.play('boss');
-          if (! view.banner) setBanner(`${ev.icon} BÖLÜM ${ev.lv}!`, `Laptopta yeni oyun: ${ev.name}`, 2.0);
-          break;
+        case 'contract': break;
+        case 'project': break;
         case 'over':
           Sound.play(ev.reason === 'shift' ? 'shift' : 'over');
-          if (ev.reason === 'shift') setBanner('17:00 — MESAİ BİTTİ!', 'Kalan canlar bonus: +' + fmt(run.stats.lifeBonus), 2);
+          if (ev.reason === 'shift') setBanner('17:00 — MESAİ BİTTİ!', run.primPromised ? '📢 5x prim iptal edildi! Can bonusu: +' + fmt(run.stats.lifeBonus) : 'Kalan canlar bonus: +' + fmt(run.stats.lifeBonus), 2.1);
           view.overDelay = 1.4;
           break;
       }
@@ -7000,12 +7030,12 @@ void main() {
     $('titleBest').textContent = `💰 ${fmt(wallet())} · En iyi: ${fmt(store.get('bossturns.best', 0))}` + (daily ? ` · Bugünkü günlük: ${fmt(daily.best)}` : '');
   }
   function renderCareer() {
-    const cr = careerState(), rk = rankFor(cr.level);
-    $('careerStars').textContent = `⭐ ${levelProgress().total} · 🎖️ ${cr.ach.length}/${ACHIEVEMENTS.length}`;
+    const cr = careerState(), rk = rankFor(cr.level), pg = levelProgress();
+    $('careerStars').textContent = `⭐ ${pg.total} · 🎖️ ${cr.ach.length}/${ACHIEVEMENTS.length}`;
     $('careerHero').innerHTML = `<div><div class="rk h">${rk.icon} Kademe ${rk.level}: ${rk.title}</div>` +
       `<div class="sub body">Maaş Çarpanı: <b>×${rk.salaryMul.toFixed(2).replace('.', ',')}</b> · ` +
       (cr.level < CAREER_RANKS.length ? `Sonraki terfi: <b>⭐ ${CAREER_RANKS[cr.level].stars} yıldız</b> (+${rk.promoBonus} 💰 terfi primi)` : 'Zirvedesin!') + `</div></div>` +
-      `<div class="sub body" style="text-align:right">Toplam Mesai: <b>${cr.totalShifts}</b><br>Tamamlanan Görev: <b>${cr.totalContracts}</b> · En İyi Seri: <b>×${cr.bestStreak}</b></div>`;
+      `<div class="sub body" style="text-align:right">Geçilen Level: <b>${pg.cleared}/${LEVELS.length}</b> · 3★: <b>${pg.threeStars}</b><br>Toplam Mesai: <b>${cr.totalShifts}</b> · En İyi Seri: <b>×${cr.bestStreak}</b></div>`;
     $('careerLadder').innerHTML = CAREER_RANKS.map(r => {
       const cls = r.level < cr.level ? 'done' : r.level === cr.level ? 'curr' : '';
       return `<div class="ladItem ${cls}"><div class="ic">${r.icon}</div><div class="nm h">${r.level}. ${r.title}</div><div class="qt num">⭐ ${r.stars} · ×${r.salaryMul.toString().replace('.', ',')}</div></div>`;
@@ -7018,15 +7048,16 @@ void main() {
   /* ---------- LEVEL HARİTASI ---------- */
   let lvChapter = 1;
   function renderLevels() {
-    const ch = CHAPTERS[lvChapter - 1], nx = nextLevelN();
+    const ch = CHAPTERS[lvChapter - 1], nx = nextLevelN(), B = BOSSES[ch.boss];
     $('lvChapter').textContent = `BÖLÜM ${ch.id}`;
-    $('lvChapterName').textContent = `${BOSSES[ch.boss].emoji} ${ch.name}`;
+    $('lvChapterName').textContent = `${B.emoji} ${ch.name}`;
+    $('lvChapterDesc').textContent = B.desc;
     $('lvGrid').innerHTML = LEVELS.filter(L => L.chapter === ch.id).map(L => {
       const open = levelUnlocked(L.n), b = levelBest(L.n);
       if (!open) return `<button class="lvTile btn gray locked" data-n="${L.n}" disabled aria-label="Level ${L.n} kilitli"><span class="n">🔒</span><span class="st body">${L.n}</span></button>`;
       const stars = [0, 1, 2].map(i => `<span class="${i < b ? '' : 'off'}">⭐</span>`).join('');
-      return `<button class="lvTile btn ${b > 0 ? 'blue' : 'gold'} ${L.n === nx && b === 0 ? 'next' : ''}" data-n="${L.n}" aria-label="Level ${L.n}, ${b} yıldız">` +
-        `<span class="n h">${L.n}</span><span class="st">${stars}</span></button>`;
+      return `<button class="lvTile btn ${b > 0 ? 'blue' : 'gold'} ${L.n === nx && b === 0 ? 'next' : ''}" data-n="${L.n}" aria-label="Level ${L.n}, ${b} yıldız, kota ${L.quota}">` +
+        `<span class="n h">${L.n}</span><span class="st">${stars}</span><span class="qt body">🎯 ${fmt(L.quota)}</span></button>`;
     }).join('');
     $('lvPrev').disabled = lvChapter <= 1;
     $('lvNext').disabled = lvChapter >= CHAPTERS.length || !levelUnlocked((lvChapter) * 5 + 1);
@@ -7096,9 +7127,9 @@ void main() {
       const key = 'bossturns.daily.' + run.dateKey, d = store.get(key, { best: 0, tries: 0 });
       d.tries++; store.set(key, d); run.tries = d.tries;
     }
-    view.swap = null; view.banner = null; view.particles = []; view.overDelay = -1; view.punch = 0;
+     view.swap = null; view.banner = null; view.particles = []; view.overDelay = -1; view.punch = 0;
     view.charLine = null; view.charCD = 6 + Math.random() * 4; view.gagCD = 18 + Math.random() * 10; view.shrugLine = null;
-    view.displayScore = 0; view.hiddenPause = false; view.flash = 0; view.catchFace = 0; view.bankFace = 0;
+    view.displayScore = 0; view.hiddenPause = false; view.flash = 0; view.catchFace = 0; view.bankFace = 0; view.lastLvStars = 0;
     view.y.x = LY.range[0] + 0.3; view.y.target = view.y.x; view.y.yaw = Math.PI; view.y.idle = 0.3;
     for (const k in H) delete H[k];
     pickBuiltFor = null;
@@ -7132,10 +7163,11 @@ void main() {
     if (!run.paid) {
       run.paid = true;
       // level en iyi yıldızı kaydedilir; kariyer toplam yıldıza göre yükselir
-      run.levelGain = 0;
+      run.levelGain = 0; run.chapterJustCleared = false;
       if (L) {
         const bm = levelBestMap(), old = clamp(Math.floor(Number(bm[L.n]) || 0), 0, 3);
         if (lvStars > old) { bm[L.n] = lvStars; store.set('bossturns.levels', { best: bm }); run.levelGain = lvStars - old; }
+        if (old === 0 && lvStars > 0 && L.n % 5 === 0) run.chapterJustCleared = true;
       }
       run.careerEval = evaluateCareerRun(run, careerState(), Object.assign(levelProgress(), { gained: run.levelGain }));
       store.set('bossturns.career', run.careerEval.career);
@@ -7146,8 +7178,9 @@ void main() {
     $('sumStars').style.display = L ? '' : 'none';
     $('sumStars').innerHTML = [0, 1, 2].map(i => `<span class="${i < lvStars ? 'stOn' : 'stOff'}">⭐</span>`).join('');
     $('sumSalary').textContent = `+${fmt(run.salary)} 💰`;
-    // tek satır: terfi ve/veya yeni başarım sayısı (ayrıntı kariyer ekranında)
+    // tek satır: bölüm bitişi, terfi ve/veya yeni başarım sayısı (ayrıntı kariyer ekranında)
     const highlights = [];
+    if (run.chapterJustCleared) highlights.push(`🎊 BÖLÜM ${L.chapter} TAMAM! ${L.n < LEVELS.length ? 'Yeni Bölüm Açıldı' : 'Tüm Bölümler Bitti!'}`);
     if (ev.promoted) highlights.push(`🎉 TERFİ: ${ev.newRank.icon} ${ev.newRank.title}`);
     if (ev.unlockedAch.length) highlights.push(`🎖️ ${ev.unlockedAch.length} yeni başarım`);
     const sumCareerEl = $('sumCareer');
