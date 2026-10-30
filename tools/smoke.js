@@ -165,7 +165,22 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     check('market: kep alınır (500 → 350), 3D oyuncuya takılır', shop.w === w0 - 150 && shop.hat && shop.eq === 'cap', JSON.stringify(shop));
     await page.click('.item[data-id="crown"]');
     check('market: para yetmezse satın alınmaz', /Yetersiz/.test(await page.textContent('#shopMsg')) && (await page.evaluate(() => Number(localStorage.getItem('bossturns.wallet')))) === 350);
+    const hair = await page.evaluate(() => ({ hidden: __bt.PL.hairTop.length > 0 && __bt.PL.hairTop.every(o => !o.visible) }));
+    check('market: kep takılınca üst saç gizlenir (şapkadan saç çıkmaz)', hair.hidden, JSON.stringify(hair));
+    await page.evaluate(() => localStorage.setItem('bossturns.wallet', '500'));
+    await page.click('.item[data-id="sunglasses"]');
+    const face = await page.evaluate(() => { const eq = JSON.parse(localStorage.getItem('bossturns.shop')).equip; return { hat: eq.hat, face: eq.face, g: !!__bt.PL.faceG }; });
+    check('market: gözlük ayrı yuvada, şapkayla birlikte takılır', face.hat === 'cap' && face.face === 'sunglasses' && face.g, JSON.stringify(face));
     await page.click('#btnShopBack'); await wait(100);
+    // oyun içi duraklat → ana menü
+    await page.click('#btnFree'); await waitGame(page, 0.2);
+    await page.click('#btnPause'); await page.waitForSelector('#pause:not(.hidden)', { timeout: 30000 }).catch(() => {});
+    const pz = await page.evaluate(() => ({ vis: !document.getElementById('pause').classList.contains('hidden'), t: __bt.run.t }));
+    await wait(300);
+    const pz2 = await page.evaluate(() => __bt.run.t);
+    await page.click('#btnQuit'); await wait(150);
+    const pq = await page.evaluate(() => ({ run: !!__bt.run, title: !document.getElementById('title').classList.contains('hidden') }));
+    check('duraklat butonu oyunu durdurur, ANA MENÜ ile menüye dönülür', pz.vis && pz.t === pz2 && !pq.run && pq.title, JSON.stringify([pz, pz2, pq]));
     // günlük mod
     await page.click('#btnDaily'); await waitGame(page, 0.1);
     const d1 = await page.evaluate(() => ({ mode: __bt.run.mode, seed: __bt.run.seed }));

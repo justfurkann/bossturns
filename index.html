@@ -204,6 +204,11 @@ html, body {
 #pocketFloat.lost { color: #ff6b7a; }
 #pocketFloat small { font-size: 32px; margin-left: 10px; color: #fff; vertical-align: 6px; text-shadow: 1.50px 0 0 var(--ink), 1.30px 0.75px 0 var(--ink), 0.75px 1.30px 0 var(--ink), 0 1.50px 0 var(--ink), -0.75px 1.30px 0 var(--ink), -1.30px 0.75px 0 var(--ink), -1.50px 0 0 var(--ink), -1.30px -0.75px 0 var(--ink), -0.75px -1.30px 0 var(--ink), 0 -1.50px 0 var(--ink), 0.75px -1.30px 0 var(--ink), 1.30px -0.75px 0 var(--ink) !important; }
 #hud.tall #pocketFloat { font-size: 84px; }
+.pauseBtns { display: flex; flex-direction: column; gap: 18px; width: 520px; }
+.pauseBtns .btn.big { height: 112px; font-size: 50px; border-radius: 999px; }
+.pauseBtns .btn.mid { height: 90px; font-size: 36px; border-radius: 999px; }
+.pauseNote { margin-top: 18px; font-size: 22px; color: #ffe9b0; }
+#hud[data-menu="1"] #btnPause { display: none; }
 #pick p, #pause p { margin: 10px 0 36px; font-size: 28px; color: #fff4d6; }
 #pickCards { display: flex; gap: 32px; }
 .card { width: 430px; height: 520px; padding: 0; position: relative; text-align: center; border-radius: 36px; }
@@ -484,6 +489,9 @@ html, body {
   </div>
   <div id="action" class="btn gold h">BASILI TUT</div>
   <div id="btns">
+    <button class="btn blue" id="btnPause" aria-label="Duraklat" title="Duraklat / ana menü">
+      <svg viewBox="0 0 50 50"><rect x="13" y="11" width="9" height="28" rx="3" fill="#fff" stroke="#3b1d08" stroke-width="3.5"/><rect x="28" y="11" width="9" height="28" rx="3" fill="#fff" stroke="#3b1d08" stroke-width="3.5"/></svg>
+    </button>
     <button class="btn blue" id="btnSound" aria-pressed="false" aria-label="Sesi aç" title="Ses (varsayılan kapalı)">
       <svg viewBox="0 0 50 50"><path d="M8 18h9l11-9v32l-11-9H8z" fill="#fff" stroke="#3b1d08" stroke-width="4" stroke-linejoin="round"/>
         <g id="sndOff"><path d="M34 18l10 14M44 18L34 32" stroke="#ff4d5e" stroke-width="6" stroke-linecap="round"/></g>
@@ -502,7 +510,10 @@ html, body {
     <div id="pickCards"></div>
     <p class="body" id="pickHint" style="margin-top:40px">Bas: parlayanı seç · ya da karta dokun</p>
   </div>
-  <div id="pause" class="overlay hidden"><h2 class="h">Duraklatıldı</h2><p class="body">Devam etmek için bas</p></div>
+  <div id="pause" class="overlay hidden"><h2 class="h">Duraklatıldı</h2><p class="body">Mola uzamasın, Yağmur geliyor…</p>
+    <div class="pauseBtns"><button class="btn green big h" id="btnResume">▶ DEVAM</button>
+      <button class="btn gray mid h" id="btnQuit">🏠 ANA MENÜ</button></div>
+    <div class="body pauseNote">Ana menüye dönersen bu tur sayılmaz.</div></div>
 
   <div id="title" class="overlay">
     <div class="menu">
@@ -753,15 +764,18 @@ function dailyCharFor(dateKey) {
 const SALARY_RATE = 0.1;
 const salaryFor = score => Math.floor(Math.max(0, score) * SALARY_RATE);
 const SHOP_SLOTS = [
-  { id: 'hat', name: 'Şapka' }, { id: 'sticker', name: 'Laptop çıkartması' },
+  { id: 'hat', name: 'Şapka' }, { id: 'face', name: 'Gözlük' }, { id: 'sticker', name: 'Laptop çıkartması' },
   { id: 'desk', name: 'Masa süsü' }, { id: 'chair', name: 'Sandalye' },
 ];
 const SHOP_ITEMS = [
   { id: 'cap',        slot: 'hat',     icon: '🧢', name: 'Kep',           price: 150 },
   { id: 'beanie',     slot: 'hat',     icon: '🧶', name: 'Bere',          price: 250 },
-  { id: 'headphones', slot: 'hat',     icon: '🎧', name: 'Kulaklık',      price: 450 },
-  { id: 'vr',         slot: 'hat',     icon: '🥽', name: 'VR Gözlük',     price: 750 },
+  { id: 'partyHat',   slot: 'hat',     icon: '🥳', name: 'Parti şapkası', price: 350 },
+  { id: 'headphones', slot: 'hat',     icon: '🎧', name: 'Stüdyo kulaklık', price: 450 },
   { id: 'crown',      slot: 'hat',     icon: '👑', name: 'Taç',           price: 1500 },
+  { id: 'sunglasses', slot: 'face',    icon: '🕶️', name: 'Güneş gözlüğü', price: 200 },
+  { id: 'starGlasses', slot: 'face',   icon: '🤩', name: 'Yıldız gözlük', price: 400 },
+  { id: 'vr',         slot: 'face',    icon: '🥽', name: 'VR Gözlük',     price: 750 },
   { id: 'heart',      slot: 'sticker', icon: '❤️', name: 'Kalp',          price: 100 },
   { id: 'bolt',       slot: 'sticker', icon: '⚡', name: 'Şimşek',        price: 200 },
   { id: 'planet',     slot: 'sticker', icon: '🪐', name: 'Gezegen',       price: 350 },
@@ -6055,6 +6069,7 @@ void main() {
     P.mouth = mouths(head, '#5a1f2a', 0.26, 0.45, 1.3);
     const hairM = M(look.hair, { roughness: 0.75 });
     const st = look.style;
+    const hairStart = head.children.length;   // market: şapka takılınca üst saç gizlenir
     if (st === 'curly') {
       // bukleler: üst yarım küreye serpilmiş küçük toplar
       const back = mesh(backShell(0.52, 1.6, 0.55), hairM, 0, 0.45, 0, head); back.material.side = 2;
@@ -6100,6 +6115,13 @@ void main() {
         });
       }
     }
+    // üst saç = arka kabuk dışındaki tüm saç parçaları; tepe yüksekliği şapka/taç yerleşimi için
+    P.hairTop = head.children.slice(hairStart).filter(o => !(o.geometry.type === 'SphereGeometry' && o.geometry.parameters.phiLength < 6.2 && o.geometry.parameters.thetaLength > 1.6));
+    P.hairTopY = 0.97;
+    for (const o of head.children.slice(hairStart)) {
+      if (!o.geometry.boundingBox) o.geometry.computeBoundingBox();
+      P.hairTopY = Math.max(P.hairTopY, o.position.y + o.geometry.boundingBox.max.y * o.scale.y);
+    }
     const bd = look.beard;
     if (bd === 'full' || bd === 'short') {
       // short: kısa kesilmiş sakal, ten hafifçe görünür
@@ -6119,6 +6141,7 @@ void main() {
       const mu = mesh(cap(0.025, 0.2), wm, 0, 0.33, 0.475, head); mu.rotation.z = Math.PI / 2; mu.castShadow = false;
       const ch = mesh(sph(0.06, 14, 10), wm, 0, 0.12, 0.4, head); ch.scale.set(1, 1.3, 0.6); ch.castShadow = false;
     }
+    const glStart = head.children.length;
     if (look.glasses) {
       const thick = look.glasses !== 'wire';
       const fc = thick ? '#141018' : '#5c544c', tube = thick ? 0.03 : 0.011;
@@ -6130,11 +6153,14 @@ void main() {
       }
       mesh(rbox(0.11, tube * 1.2, 0.03, 0.008), fc, 0, 0.57, 0.5, head);
     }
+    P.glassesParts = head.children.slice(glStart);
+    const bandStart = head.children.length;
     if (look.band) {
       const band = mesh(new T.TorusGeometry(0.515, 0.045, 10, 40), look.band, 0, 0.74, 0.02, head);
       band.rotation.x = Math.PI / 2 - 0.3; band.scale.set(1, 1, 1.4);
       mesh(rbox(0.16, 0.06, 0.02, 0.01), '#d8413a', 0, 0.84, 0.5, head);  // bandın ortasındaki kırmızı şerit
     }
+    P.hairTop.push(...head.children.slice(bandStart));   // alın bandı da şapkanın altında kalır
     // çağrı merkezi kulaklığı + mikrofon
     const hs = new T.Group(); head.add(hs); P.headset = hs;
     mesh(new T.TorusGeometry(0.53, 0.035, 8, 32, Math.PI), '#23232f', 0, 0.47, -0.02, hs);
@@ -6240,29 +6266,91 @@ void main() {
   /* =================== MARKET: görünüm parçaları =================== */
   const shopState = () => {
     const st = store.get('bossturns.shop', null) || {};
-    return { owned: Array.isArray(st.owned) ? st.owned : [], equip: st.equip && typeof st.equip === 'object' ? st.equip : {} };
+    const equip = st.equip && typeof st.equip === 'object' ? st.equip : {};
+    if (equip.hat === 'vr') { delete equip.hat; if (!equip.face) equip.face = 'vr'; }
+    return { owned: Array.isArray(st.owned) ? st.owned : [], equip };
   };
+  /* Giyilebilirler kafanın şekline göre yerleşir (P = karakter: hairTopY = saçın tepesi).
+     Kep/bere, saçın tepe kabuğuyla aynı eğimde oturan bir kubbedir ve üst saçı gizler (saç içinden çıkmaz,
+     kaşlar ve gözler açıkta kalır). Taç/parti şapkası saçın ÜSTÜNE oturur. */
+  const domeG = (h, r) => { const g = new T.Group(); g.position.set(0, 0.47, -0.02); g.rotation.x = -0.32; h.add(g); return g; };
   const COSMETIC = {
-    // şapkalar: kafa grubuna (kafa merkezi y≈0.45, tepe y≈0.97)
     cap(h) {
-      mesh(new T.SphereGeometry(0.53, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5), '#e5484d', 0, 0.55, -0.02, h);
-      const v = mesh(cyl(0.34, 0.36, 0.05), '#c23a3f', 0, 0.57, 0.38, h); v.scale.set(1, 1, 0.75);
-      mesh(sph(0.06), '#c23a3f', 0, 1.08, -0.02, h);
+      const g = domeG(h);
+      mesh(new T.SphereGeometry(0.56, 40, 20, 0, Math.PI * 2, 0, Math.PI * 0.4), '#e5484d', 0, 0, 0, g);
+      for (let i = 0; i < 6; i++) { const pn = mesh(new T.SphereGeometry(0.565, 4, 12, i / 6 * Math.PI * 2, 0.02, 0.05, Math.PI * 0.34), '#b8323a', 0, 0, 0, g); pn.castShadow = false; }
+      mesh(sph(0.06), '#b8323a', 0, 0.56, 0, g);
+      // siper: kubbenin ön alt kenarından öne uzanan yassı yarım disk
+      const v = mesh(new T.CylinderGeometry(0.34, 0.34, 0.035, 32, 1, false, -Math.PI / 2, Math.PI), '#c23a3f', 0, 0.17, 0.5, g);
+      v.scale.set(1, 1, 0.8); v.rotation.x = 0.2;
+      return { hideTop: true };
     },
     beanie(h) {
-      mesh(new T.SphereGeometry(0.54, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5), '#4d74f0', 0, 0.58, -0.02, h);
-      mesh(new T.TorusGeometry(0.52, 0.07, 10, 36).rotateX(Math.PI / 2), '#2a43b6', 0, 0.6, -0.02, h);
-      mesh(sph(0.13), '#ffffff', 0, 1.14, -0.02, h);
+      const g = domeG(h);
+      const knit = M('#4d74f0', { roughness: 0.95 });
+      const dome = mesh(new T.SphereGeometry(0.565, 40, 20, 0, Math.PI * 2, 0, Math.PI * 0.44), knit, 0, 0.02, 0, g); dome.scale.set(1, 1.08, 1);
+      for (let i = 0; i < 10; i++) { const rib = mesh(new T.SphereGeometry(0.57, 3, 12, i / 10 * Math.PI * 2, 0.04, 0.08, Math.PI * 0.32), '#3d5fd6', 0, 0.02, 0, g); rib.scale.set(1, 1.08, 1); rib.castShadow = false; }
+      const th = Math.PI * 0.43, rr = 0.565 * Math.sin(th);
+      mesh(new T.TorusGeometry(rr, 0.075, 12, 40).rotateX(Math.PI / 2), '#2a43b6', 0, 0.565 * Math.cos(th) + 0.04, 0, g);
+      mesh(sph(0.14, 16, 12), '#ffffff', 0, 0.66, 0, g);
+      return { hideTop: true };
     },
-    headphones(h) {
-      mesh(new T.TorusGeometry(0.56, 0.05, 10, 36, Math.PI), '#23232f', 0, 0.45, 0, h);
-      for (const s of [-1, 1]) { const c = mesh(cyl(0.16, 0.16, 0.14), M('#ff4d5e'), s * 0.55, 0.42, 0, h); c.rotation.z = Math.PI / 2; }
+    partyHat(h, P) {
+      const g = new T.Group(); g.position.set(0.08, P.hairTopY - 0.06, 0.02); g.rotation.z = -0.18; h.add(g);
+      mesh(new T.ConeGeometry(0.2, 0.5, 28), '#ff6ab5', 0, 0.25, 0, g);
+      for (const [y, a] of [[0.12, 0.3], [0.22, 2.2], [0.32, 4.1], [0.1, 3.4], [0.2, 5.4]]) {
+        const rr = 0.2 * (1 - y / 0.5) + 0.005;
+        mesh(sph(0.032, 10, 8), y > 0.2 ? '#ffe36b' : '#5fe0ff', Math.cos(a) * rr, y, Math.sin(a) * rr, g);
+      }
+      mesh(sph(0.07, 14, 10), '#ffe36b', 0, 0.52, 0, g);
+      mesh(new T.TorusGeometry(0.2, 0.03, 8, 28).rotateX(Math.PI / 2), '#ffffff', 0, 0.01, 0, g);
+      return {};
     },
-    crown(h) {
+    headphones(h, P) {
+      // büyük stüdyo kulaklığı: beyaz + turkuaz, kemer saçın üstünden geçer
+      const R = Math.max(0.6, P.hairTopY - 0.45 + 0.07);
+      const shell = M('#f4f6fb', { roughness: 0.35 }), acc = M('#38d6ff', { roughness: 0.3, emissive: '#1a8fb8', emissiveIntensity: 0.25 });
+      const band = mesh(new T.TorusGeometry(R, 0.055, 12, 40, Math.PI), shell, 0, 0.45, -0.02, h); band.scale.set(0.98, 1, 1);
+      mesh(new T.TorusGeometry(R - 0.02, 0.035, 10, 40, Math.PI), '#2a2f45', 0, 0.45, -0.02, h).scale.set(0.98, 0.97, 1);
+      for (const s of [-1, 1]) {
+        const cup = mesh(cyl(0.21, 0.21, 0.17, 32).rotateZ(Math.PI / 2), shell, s * 0.58, 0.43, 0, h);
+        mesh(cyl(0.15, 0.15, 0.02, 28).rotateZ(Math.PI / 2), acc, s * 0.675, 0.43, 0, h);
+        mesh(new T.TorusGeometry(0.17, 0.05, 10, 28).rotateY(Math.PI / 2), '#2a2f45', s * 0.5, 0.43, 0, h);
+        const arm = mesh(rbox(0.06, 0.22, 0.08, 0.02), shell, s * 0.6, 0.6, 0, h); arm.rotation.z = s * 0.15;
+      }
+      return { hideHeadset: true };
+    },
+    crown(h, P) {
       const gold = M('#ffcf2e', { metalness: 0.6, roughness: 0.25 });
-      mesh(cyl(0.34, 0.31, 0.18), gold, 0, 1.0, 0, h);
-      for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; mesh(new T.ConeGeometry(0.07, 0.2, 10), gold, Math.cos(a) * 0.3, 1.18, Math.sin(a) * 0.3, h); }
-      mesh(sph(0.05), '#e5484d', 0, 1.02, 0.33, h);
+      const g = new T.Group(); g.position.set(0, P.hairTopY - 0.07, 0); g.rotation.z = 0.12; h.add(g);
+      mesh(cyl(0.3, 0.27, 0.16, 32), gold, 0, 0.08, 0, g);
+      for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; mesh(new T.ConeGeometry(0.065, 0.2, 10), gold, Math.cos(a) * 0.27, 0.25, Math.sin(a) * 0.27, g); mesh(sph(0.03), gold, Math.cos(a) * 0.27, 0.36, Math.sin(a) * 0.27, g); }
+      for (const [a, c] of [[Math.PI / 2, '#e5484d'], [Math.PI / 2 + 1.05, '#38d6ff'], [Math.PI / 2 - 1.05, '#3fd28b']]) mesh(sph(0.042), c, Math.cos(a) * 0.3, 0.08, Math.sin(a) * 0.3, g);
+      return {};
+    },
+    // gözlükler: karakterin kendi gözlüğünün yerine geçer
+    sunglasses(h) {
+      const lens = M('#14121c', { roughness: 0.08, metalness: 0.5 });
+      for (const s of [-1, 1]) { const l = mesh(rbox(0.27, 0.17, 0.04, 0.06), lens, s * 0.18, 0.55, 0.5, h); l.rotation.y = s * -0.12; }
+      mesh(rbox(0.12, 0.03, 0.03, 0.01), '#14121c', 0, 0.59, 0.52, h);
+      for (const s of [-1, 1]) { const a = mesh(rbox(0.02, 0.03, 0.38, 0.008), '#14121c', s * 0.33, 0.58, 0.3, h); a.rotation.y = s * -0.3; }
+      mesh(rbox(0.07, 0.03, 0.01, 0.01), M('#ffffff', { emissive: '#ffffff', emissiveIntensity: 0.5 }), -0.24, 0.6, 0.525, h).rotation.z = 0.5;
+      return { hideGlasses: true };
+    },
+    starGlasses(h) {
+      const st = new T.Shape();
+      for (let i = 0; i < 10; i++) { const r = i % 2 ? 0.075 : 0.17, a = i / 10 * Math.PI * 2 + Math.PI / 2; i ? st.lineTo(Math.cos(a) * r, Math.sin(a) * r) : st.moveTo(Math.cos(a) * r, Math.sin(a) * r); }
+      const geo = new T.ExtrudeGeometry(st, { depth: 0.04, bevelEnabled: true, bevelSize: 0.012, bevelThickness: 0.012, bevelSegments: 2 });
+      for (const s of [-1, 1]) { const f = mesh(geo, '#ff4fd8', s * 0.19, 0.55, 0.47, h); f.rotation.y = s * -0.1; mesh(cyl(0.07, 0.07, 0.02, 20).rotateX(Math.PI / 2), M('#5fe0ff', { transparent: true, opacity: 0.75, roughness: 0.1 }), s * 0.19, 0.55, 0.52, h); }
+      mesh(rbox(0.1, 0.03, 0.03, 0.01), '#ff4fd8', 0, 0.58, 0.52, h);
+      return { hideGlasses: true };
+    },
+    vr(h) {
+      mesh(rbox(0.74, 0.27, 0.3, 0.07), '#f4f6fb', 0, 0.55, 0.4, h);
+      mesh(rbox(0.66, 0.18, 0.05, 0.03), M('#1e2238', { roughness: 0.2 }), 0, 0.55, 0.555, h);
+      mesh(rbox(0.5, 0.05, 0.02, 0.02), M('#38d6ff', { emissive: '#38d6ff', emissiveIntensity: 0.9 }), 0, 0.55, 0.585, h);
+      const strap = mesh(new T.TorusGeometry(0.52, 0.045, 8, 36), '#2a2f45', 0, 0.58, 0.02, h); strap.rotation.x = Math.PI / 2; strap.scale.set(1, 1.1, 1);
+      return { hideGlasses: true };
     },
     // çıkartmalar: laptop kapağının bize bakan yüzü
     heart(l) {
@@ -6296,11 +6384,6 @@ void main() {
       mesh(cyl(0.13, 0.06, 0.2), gold, 0.72, 1.92, 0.3, d);
       for (const s of [-1, 1]) mesh(new T.TorusGeometry(0.05, 0.015, 8, 16), gold, 0.72 + s * 0.14, 1.94, 0.3, d);
     },
-    vr(h) {
-      mesh(rbox(0.72, 0.24, 0.32, 0.05), '#1e2238', 0, 0.56, 0.36, h);
-      mesh(rbox(0.64, 0.16, 0.06, 0.02), M('#38d6ff', { emissive: '#38d6ff', emissiveIntensity: 0.6 }), 0, 0.56, 0.5, h);
-      mesh(new T.TorusGeometry(0.51, 0.04, 8, 32), '#1e2238', 0, 0.56, 0, h).rotation.x = Math.PI / 2;
-    },
     fire(l) {
       mesh(new T.ConeGeometry(0.12, 0.28, 10), '#ff5e2e', -0.05, 0.26, 0.04, l);
       mesh(new T.ConeGeometry(0.07, 0.18, 10), '#ffcf2e', -0.05, 0.22, 0.06, l);
@@ -6321,14 +6404,18 @@ void main() {
     const key = JSON.stringify(eq) + PL.charId;
     if (PL.cosmeticKey === key) return;
     PL.cosmeticKey = key;
-    for (const k of ['hatG', 'stickerG', 'deskG']) if (PL[k]) { PL[k].parent.remove(PL[k]); PL[k] = null; }
+    for (const k of ['hatG', 'faceG', 'stickerG', 'deskG']) if (PL[k]) { PL[k].parent.remove(PL[k]); PL[k] = null; }
+    const fx = {};
     const add = (slot, parent, field) => {
       const id = eq[slot];
       if (!id || !COSMETIC[id]) return;
-      const g = new T.Group(); parent.add(g); COSMETIC[id](g); PL[field] = g;
+      const g = new T.Group(); parent.add(g); Object.assign(fx, COSMETIC[id](g, PL) || {}); PL[field] = g;
+      if (parent === PL.head) g.traverse(o => { o.castShadow = false; });
     };
-    add('hat', PL.head, 'hatG'); add('sticker', PL.lid, 'stickerG'); add('desk', PL.desk, 'deskG');
-    if (PL.headset) PL.headset.visible = !['headphones', 'vr'].includes(eq.hat);
+    add('hat', PL.head, 'hatG'); add('face', PL.head, 'faceG'); add('sticker', PL.lid, 'stickerG'); add('desk', PL.desk, 'deskG');
+    (PL.hairTop || []).forEach(o => { o.visible = !fx.hideTop; });
+    (PL.glassesParts || []).forEach(o => { o.visible = !fx.hideGlasses; });
+    if (PL.headset) PL.headset.visible = !fx.hideHeadset;
     PL.chair.material = CHAIR_COLORS[eq.chair] || CHAIR_DEFAULT;
   }
 
@@ -6483,6 +6570,7 @@ void main() {
     $('pick').classList.toggle('hidden', run.state !== 'pick');
     if (run.state === 'pick') updatePick();
     $('pause').classList.toggle('hidden', !view.hiddenPause);
+    $('banner').style.visibility = view.hiddenPause ? 'hidden' : '';
     // konuşma balonu
     const refW = view.layout === 'wide' ? 1920 : 1080;
     const bub = $('bubble');
@@ -6821,6 +6909,7 @@ void main() {
   }
 
   let lastSkyBucket = -1;
+  const _shopV = new T.Vector3(), _shopP = new T.Vector3(), _shopT = new T.Vector3(), _shopL = new T.Vector3();
   function animateWorld(dt) {
     const p = run ? clockProgress(run) : 0.15;
     // duvar ekranı: oyuncu kaytardıkça kuyruk büyür
@@ -6847,7 +6936,17 @@ void main() {
     view.punch = Math.max(0, view.punch - dt * 2.5);
     const push = Math.sin(view.punch * Math.PI) * 1.2;
     camera.position.set(camBase.x + sx, camBase.y + sy, camBase.z - push);
-    camera.lookAt(camTgt);
+    // market açıkken kamera oyuncunun kafasına yaklaşır (aldığın şeyi gör); panel solda, karakter sağda kalır
+    const shopOn = !$('shop').classList.contains('hidden') && PL.head;
+    view.shopZoom = RM ? (shopOn ? 1 : 0) : damp(view.shopZoom || 0, shopOn ? 1 : 0, 5, dt);
+    if (view.shopZoom > 0.001 && PL.head) {
+      PL.head.getWorldPosition(_shopV);
+      const tall = view.layout === 'tall', k = view.shopZoom;
+      _shopP.set(_shopV.x + (tall ? 0.2 : -1.3), _shopV.y + (tall ? 0.2 : 0.9), _shopV.z + (tall ? 5.2 : 6.2));
+      _shopT.set(_shopV.x + (tall ? 0.2 : -1.75), _shopV.y + (tall ? -1.3 : 0.45), _shopV.z);
+      camera.position.lerp(_shopP, k);
+      camera.lookAt(_shopL.copy(camTgt).lerp(_shopT, k));
+    } else camera.lookAt(camTgt);
   }
 
   function updateView(dt) {
@@ -7002,6 +7101,14 @@ void main() {
   buildSheet();
 
   /* =================== SES DÜĞMESİ =================== */
+  // oyun içi duraklat: DEVAM ya da ANA MENÜ (tur sayılmaz, maaş/yıldız yazılmaz)
+  $('btnPause').addEventListener('click', () => { if (run && run.state !== 'over') { view.hiddenPause = true; run.holding = false; Input.clear(); } });
+  $('btnResume').addEventListener('click', () => { if (run) { view.hiddenPause = false; run.locked = true; } });
+  $('btnQuit').addEventListener('click', () => {
+    view.hiddenPause = false; run = null; view.banner = null; $('banner').classList.remove('on');
+    for (const id of ['pause', 'summary', 'pick']) $(id).classList.add('hidden');
+    $('title').classList.remove('hidden'); refreshTitle();
+  });
   $('btnSound').addEventListener('click', () => {
     Sound.on = !Sound.on;
     if (Sound.on && !Sound.ensure()) Sound.on = false;
