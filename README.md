@@ -43,8 +43,8 @@ Exe imzasız olduğu için Windows ilk açılışta "Bilgisayarınız korundu" d
 
 ## Geliştirici notları
 
-- Tek dosya: `index.html` (~680 KB). Üç bölüm: oyun mantığı (`<script id="logic">`, DOM'suz), gömülü Three.js (`<script id="three">`) ve 3D sahne + arayüz (`<script id="app">`).
-- Three.js ve yazı tipi dosyanın içine gömülüdür; internet ya da CDN gerekmez. Güncellemek için: `npm install && npm run vendor`.
+- Tek dosya: `index.html` (~790 KB). Üç bölüm: oyun mantığı (`<script id="logic">`, DOM'suz), gömülü Three.js (`<script id="three">`) ve 3D sahne + arayüz (`<script id="app">`).
+- Three.js ve yazı tipleri (Lilita One, Fredoka, Nunito — hepsi OFL) dosyanın içine gömülüdür; internet ya da CDN gerekmez. Güncellemek için: `npm install && npm run vendor`.
 - Tarayıcının WebGL desteklemesi gerekir (bütün güncel tarayıcılar destekler).
 - Denge sabitlerinin hepsi `CONFIG` nesnesinde.
 - `node tools/sim.js 2000` komutu, oyun mantığını tarayıcı olmadan 3 farklı oyuncu modeliyle oynatıp ilk canın kaçıncı basışta gittiğini, tur süresini ve skoru raporlar.
