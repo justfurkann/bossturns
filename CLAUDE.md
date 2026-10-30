@@ -39,7 +39,10 @@
   - `<script id="three">`: gömülü Three.js (üretilmiş, düzenleme).
   - `<script id="app">`: 3D sahne, Yağmur/oyuncu modelleri ve animasyonları, Clash tarzı DOM HUD, ses, giriş.
 - Yerleşim: geniş ekran (PC, 1920×1080 referans) ve dar ekran (telefon, 1080 genişlik referans). HUD bu referansta tasarlanıp ölçeklenir.
-- Görsel stil: Clash Royale'den esinlenen parlak, tombul arayüz. Telifli varlık/logo/karakter kullanma.
+- Görsel stil: Cut the Rope / Om Nom sadeliği. 3D sahne **çizgi film** görünür: `MeshToonMaterial` (3 kademe, `TOON_RAMP`) + koyu kontur (`outline()`, ters kabuk). Telifli varlık/logo/karakter kullanma.
+- Sadelik kuralı: oyun sırasında ekranda yalnızca skor (+ ince kota çubuğu), saat, canlar ve tek durum butonu. Cep, oyuncunun kafasının üstünde yüzer (`#pocketFloat`). Ana menüde kart yok; sahne görünür, tek büyük buton + yuvarlak ikonlar. Yeni HUD öğesi eklemeden önce "oyuncu bunu oyun sırasında okumak zorunda mı?" diye sor.
+- Karakterler önce SİLUETLE ayrışır (`LOOKS`: tall, bulk, arm, headS, lean, face, tic): boy/gövde/duruş/ifade farkı, saç detayından önce gelir.
+- `package-lock.json` ve `src-tauri/Cargo.lock` repoda kalmalı (exe derlemesi ve `npm ci` bunlara dayanır); silme.
 - Yazı hiyerarşisi (sahibinin kararı): logo = Lilita One + kalın kontur (`.t`, yalnızca logo) · başlık/buton = Fredoka 700 + ince kontur (`.h`) · saat/para/puan = Nunito 800 (`.num`) · açıklama/kural = Nunito 600, kontursuz (`.body`). Küçük metne kalın kontur verme.
 - `tools/sim.js`: denge simülasyonu (`node tools/sim.js 2000`).
 - `tools/smoke.js`: Playwright testleri (`node tools/smoke.js`, WebGL yazılımla çizilir, birkaç dakika sürer). Değişiklikten sonra ikisini de çalıştır.
