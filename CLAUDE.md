@@ -9,10 +9,10 @@
 - **Patron her zaman sarışın, 20'li yaşlarında bir kadındır.** Patron tipleri (davranış/taktik) değişebilir ama patron karakteri bu kalır.
 
 ## Oyuncular (sahibinin kararı)
-- 4 oynanabilir karakter, bu sırayla: **ALP, FURKAN, BARANSEL, BULUT** (`CHARACTERS`, logic bloğu).
+- Takımın adı **🐒 Keleşli Maymunlar**: ALP, FURKAN, BARANSEL, BULUT. 5. karakter **KAAN** (misafir). Sıra: ALP, FURKAN, BARANSEL, BULUT, KAAN (`CHARACTERS`, logic bloğu). Silah çizme; sadece isim ve 🐒.
 - Serbest modda oyuncu seçer; **günlük görevde herkes "günün karakteri" ile oynar** (tarihe göre sırayla döner, `dailyCharFor`).
 - Görünümler `LOOKS` tablosunda (app bloğu); gerçek kişilerin fotoğraflarına göre stilize edilecek. Fotoğrafları repoya koyma, yalnızca tablodaki parametreleri güncelle.
-- Yetenekler (pasif, çekirdek döngüyü değiştirmez): ALP ⚡ Hızlı El (tolerans 0,15 sn) · FURKAN 👂 Kulağı Delik (blöflerin ~3'te 2'sini sezer, ünlem gri "?") · BARANSEL 🔥 Risk Aşığı (çarpan %18 hızlı) · BULUT ☁️ Soğukkanlı (yakalanınca cebin yarısı kasaya). Sayılar `CONFIG.abilities`'te; hedef her birinin ortalama oyuncuya ≈ +%5 vermesi (`node tools/sim.js` tablosu). Oyun zamanlamaya çok duyarlı: tolerans/uyarıya 0,03 sn bile ≈ +%5 eder.
+- Yetenekler (pasif, çekirdek döngüyü değiştirmez): ALP ⚡ Hızlı El (tolerans 0,15 sn) · FURKAN 👂 Kulağı Delik (blöflerin ~3'te 2'sini sezer, ünlem gri "?") · BARANSEL 🙇 Yalaka (Yağmur %5 daha seyrek döner; bakarken çalışıyorsa "Hocam kombin efsane!" balonu) · BULUT ☁️ Soğukkanlı (yakalanınca cebin yarısı kasaya) · KAAN 🖥️ ATS Bozuldu (ATS çökme olasılığı %3 yerine %25). Sayılar `CONFIG.abilities`'te; hedef her birinin ortalama oyuncuya ≈ +%5 vermesi (`node tools/sim.js` tablosu). Oyun zamanlamaya çok duyarlı: tolerans/uyarıya 0,03 sn bile ≈ +%5 eder.
 - Ana menüde "KARAKTERLER" sekmesi: seçim kaydedilir, "Mesaiye başla" doğrudan seçili karakterle başlar.
 - Ekrandaki GİZLE butonu sahibinin isteğiyle kaldırıldı; patron tuşu yalnızca klavyede (Esc) ve masaüstünde (Ctrl+Shift+Boşluk) duruyor. Butonu geri ekleme.
 - **Market (sahibinin kararı): yalnızca görünüm satar** (şapka, laptop çıkartması, masa süsü, sandalye). Oyun avantajı satma; günlük görev adil kalmalı. Para = maaş: her tur sonunda kasanın onda biri (`salaryFor`). Katalog `SHOP_ITEMS` (logic), 3D parçalar `COSMETIC` (app). Kalıcı veriler: `bossturns.wallet`, `bossturns.shop` (localStorage).
@@ -22,6 +22,7 @@
 - İç şaka: **"HEDEF 10.000"** (poster + duvardaki canlı çağrı ekranı + kariyerin zirvesi). Gerçek şirket adı/logosu kullanma.
 - Duvar ekranı (`drawBoard`): bekleyen çağrı oyuncu basılı tuttukça artar, bıraktıkça azalır (yalnızca görsel).
 - Esc tablosu çağrı merkezi KPI raporu (AHT, FCR, CSAT).
+- İç şakalar: "KAAN ATS BOZULDU" (ATS olayı: Yağmur uzun süre meşgul, `CONFIG.ats`) · "Primler 5'e katlanacak" (tur ortası duyuru, sonda İPTAL EDİLDİ) · "Bi kısa mola" (kahve molası ekranı) · "Bi terasa çıkalım" (kapı tabelası TERAS, son canda banner) · Yağmur ofiste oyun oynayana kızar.
 - Kariyer kotaları (`CAREER_RANKS`) sim skor dağılımına göre: 30 turda dikkatli oyuncu zirveye, ortalama ~8. kademeye ulaşır.
 
 ## Kısıtlar

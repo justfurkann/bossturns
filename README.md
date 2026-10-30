@@ -31,20 +31,21 @@ Exe imzasız olduğu için Windows ilk açılışta "Bilgisayarınız korundu" d
 | Patron **bakarken** basılıysan | Yakalanırsın: cepteki puan gider, bir can gider. Tekrar oynamak için önce bırakman gerekir. |
 | Saat **18:00** | Mesai biter, kalan her can +100 puan. |
 
-- **4 oyuncu, her birinin yeteneği var** (ana menü → 👥 KARAKTERLER; seçimin hatırlanır):
+- **🐒 Keleşli Maymunlar + misafir Kaan: 5 oyuncu, her birinin yeteneği var** (ana menü → 👥 KARAKTERLER; seçimin hatırlanır):
   | Karakter | Yetenek |
   |---|---|
   | ALP | ⚡ **Hızlı El:** Yağmur bakınca kaçış payı %25 daha geniş |
   | FURKAN | 👂 **Kulağı Delik:** blöflerin çoğunu sezer, ünlem gri **?** olur |
-  | BARANSEL | 🔥 **Risk Aşığı:** çarpan %18 daha hızlı artar |
+  | BARANSEL | 🙇 **Yalaka:** "Hocam kombin efsane!" Yağmur ondan daha az şüphelenir |
   | BULUT | ☁️ **Soğukkanlı:** yakalanınca cebin yarısı kasaya girer |
+  | KAAN (misafir) | 🖥️ **ATS Bozuldu:** onun olduğu yerde ATS sık çöker, Yağmur uğraşırken oynarsın |
 
   Yetenekler simülasyonla dengelendi (her biri ortalama ≈ +%5). Her gün sırayla biri **günün karakteri** olur; günlük görevde herkes onunla oynar, böylece skorlar adil karşılaştırılır.
 - **3 can** var. Her tur sıfırdan başlar; turlar arasında yalnızca en iyi skor, cüzdan ve marketten aldıkların saklanır.
 - **🛒 Market:** her tur sonunda kasanın onda biri **maaş** olarak cüzdana girer. Marketten şapka (kep, bere, kulaklık, taç), laptop çıkartması, masa süsü ve sandalye rengi alırsın. Sadece görünüm; oyuna avantaj vermez.
 - Puan arttıkça **Yağmur'un ruh hali değişir**: 🙂 Sakin, 😴 Kahvesiz (yavaş döner, uzun bakar), 📱 Telaşlı (hızlı döner, kısa bakar), 🤨 Şüpheci (blöf ustası, bazen çifte döner), 😎 Patron Modu (her seferinde başka taktik).
 - **Yağmur'un kombini her gün değişir** (ceket, alt parça, saç, aksesuar). Aynı gün herkes aynı kombini görür.
-- **Kahve molası:** 250, 800 ve 1600 puanda 3 avantajdan birini seçersin. Seçim yalnızca o tur için geçerli. Parlayan kart sırayla değişir: basınca parlayan seçilir ya da istediğin karta doğrudan dokunabilirsin.
+- **Bi kısa mola:** 250, 800 ve 1600 puanda 3 avantajdan birini seçersin. Seçim yalnızca o tur için geçerli. Parlayan kart sırayla değişir: basınca parlayan seçilir ya da istediğin karta doğrudan dokunabilirsin.
 - **📅 Günlük görev:** Seçenekler tarihe bağlı. Aynı gün oynayan herkes aynı patron sırasını ve aynı rastgele diziyi görür. Tur sonunda Wordle tarzı emoji özetini **Kopyala** ile paylaşabilirsin
   (🟩 kasaya attın · 🟨 kıl payı · 🟥 yakalandın · 🟦 kalkan kurtardı).
 - **Esc = patron tuşu:** Ekranı sahte bir tabloyla kaplar ve oyunu durdurur. Tekrar Esc'e basınca geri dönersin.
