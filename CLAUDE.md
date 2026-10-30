@@ -8,6 +8,12 @@
 ## Karakter kuralı (sahibinin kararı, değiştirme)
 - **Patron her zaman sarışın, 20'li yaşlarında bir kadındır.** Patron tipleri (davranış/taktik) değişebilir ama patron karakteri bu kalır.
 
+## Oyuncular (sahibinin kararı)
+- 4 oynanabilir karakter, bu sırayla: **ALP, FURKAN, BARANSEL, BULUT** (`CHARACTERS`, logic bloğu).
+- Serbest modda oyuncu seçer; **günlük görevde herkes "günün karakteri" ile oynar** (tarihe göre sırayla döner, `dailyCharFor`).
+- Görünümler `LOOKS` tablosunda (app bloğu); gerçek kişilerin fotoğraflarına göre stilize edilecek. Fotoğrafları repoya koyma, yalnızca tablodaki parametreleri güncelle.
+- Yetenekler henüz yok; eklenecekse çekirdek döngüyü değiştirmeyen pasif etkiler olmalı ve `tools/sim.js` ile dengelenmeli.
+
 ## Kısıtlar
 - Tek giriş: basılı tut / bırak. Yeni kontrol ekleme.
 - Çekirdek döngüyü (tut/bırak/patron) değiştirmeden önce sahibine sor.
