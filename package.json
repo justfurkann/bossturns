@@ -1,0 +1,15 @@
+{
+  "name": "boss-turns",
+  "private": true,
+  "description": "BOSS TURNS — geliştirme araçları (oyunun kendisi index.html, çalışmak için bunlara ihtiyacı yok)",
+  "scripts": {
+    "vendor": "node tools/vendor.js",
+    "sim": "node tools/sim.js 2000",
+    "test": "node tools/smoke.js"
+  },
+  "devDependencies": {
+    "@fontsource/lilita-one": "5.3.0",
+    "esbuild": "0.25.10",
+    "three": "0.186.1"
+  }
+}
