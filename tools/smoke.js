@@ -125,10 +125,11 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     check('karta dokununca o kart seçilir, oyun devam eder', picked.state === 'play' && picked.mods.length === 1, JSON.stringify(picked));
 
     // ruh hali değişimi
+    const boss0 = await page.evaluate(() => __bt.run.boss.typeId);
     await page.evaluate(() => { const r = __bt.run; r.score = 449; r.nextBossAt = 450; r.boss.phase = 'away'; r.boss.t = 0; r.boss.dur = 999; });
     await page.mouse.down(); await waitGame(page, 0.6); await page.mouse.up(); await waitGame(page, 0.3);
     const boss = await page.evaluate(() => ({ id: __bt.run.boss.typeId, name: document.getElementById('moodName').textContent }));
-    check('450 puanda Yağmur\'un ruh hali değişir, kart güncellenir', boss.id !== 'lead' && boss.name.includes('Yağmur') || boss.name === 'Patron Modu', JSON.stringify(boss));
+    check('450 puanda Yağmur\'un ruh hali değişir, kart güncellenir', boss.id !== boss0 && (boss.name.includes('Yağmur') || boss.name.includes('Hedef')), JSON.stringify(boss));
 
     // tur sonu
     await page.evaluate(() => { __bt.run.t = 400; });
@@ -169,6 +170,18 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     check('günlük mod tarih seed\'i ile başlar', d1.mode === 'daily' && d1.seed.startsWith('bossturns:20'), d1.seed);
     const dc = await page.evaluate(() => ({ got: __bt.run.charId, want: dailyCharFor(todayKey()).id }));
     check('günlük görevde herkes günün karakteriyle oynar', dc.got === dc.want, JSON.stringify(dc));
+
+    // leveller: harita, kilitler, yıldız kaydı ve sonraki levelin açılması
+    await page.evaluate(() => { __bt.run.t = 999; }); await waitGame(page, 1.8);
+    await page.click('#btnMenu'); await wait(100);
+    await page.evaluate(() => localStorage.removeItem('bossturns.levels'));
+    await page.click('#btnLevels'); await wait(150);
+    const lv = await page.evaluate(() => ({ tiles: document.querySelectorAll('.lvTile').length, locked: document.querySelectorAll('.lvTile.locked').length }));
+    check('level haritası: bölümde 5 level, yalnızca ilki açık', lv.tiles === 5 && lv.locked === 4, JSON.stringify(lv));
+    await page.click('.lvTile.next'); await waitGame(page, 0.1);
+    await page.evaluate(() => { __bt.run.score = 2000; __bt.run.t = 999; }); await waitGame(page, 1.8);
+    const lr = await page.evaluate(() => ({ n: __bt.run.level.n, st: __bt.run.levelStars, best: JSON.parse(localStorage.getItem('bossturns.levels')).best, again: document.getElementById('btnAgain').textContent }));
+    check('level geçilince yıldız kaydedilir, sonraki level açılır', lr.n === 1 && lr.st === 3 && lr.best[1] === 3 && /LEVEL 2/.test(lr.again), JSON.stringify(lr));
 
     check('masaüstü: konsol/JS hatası yok', errs.length === 0, errs.join(' | '));
     await page.close();
