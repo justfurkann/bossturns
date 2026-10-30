@@ -157,8 +157,16 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     await page.click('#btnFree'); await waitGame(page, 0.1);
     check('"Mesaiye başla" seçili karakterle doğrudan başlar', (await page.evaluate(() => __bt.run.charId)) === 'bulut' && /BULUT/.test(who), who);
     await page.evaluate(() => { __bt.run.t = 999; }); await waitGame(page, 1.8);
-    // günlük mod
+    // market: maaş cüzdana girdi; kep al, 3D'de takılsın, para düşsün
     await page.click('#btnMenu'); await wait(100);
+    const w0 = await page.evaluate(() => { localStorage.setItem('bossturns.wallet', '500'); return 500; });
+    await page.click('#btnShop'); await page.click('.item[data-id="cap"]');
+    const shop = await page.evaluate(() => ({ w: Number(localStorage.getItem('bossturns.wallet')), hat: !!__bt.PL.hatG, eq: JSON.parse(localStorage.getItem('bossturns.shop')).equip.hat }));
+    check('market: kep alınır (500 → 350), 3D oyuncuya takılır', shop.w === w0 - 150 && shop.hat && shop.eq === 'cap', JSON.stringify(shop));
+    await page.click('.item[data-id="crown"]');
+    check('market: para yetmezse satın alınmaz', /Yetersiz/.test(await page.textContent('#shopMsg')) && (await page.evaluate(() => Number(localStorage.getItem('bossturns.wallet')))) === 350);
+    await page.click('#btnShopBack'); await wait(100);
+    // günlük mod
     await page.click('#btnDaily'); await waitGame(page, 0.1);
     const d1 = await page.evaluate(() => ({ mode: __bt.run.mode, seed: __bt.run.seed }));
     check('günlük mod tarih seed\'i ile başlar', d1.mode === 'daily' && d1.seed.startsWith('bossturns:20'), d1.seed);
