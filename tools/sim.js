@@ -1,6 +1,6 @@
 // Denge simülasyonu: index.html içindeki oyun mantığını (DOM'suz) yükler ve
 // basit insan modelleriyle binlerce tur oynatır.
-// Kullanım: node tools/sim.js [tur sayısı]   (ör. node tools/sim.js 2000)
+// Kullanım: node tools/sim.js [tur sayısı]   (ör. node tools/sim.js 2000) — profiller + karakter yetenekleri tablosu
 // Sabitleri denemek için: node tools/sim.js 2000 '{"warn":[0.85,0.38]}'
 'use strict';
 const fs = require('fs');
@@ -41,6 +41,8 @@ function makePlayer(P, r) {
       return held;
     }
     // basılı tutuyor
+    // sezilen blöf (FURKAN): ünlem gri "?" görünür, oyuncu bırakmaz
+    if (b.phase === 'warn' && b.next.sensed) return held;
     if ((b.phase === 'warn' || b.phase === 'look') && reactedTo !== b.next) {
       reactedTo = b.next;
       let rt = Math.max(0.18, P.rt[0] + gauss(r) * P.rt[1]);
@@ -53,11 +55,11 @@ function makePlayer(P, r) {
   };
 }
 
-function simulate(BT, profile, n, seed = 1, setup = null) {
+function simulate(BT, profile, n, seed = 1, setup = null, charId = 'none') {
   const r = BT.makeRng('player' + seed);
   const res = { first: [], dur: [], score: [], shift: 0, presses: [] };
   for (let i = 0; i < n; i++) {
-    const run = BT.createRun('free', { seed: seed * 100000 + i });
+    const run = BT.createRun('free', { seed: seed * 100000 + i, charId });
     if (setup) setup(run);
     const player = makePlayer(PROFILES[profile], r);
     const dt = 1 / 60;
@@ -87,6 +89,14 @@ if (require.main === module) {
       `${p.padEnd(9)} ilk can: ort ${avg(s.first).toFixed(1)} basış (medyan ${pct(s.first, 0.5)}) | ` +
       `tur: ort ${avg(s.dur).toFixed(0)} sn, p90 ${pct(s.dur, 0.9).toFixed(0)} sn, max ${Math.max(...s.dur).toFixed(0)} sn | ` +
       `skor ort ${avg(s.score).toFixed(0)} | 18:00'e varan %${(100 * s.shift / n).toFixed(0)}`);
+  }
+  // karakter yetenekleri: "ortalama" oyuncu, yeteneksiz tabana göre
+  const base = avg(simulate(BT, 'ortalama', n).score);
+  console.log(`\nKarakterler (ortalama oyuncu, yeteneksiz taban skor ${base.toFixed(0)}):`);
+  for (const c of BT.CHARACTERS) {
+    const s = simulate(BT, 'ortalama', n, 1, null, c.id);
+    const d = avg(s.score) / base - 1;
+    console.log(`  ${c.name.padEnd(9)} ${c.ability.name.padEnd(13)} skor ${avg(s.score).toFixed(0)} (${d >= 0 ? '+' : ''}${(d * 100).toFixed(1)}%) | ilk can medyan ${pct(s.first, 0.5)}`);
   }
 }
 module.exports = { loadGame, simulate, PROFILES };
