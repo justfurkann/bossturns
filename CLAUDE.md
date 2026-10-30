@@ -17,7 +17,10 @@
 - Her karakterin masasında kendine özel bir eşya (`CHAR_DESK_PROPS`, masanın sol ön köşesi: kaşe, modem, ayna, bitki çayı + zen taşı, ATS kutusu, shaker + dambıl) ve kendine özel bekleme animasyonu (`animatePlayer`: Gökberk omuz esnetme, Kaan fön düzeltme, Furkan hızlı klavye, Bulut arkaya yaslanma, Baransel Yağmur'u kesme, Alp sakin yazma) var.
 - Ana menüde "KARAKTERLER" sekmesi: seçim kaydedilir, "Mesaiye başla" doğrudan seçili karakterle başlar.
 - Ekrandaki GİZLE butonu sahibinin isteğiyle kaldırıldı; patron tuşu yalnızca klavyede (Esc) ve masaüstünde (Ctrl+Shift+Boşluk) duruyor. Butonu geri ekleme.
-- **Market (sahibinin kararı): yalnızca görünüm satar** (şapka, laptop çıkartması, masa süsü, sandalye). Oyun avantajı satma; günlük görev adil kalmalı. Para = maaş: her tur sonunda kasanın onda biri (`salaryFor`). Katalog `SHOP_ITEMS` (logic), 3D parçalar `COSMETIC` (app). Kalıcı veriler: `bossturns.wallet`, `bossturns.shop` (localStorage).
+- **Market (sahibinin kararı): yalnızca görünüm satar** (şapka, gözlük, laptop çıkartması, masa süsü, sandalye). Oyun avantajı satma; günlük görev adil kalmalı. Para = maaş: her tur sonunda kasanın onda biri (`salaryFor`). Katalog `SHOP_ITEMS` (logic), 3D parçalar `COSMETIC` (app). Kalıcı veriler: `bossturns.wallet`, `bossturns.shop` (localStorage).
+- Giyilebilirler kafaya göre yerleşir: `buildPerson` üst saç parçalarını (`P.hairTop`, alın bandı dahil), saçın tepe yüksekliğini (`P.hairTopY`) ve gözlüğü (`P.glassesParts`) işaretler. Kep/bere saçın tepe kabuğuyla aynı eğimde oturan kubbedir ve üst saçı gizler (`hideTop`); taç ve parti şapkası `hairTopY`'nin üstüne oturur; stüdyo kulaklığın kemeri saçın üstünden geçer ve çağrı merkezi kulaklığını gizler (`hideHeadset`); gözlük yuvası (`face`: güneş gözlüğü, yıldız gözlük, VR) karakterin kendi gözlüğünü gizler (`hideGlasses`). Kafaya takılanlar gölge düşürmez. Yeni şapka eklerken 6 karakterde de dene (özellikle Kaan'ın fönlü saçı ve Gökberk'in bandı).
+- Market açıkken kamera oyuncunun kafasına yaklaşır (`view.shopZoom`), panel solda/altta kalır.
+- Oyun içinde ⏸ duraklat butonu (SES'in yanında): DEVAM ya da ANA MENÜ (tur sayılmaz, maaş/yıldız yazılmaz). Bu bir arayüz butonu, oyun kontrolü değil.
 
 ## Tema: çağrı merkezi (sahibinin kararı)
 - Oyun bir **çağrı merkezi ofisi** simülasyonu. Yağmur = takım lideri. Oyuncular kulaklıklı temsilciler.
