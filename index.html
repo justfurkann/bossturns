@@ -5502,8 +5502,11 @@ void main() {
 
   /* ---------- yardımcılar ----------
      Görsel stil: çizgi film (Cut the Rope tarzı). 3 kademeli toon gölgelendirme + koyu kontur. */
-  const TOON_RAMP = new T.DataTexture(new Uint8Array([150, 215, 255]), 3, 1, T.RedFormat);
+  const TOON_RAMP = new T.DataTexture(new Uint8Array([175, 222, 255]), 3, 1, T.RedFormat);
   TOON_RAMP.minFilter = TOON_RAMP.magFilter = T.NearestFilter; TOON_RAMP.needsUpdate = true;
+  // ten için çok yumuşak rampa: yuvarlak kafanın kenarı koyu banda düşünce yüz "fanus içinde top" gibi duruyordu
+  const SKIN_RAMP = new T.DataTexture(new Uint8Array([222, 244, 255]), 3, 1, T.RedFormat);
+  SKIN_RAMP.minFilter = SKIN_RAMP.magFilter = T.NearestFilter; SKIN_RAMP.needsUpdate = true;
   const MAT = {};
   const M = (color, o = {}) => {
     const key = Object.keys(o).length ? null : color;
@@ -5520,7 +5523,7 @@ void main() {
   // kontur: ters çevrilmiş kabuk, normaller boyunca ekranda sabit kalınlıkta şişirilir
   const OUTLINE = new T.ShaderMaterial({
     side: T.BackSide,
-    uniforms: { uW: { value: 0.0028 }, uC: { value: new T.Color('#2b1608') } },
+    uniforms: { uW: { value: 0.0024 }, uC: { value: new T.Color('#2b1608') } },
     vertexShader: 'uniform float uW; void main() { vec4 mv = modelViewMatrix * vec4(position, 1.0); vec3 n = normalize(normalMatrix * normal); mv.xyz += n * uW * -mv.z; gl_Position = projectionMatrix * mv; }',
     fragmentShader: 'uniform vec3 uC; void main() { gl_FragColor = vec4(uC, 1.0); }',
   });
@@ -5530,6 +5533,10 @@ void main() {
     for (const o of list) {
       const mt = o.material;
       if (!mt || mt.transparent || mt.isMeshBasicMaterial || mt.isShaderMaterial || o.geometry.type === 'PlaneGeometry') continue;
+      if (mt.side === 2) continue;                                   // açık kabuk: içi kontur rengiyle görünür ("fanus")
+      const gp = o.geometry.parameters || {};
+      if (o.geometry.type === 'SphereGeometry' && (gp.phiLength < 6.28 || gp.thetaLength < 3.14)) continue;
+      if (o.geometry.type === 'TorusGeometry' && gp.arc < 6.28) continue;
       if (!o.geometry.boundingSphere) o.geometry.computeBoundingSphere();
       const r = o.geometry.boundingSphere.radius * Math.max(o.scale.x, o.scale.y, o.scale.z);
       if (r < minR || r > 8) continue;
@@ -5552,7 +5559,7 @@ void main() {
   const sun = new T.DirectionalLight('#ffd7a3', 2.6);
   sun.position.set(-6, 9, 6); sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -10, right: 10, top: 9, bottom: -6 });
-  sun.shadow.bias = -0.0005; sun.shadow.radius = 4;
+  sun.shadow.bias = -0.0005; sun.shadow.radius = 4; sun.shadow.intensity = 0.35;
   scene.add(sun);
   const rim = new T.DirectionalLight('#9fc4ff', 1.4); rim.position.set(4, 5, -8); scene.add(rim);
   const lampA = new T.PointLight('#ffd08a', 0, 12); lampA.position.set(-2.5, 5.5, 2); scene.add(lampA);
@@ -5562,7 +5569,7 @@ void main() {
   // koridor duvarı
   mesh(new T.PlaneGeometry(40, 14), M('#f0d9b5', { roughness: 0.9 }), 0, 7, -3.6).castShadow = false;
   mesh(rbox(40, 1.3, 0.12, 0.03), '#d9b98c', 0, 0.65, -3.5);
-  mesh(new T.PlaneGeometry(40, 4).rotateX(-Math.PI / 2), M('#c9a77c', { roughness: 0.8 }), 0, 0, -1.6).castShadow = false;
+  mesh(new T.PlaneGeometry(40, 2.8).rotateX(-Math.PI / 2), M('#c9a77c', { roughness: 0.8 }), 0, 0, -2.2).castShadow = false;
   // pencereler: gökyüzü saate göre yeniden çizilir
   const skyTex = canvasTex(256, 320, () => {});
   function drawSky(p) {
@@ -5703,7 +5710,7 @@ void main() {
     const root = new T.Group(); scene.add(root);
     const body = new T.Group(); root.add(body);
     const tee = o.style === 'tee';
-    const skin = M(SKIN, { roughness: 0.65, emissive: '#ff2a2a', emissiveIntensity: 0 });
+    const skin = M(SKIN, { gradientMap: SKIN_RAMP, emissive: '#ff2a2a', emissiveIntensity: 0 });
     // saç: dipler koyu (kumral), boylar sarı, yüzü çevreleyen tutamlar en açık (balyaj)
     const hairM = M(new T.Color(HAIR).multiplyScalar(o.hairTone), { roughness: 0.6 });
     const rootM = M(new T.Color(HAIR_ROOT).multiplyScalar(o.hairTone), { roughness: 0.7 });
@@ -5755,12 +5762,12 @@ void main() {
       const ear = mesh(sph(0.085, 14, 10), skin, s * 0.44, 0.42, 0, head); ear.scale.z = 0.6;
       if (o.acc === 'earrings') mesh(sph(0.045, 12, 10), M('#ffd23f', { metalness: 0.7, roughness: 0.25 }), s * 0.45, 0.29, 0.02, head);
     }
-    mesh(sph(0.06, 14, 10), M(SKIN, { roughness: 0.6 }), 0, 0.38, 0.43, head);
+    mesh(sph(0.06, 14, 10), M(SKIN, { gradientMap: SKIN_RAMP }), 0, 0.38, 0.43, head);
     const ey = eyes(head, { y: 0.52, x: 0.17, z: 0.37, iris: '#4a9be0' });
     const lashes = [], brows = [];
     for (const s of [-1, 1]) {
       // uzun, kalkık kirpikler
-      const l = mesh(rbox(0.17, 0.045, 0.035, 0.016), '#2a1a10', s * 0.18, 0.62, 0.42, head); l.rotation.z = s * -0.24; lashes.push(l);
+      const l = mesh(rbox(0.17, 0.045, 0.035, 0.016), '#2a1a10', s * 0.18, 0.62, 0.42, head); l.rotation.z = s * -0.24; l.userData.noOutline = true; lashes.push(l);
       const b = mesh(rbox(0.19, 0.045, 0.045, 0.02), new T.Color(HAIR_ROOT).multiplyScalar(0.8).getStyle(), s * 0.18, 0.71, 0.4, head); brows.push(b);
     }
     for (const s of [-1, 1]) { const bl = mesh(sph(0.07, 12, 8), M('#ff8fa3', { transparent: true, opacity: 0.45 }), s * 0.26, 0.36, 0.38, head); bl.scale.set(1, 0.6, 0.3); bl.castShadow = false; }
@@ -5774,7 +5781,7 @@ void main() {
       const sw = mesh(sph(0.24, 20, 14), rootM, s * 0.19, 0.79, 0.2, head); sw.scale.set(1.25, 0.45, 0.9); sw.rotation.z = s * -0.42;
       // yüzü çevreleyen açık sarı tutamlar (balyaj)
       const fr = mesh(cap(0.05, o.hair === 'long' ? 0.5 : 0.34), lightM, s * 0.4, o.hair === 'long' ? 0.3 : 0.4, 0.2, head);
-      fr.rotation.z = s * 0.1; fr.scale.z = 0.6;
+      fr.rotation.z = s * 0.1; fr.scale.z = 0.6; fr.userData.noOutline = true;
     }
     let pony = null;
     if (o.hair === 'ponytail') {
@@ -5793,10 +5800,10 @@ void main() {
       // uzun açık saç: arkada sarı perde, uçlara doğru açılan hafif dalgalar; önde omza dökülen tutamlar
       pony = new T.Group(); pony.position.set(0, 0.5, -0.25); head.add(pony);
       const curtain = mesh(cap(0.32, 0.55), hairM, 0, -0.38, -0.02, pony); curtain.scale.set(1.3, 1, 0.45);
-      for (let i = -2; i <= 2; i++) { const w = mesh(sph(0.11, 14, 10), lightM, i * 0.15, -0.82, -0.04 + Math.abs(i) * 0.02, pony); w.scale.set(1, 1.3, 0.6); }
+      for (let i = -2; i <= 2; i++) { const w = mesh(sph(0.11, 14, 10), lightM, i * 0.15, -0.82, -0.04 + Math.abs(i) * 0.02, pony); w.scale.set(1, 1.3, 0.6); w.userData.noOutline = true; }
       for (const s of [-1, 1]) {
         const lock = mesh(cap(0.1, 0.55), hairM, s * 0.38, 0.02, 0.14, head); lock.scale.z = 0.75; lock.rotation.z = s * -0.08;
-        const end = mesh(sph(0.1, 14, 10), lightM, s * 0.4, -0.34, 0.16, head); end.scale.set(1, 1.3, 0.7);
+        const end = mesh(sph(0.1, 14, 10), lightM, s * 0.4, -0.34, 0.16, head); end.scale.set(1, 1.3, 0.7); end.userData.noOutline = true;
       }
     }
     // çağrı merkezi kulaklığı: ince taç + tek kulaklık + mikrofon
@@ -5829,6 +5836,7 @@ void main() {
     props.shades = new T.Group(); head.add(props.shades);
     for (const s of [-1, 1]) { const l = mesh(cyl(0.11, 0.11, 0.03), M('#111118', { roughness: 0.1, metalness: 0.4 }), s * 0.17, 0.52, 0.47, props.shades); l.rotation.x = Math.PI / 2; }
     mesh(rbox(0.12, 0.03, 0.03, 0.01), '#111118', 0, 0.55, 0.48, props.shades);
+    head.traverse(o => { o.castShadow = false; });
     outline(root);
     return { root, body, torso, head, legs, arms, hands, eyes: ey, brows, lashes, mouth, pony, glasses, props, skin, o };
   }
@@ -5907,11 +5915,12 @@ void main() {
                 tall: 1.1, bulk: 1.35, arm: 1.7, headS: 0.86, eye: 0.9, face: { idle: [0.75, 0.3, 'flat'], hold: [0.9, 0.35, 'smile'] }, tic: 'flex' },
   };
   // yüzün önünü (+z) ortalayan küre dilimi: phi = π/2 tam önü gösterir
+  const mixC = (a, b, t) => '#' + new T.Color(a).lerp(new T.Color(b), t).getHexString();
   const frontShell = (r, width, t0, t1) => new T.SphereGeometry(r, 36, 24, Math.PI / 2 - width / 2, width, t0 * Math.PI, (t1 - t0) * Math.PI);
   const backShell = (r, open, thetaLen) => new T.SphereGeometry(r, 36, 24, Math.PI / 2 + open / 2, Math.PI * 2 - open, 0, thetaLen * Math.PI);
   function buildPerson(look, parent) {
     const P = { look };
-    const skin = M(look.skin, { roughness: 0.7 });
+    const skin = M(look.skin, { gradientMap: SKIN_RAMP });
     const shirtDark = new T.Color(look.shirt).multiplyScalar(0.8).getStyle();
     const bulk = look.bulk || 1, tall = look.tall || 1, armB = look.arm || bulk, hS = look.headS || 1;
     const dy = (tall - 1) * 0.7;                                   // uzun boylunun omuz/kafa yüksekliği
@@ -5941,7 +5950,7 @@ void main() {
     head.scale.set((look.head ? look.head[0] : 1) * hS, (look.head ? look.head[1] : 1) * hS, hS);
     const sk = mesh(sph(0.5, 40, 28), skin, 0, 0.45, 0, head); sk.scale.set(1, 1.03, 0.95);
     for (const s of [-1, 1]) { const e = mesh(sph(0.11), skin, s * 0.49, 0.45, 0, head); e.scale.z = 0.6; }
-    mesh(sph(0.1), M(look.skin, { roughness: 0.6 }), 0, 0.4, 0.47, head).scale.set(1, 0.95, 1.1);
+    mesh(sph(0.1), M(look.skin, { gradientMap: SKIN_RAMP }), 0, 0.4, 0.47, head).scale.set(1, 0.95, 1.1);
     P.eyes = eyes(head, { y: 0.55, x: 0.18, z: 0.41, iris: look.iris, size: 0.1 * (look.eye || 1) });
     const browCol = new T.Color(look.hair).multiplyScalar(0.85).getStyle();
     P.brows = [-1, 1].map(s => mesh(rbox(0.24, 0.065 * (look.brow || 1), 0.06, 0.03), browCol, s * 0.19, 0.73, 0.43, head));
@@ -5959,7 +5968,7 @@ void main() {
       }
     } else if (st === 'fade' || st === 'pomp') {
       // yanlar sıfıra yakın (yarı saydam ince kabuk), üstte kısa/kabarık saç
-      const sides = mesh(backShell(0.506, 1.7, 0.6), M(look.hair, { transparent: true, opacity: 0.45, roughness: 1 }), 0, 0.45, 0, head);
+      const sides = mesh(backShell(0.506, 1.7, 0.6), M(mixC(look.skin, look.hair, 0.6)), 0, 0.45, 0, head);
       sides.material.side = 2; sides.castShadow = false;
       const top = mesh(new T.SphereGeometry(0.52, 40, 24, 0, Math.PI * 2, 0, Math.PI * 0.27), hairM, 0, 0.5, -0.02, head);
       top.rotation.x = -0.3; top.scale.set(0.98, 1.0, 1.0);
@@ -5996,11 +6005,13 @@ void main() {
     const bd = look.beard;
     if (bd === 'full' || bd === 'short') {
       // short: kısa kesilmiş sakal, ten hafifçe görünür
-      const bm = bd === 'short' ? M(look.hair, { transparent: true, opacity: 0.8, roughness: 1 }) : hairM;
+      const bm = bd === 'short' ? M(mixC(look.skin, look.hair, 0.82)) : hairM;
       mesh(frontShell(0.505, 2.6, 0.56, 0.86), bm, 0, 0.45, 0, head).material.side = 2;
       const mu = mesh(cap(0.055, 0.22), hairM, 0, 0.33, 0.47, head); mu.rotation.z = Math.PI / 2;
     } else if (bd === 'stubble' || bd === 'goatee') {
-      mesh(frontShell(0.503, 2.4, 0.58, 0.84), M(look.hair, { transparent: true, opacity: bd === 'goatee' ? 0.28 : 0.35, roughness: 1 }), 0, 0.45, 0, head).castShadow = false;
+      // kirli sakal: yalnızca çene hattında, tene çok yakın bir ton (toon'da koyu katman "maske" gibi duruyordu)
+      const st2 = mesh(frontShell(0.502, 1.9, 0.66, 0.86), M(mixC(look.skin, look.hair, 0.16)), 0, 0.45, 0, head);
+      st2.castShadow = false; st2.userData.noOutline = true;
     }
     if (bd === 'goatee') {
       // keçi sakal: dolgun bıyık + çene sakalı
@@ -6008,7 +6019,7 @@ void main() {
       const ch = mesh(sph(0.13, 20, 14), hairM, 0, 0.11, 0.37, head); ch.scale.set(1.05, 0.95, 0.65); ch.rotation.x = 0.5;
     } else if (bd === 'wisp') {
       // ince, yarı saydam bıyık + çenede küçük tutam
-      const wm = M(look.hair, { transparent: true, opacity: 0.55, roughness: 1 });
+      const wm = M(mixC(look.skin, look.hair, 0.55));
       const mu = mesh(cap(0.025, 0.2), wm, 0, 0.33, 0.475, head); mu.rotation.z = Math.PI / 2; mu.castShadow = false;
       const ch = mesh(sph(0.06, 14, 10), wm, 0, 0.12, 0.4, head); ch.scale.set(1, 1.3, 0.6); ch.castShadow = false;
     }
@@ -6039,6 +6050,7 @@ void main() {
     mesh(sph(0.05), '#120d2b', to.x, to.y, to.z, hs);
     P.drop = mesh(sph(0.07), M('#8fe0ff', { roughness: 0.1, emissive: '#2a9fd8', emissiveIntensity: 0.3 }), 0.47, 0.75, 0.25, head);
     P.drop.scale.set(1, 1.5, 1);
+    head.traverse(o => { o.castShadow = false; });   // kulaklık/saç yüze gölge düşürünce "fanus" halkası oluşuyordu
     outline(body);
     return P;
   }
