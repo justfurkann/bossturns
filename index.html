@@ -1,0 +1,1428 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#151821">
+<meta name="description" content="BOSS TURNS — Patron Dönüyor! Basılı tut, bırak, yakalanma.">
+<title>BOSS TURNS — Patron Dönüyor!</title>
+<style>
+  :root {
+    --bg: #151821; --panel: #1f2430; --ink: #f4f1ea; --muted: #a9b0c0;
+    --accent: #f2c14e; --danger: #e5484d; --ok: #3fb68b;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    touch-action: none; overscroll-behavior: none;
+    -webkit-user-select: none; user-select: none;
+    -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+  }
+  /* Sahne 360x600 mantıksal boyutta; JS ile ölçeklenir */
+  #stage {
+    position: absolute; left: 50%; top: 50%; width: 360px; height: 600px;
+    transform-origin: 50% 50%; transform: translate(-50%, -50%);
+  }
+  #game { position: absolute; inset: 0; width: 360px; height: 600px; display: block; touch-action: none; cursor: pointer; }
+  .hudbtn {
+    position: absolute; top: 5px; width: 34px; height: 34px; border-radius: 9px;
+    border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.08); color: var(--ink);
+    font-size: 17px; line-height: 1; padding: 0; cursor: pointer; touch-action: manipulation;
+  }
+  .hudbtn:focus-visible, .overlay button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #btnSound { right: 46px; }
+  #btnPanic { right: 6px; }
+  .overlay {
+    position: absolute; inset: 44px 0 0 0; padding: 18px 22px; overflow-y: auto;
+    background: rgba(17, 20, 28, .94); display: flex; flex-direction: column; align-items: center;
+    text-align: center; touch-action: pan-y;
+  }
+  .overlay.hidden, #sheet.hidden { display: none; }
+  .overlay h1 { margin: 6px 0 0; font-size: 44px; letter-spacing: 2px; color: var(--accent); font-weight: 900; }
+  .overlay h2 { margin: 6px 0 2px; font-size: 28px; font-weight: 900; }
+  .sub { margin: 0 0 10px; color: var(--muted); font-size: 15px; }
+  .rules { list-style: none; padding: 0; margin: 4px 0 12px; text-align: left; font-size: 14px; line-height: 1.45; width: 100%; }
+  .rules li { margin: 0 0 6px; padding-left: 26px; position: relative; }
+  .rules li span { position: absolute; left: 0; }
+  .overlay button.big {
+    width: 100%; margin: 5px 0; padding: 12px 10px; border-radius: 12px; border: 0; cursor: pointer;
+    font: inherit; font-size: 17px; font-weight: 800; background: var(--accent); color: #1b1b1b;
+    touch-action: manipulation;
+  }
+  .overlay button.alt { background: #2d3445; color: var(--ink); }
+  .overlay button.ghost { background: transparent; color: var(--muted); border: 1px solid #3a4152; font-weight: 600; font-size: 15px; }
+  .tiny { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+  .best { color: var(--ink); font-size: 14px; margin: 8px 0 0; }
+  .bigscore { font-size: 46px; font-weight: 900; color: var(--accent); line-height: 1.05; }
+  .record { color: var(--ok); font-weight: 800; font-size: 14px; min-height: 18px; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; width: 100%; font-size: 13px; margin: 8px 0; text-align: left; }
+  .stats div { display: flex; justify-content: space-between; border-bottom: 1px solid #2a3040; padding: 2px 0; }
+  .stats b { color: var(--ink); }
+  .stats span { color: var(--muted); }
+  #sumEmoji {
+    font-family: inherit; white-space: pre-wrap; font-size: 15px; line-height: 1.25; margin: 6px 0;
+    background: #0e1118; border-radius: 10px; padding: 8px 10px; width: 100%; text-align: left;
+    -webkit-user-select: text; user-select: text;
+  }
+  .row2 { display: flex; gap: 8px; width: 100%; }
+  .row2 button { flex: 1; }
+
+  /* Patron tuşu: sahte tablo */
+  #sheet {
+    position: fixed; inset: 0; z-index: 50; background: #fff; color: #222;
+    font: 13px "Segoe UI", Arial, sans-serif; display: flex; flex-direction: column; touch-action: auto;
+    -webkit-user-select: text; user-select: text;
+  }
+  #sheet .titlebar { background: #217346; color: #fff; padding: 6px 10px; display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  #sheet .titlebar .fname { flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #sheet .titlebar button { background: transparent; border: 0; color: #fff; font-size: 15px; cursor: pointer; padding: 2px 6px; }
+  #sheet .menu { background: #f3f3f3; border-bottom: 1px solid #d4d4d4; padding: 5px 10px; display: flex; gap: 16px; font-size: 12.5px; color: #333; white-space: nowrap; overflow: hidden; }
+  #sheet .menu b { color: #217346; }
+  #sheet .fbar { display: flex; border-bottom: 1px solid #d4d4d4; font-size: 12.5px; }
+  #sheet .fbar .ref { width: 70px; padding: 4px 6px; border-right: 1px solid #d4d4d4; }
+  #sheet .fbar .fx { padding: 4px 8px; color: #555; white-space: nowrap; overflow: hidden; }
+  #sheet .grid { flex: 1; overflow: auto; }
+  #sheet table { border-collapse: collapse; font-size: 12.5px; }
+  #sheet th, #sheet td { border: 1px solid #e1e1e1; padding: 2px 6px; height: 22px; white-space: nowrap; }
+  #sheet th { background: #f3f3f3; color: #555; font-weight: 400; min-width: 34px; }
+  #sheet td { min-width: 84px; text-align: right; }
+  #sheet td.t { text-align: left; }
+  #sheet tr.h td { font-weight: 700; background: #e2efda; text-align: left; }
+  #sheet td.sel { outline: 2px solid #217346; outline-offset: -2px; }
+  #sheet .tabs { border-top: 1px solid #d4d4d4; background: #f3f3f3; display: flex; gap: 2px; padding: 0 8px; font-size: 12px; }
+  #sheet .tabs span { padding: 5px 12px; color: #444; }
+  #sheet .tabs span.on { background: #fff; color: #217346; font-weight: 700; border-bottom: 2px solid #217346; }
+  #sheet .status { background: #217346; color: #fff; font-size: 11.5px; padding: 3px 10px; display: flex; justify-content: space-between; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="game" width="360" height="600" role="img" aria-label="BOSS TURNS oyun alanı. Oynamak için basılı tut, kaydetmek için bırak."></canvas>
+  <button class="hudbtn" id="btnSound" aria-pressed="false" aria-label="Sesi aç" title="Ses (varsayılan kapalı)">🔇</button>
+  <button class="hudbtn" id="btnPanic" aria-label="Patron tuşu: ekranı tabloyla kapla (Esc)" title="Patron tuşu (Esc)">🫣</button>
+
+  <div class="overlay" id="title">
+    <h1>BOSS TURNS</h1>
+    <p class="sub">Patron Dönüyor!</p>
+    <ul class="rules">
+      <li><span>🖐️</span><b>Basılı tut</b>: gizlice oyun oyna, cebin dolar. Ne kadar uzun tutarsan o kadar hızlı dolar.</li>
+      <li><span>✋</span><b>Bırak</b>: cepteki puan kasaya girer, artık güvende.</li>
+      <li><span>❗</span>Patron dönmeye başlarsa ünlem çıkar. Bazen blöftür!</li>
+      <li><span>👀</span>Patron <b>bakarken</b> basılı tutuyorsan yakalanırsın: cep gider, bir can gider.</li>
+      <li><span>🕕</span>Saat 18:00 olunca mesai biter. Kalan canlar bonus.</li>
+    </ul>
+    <button class="big" id="btnFree">Mesaiye başla</button>
+    <button class="big alt" id="btnDaily">📅 Günlük görev</button>
+    <p class="best" id="titleBest"></p>
+    <p class="tiny">Boşluk tuşu da olur · Esc / 🫣 = patron tuşu</p>
+  </div>
+
+  <div class="overlay hidden" id="summary" aria-live="polite">
+    <h2 id="sumTitle">Mesai bitti!</h2>
+    <p class="sub" id="sumReason"></p>
+    <div class="bigscore" id="sumScore">0</div>
+    <div class="record" id="sumRecord"></div>
+    <div class="stats" id="sumStats"></div>
+    <pre id="sumEmoji"></pre>
+    <div class="row2">
+      <button class="big alt" id="btnCopy">📋 Kopyala</button>
+      <button class="big" id="btnAgain">Bir tur daha</button>
+    </div>
+    <button class="big ghost" id="btnMenu">Ana menü</button>
+  </div>
+  <div class="sr" id="live" aria-live="assertive"></div>
+</div>
+
+<div id="sheet" class="hidden" aria-label="Tablo">
+  <div class="titlebar"><span>▦</span><span class="fname">Q3_Butce_Revize_v7_SON_son.xlsx — Kaydedildi</span><button id="sheetBack" aria-label="Geri dön (Esc)" title="Geri dön (Esc)">↩</button></div>
+  <div class="menu"><b>Dosya</b><span>Giriş</span><span>Ekle</span><span>Sayfa Düzeni</span><span>Formüller</span><span>Veri</span><span>Gözden Geçir</span></div>
+  <div class="fbar"><div class="ref">F7</div><div class="fx">fx&nbsp;&nbsp;=TOPLA(F2:F6)*(1+$B$15)</div></div>
+  <div class="grid"><table id="sheetTable"></table></div>
+  <div class="tabs"><span class="on">Q3 Bütçe</span><span>Özet</span><span>Varsayımlar</span><span>Sayfa4</span></div>
+  <div class="status"><span>Hazır</span><span>Ortalama: 48.213,7 · Toplam: 1.446.411 · %100</span></div>
+</div>
+
+<script>
+'use strict';
+/* =====================================================================
+   1. CONFIG — tüm denge sabitleri burada
+   ===================================================================== */
+const CONFIG = {
+  W: 360, H: 600,
+  lives: 3,
+  rate: { base: 8, perSec: 14 },            // cep += (base + tutmaSüresi*perSec*growth) * dt
+  difficultyScore: 1500,                     // d = min(1, kasa / difficultyScore)
+  away: { min: [1.6, 0.8], rand: [3.0, 2.0] },// sırtı dönük: lerp(min) + rand*lerp(rand)  (spec: min 2.5→0.8, rand 3.5→2.0)
+  warn: [0.5, 0.34],                         // kafa dönüyor (spec: 0.85→0.38; tools/sim.js ile kısaltıldı)
+  warnFloor: 0.3,                            // patron çarpanlarından sonra en kısa uyarı
+  look: { min: [1.3, 0.8], rand: 0.6 },
+  fake: { base: 0.2, perD: 0.2 },            // sahte alarm olasılığı
+  tolerance: 0.12,                           // bakmaya başladıktan sonra affedilen süre
+  scoldTime: 1.1,
+  firstAway: 2.2,                            // turun ilk "rahat" anı
+  afterScoldAway: 1.4,
+  afterPickAway: 1.2,
+  shrugTime: 0.55,                           // sahte alarm sonrası "hmm" animasyonu (oyun açısından away)
+  swapTime: 1.8,                             // patron değişimi animasyonu (away içinde)
+  bossEvery: 450,                            // her bu kadar puanda yeni patron
+  pickAt: [250, 800, 1600],                  // modifier seçimi eşikleri
+  pickCycle: 0.95,                           // seçim ekranında vurgu kaç saniyede bir kayar
+  pickGrace: 0.45,                           // seçim ekranı açıldıktan sonra yanlışlıkla seçmeyi önler
+  shift: { seconds: 180, score: 5000, lifeBonus: 100 }, // saat = süre/180 + kasa/5000 (≤3 dk garanti)
+  startHour: 9, endHour: 18,
+};
+
+/* Patron tipleri: çarpanlar temel değerlere uygulanır */
+const BOSSES = {
+  lead:   { name: 'Takım Lideri',       desc: 'Dengeli. Klasik.',
+            away: 1, warn: 1, look: 1, fake: 0, walk: 1,
+            look_: { suit: '#3d5a80', tie: '#e07a5f', hair: '#3b2a20', skin: '#f0c8a0', hairStyle: 'side' } },
+  turtle: { name: 'Kaplumbağa Müdür',   desc: 'Yavaş döner ama uzun bakar.',
+            away: 1.1, warn: 1.45, look: 1.7, fake: -0.08, walk: 0.55,
+            look_: { suit: '#6b705c', tie: '#b5838d', hair: '#bdbdbd', skin: '#e9c2a0', hairStyle: 'bald', glasses: true } },
+  flash:  { name: 'Şimşek Koordinatör', desc: 'Hızlı döner, kısa bakar.',
+            away: 0.8, warn: 0.72, look: 0.55, fake: 0, walk: 1.7,
+            look_: { suit: '#2a9d8f', tie: '#e9c46a', hair: '#1d1d1d', skin: '#c68b59', hairStyle: 'spiky', headset: true } },
+  sly:    { name: 'Kurnaz Direktör',    desc: 'Blöf ustası. Bazen çifte döner!',
+            away: 0.95, warn: 1, look: 0.9, fake: 0.25, doubleTake: 0.45, walk: 0.8,
+            look_: { suit: '#5e3b56', tie: '#c9a227', hair: '#202020', skin: '#f2d0b0', hairStyle: 'slick', mustache: true } },
+  gm:     { name: 'Genel Müdür',        desc: 'Her seferinde başka taktik.', mix: true, minScore: 1800, walk: 0.9,
+            away: 1, warn: 1, look: 1, fake: 0,
+            look_: { suit: '#22223b', tie: '#9a031e', hair: '#e0e0e0', skin: '#eac4a2', hairStyle: 'side', glasses: true, pin: true } },
+};
+const MIX_POOL = ['lead', 'turtle', 'flash', 'sly'];
+
+/* Tur içi modifier'lar (yalnızca o tur geçerli) */
+const MODS = [
+  { id: 'shield',    icon: '🛡️', name: 'Kalkan',            desc: 'Bir sonraki yakalanmada can gitmez (cep yine gider).', stack: true },
+  { id: 'insurance', icon: '📎', name: 'Sigorta',            desc: 'Çarpan %35 yavaş artar ama yakalanınca cebin yarısı kasaya girer.' },
+  { id: 'espresso',  icon: '☕', name: 'Duble Espresso',     desc: 'Çarpan %50 daha hızlı artar. Elin titremesin.' },
+  { id: 'mirror',    icon: '🪞', name: 'Monitör Aynası',     desc: 'Patron dönmeye başlayınca +0,2 sn fazladan süre.' },
+  { id: 'overtime',  icon: '🕘', name: 'Fazla Mesai',        desc: '+1 can, ama patron %15 daha sık döner.' },
+  { id: 'interest',  icon: '📈', name: 'Faiz',               desc: 'Kasaya giren her şey +%20, ama hiç tolerans yok.' },
+  { id: 'earplugs',  icon: '🎧', name: 'Gürültü Önleyici',   desc: 'Sahte alarmlar yarıya iner.' },
+  { id: 'lunch',     icon: '🥪', name: 'Uzun Öğle Arası',    desc: 'Saat 45 dakika geri gider.' },
+];
+const MOD_BY_ID = Object.fromEntries(MODS.map(m => [m.id, m]));
+
+/* =====================================================================
+   2. RNG — seed'li, günlük görev için deterministik
+   ===================================================================== */
+function hashSeed(str) {
+  let h = 1779033703 ^ str.length;
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  return (h ^= h >>> 16) >>> 0;
+}
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const makeRng = seed => mulberry32(hashSeed(seed));
+const lerp = (a, b, k) => a + (b - a) * k;
+const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+
+function todayKey(date = new Date()) {
+  const p = n => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${p(date.getMonth() + 1)}-${p(date.getDate())}`;
+}
+function dailyNumber(key) {
+  const [y, m, d] = key.split('-').map(Number);
+  return Math.floor((Date.UTC(y, m - 1, d) - Date.UTC(2026, 0, 1)) / 864e5) + 1;
+}
+
+/* =====================================================================
+   3. OYUN MANTIĞI — saf state machine (DOM yok; Node'da simüle edilebilir)
+      run.state: 'play' | 'pick' | 'over'
+      boss.phase: 'away' → 'warn' → 'look' → 'away' …  yakalanınca 'scold'
+   ===================================================================== */
+function createRun(mode = 'free', opts = {}) {
+  const dateKey = opts.dateKey || todayKey();
+  const seed = mode === 'daily' ? `bossturns:${dateKey}` : `free:${opts.seed ?? Math.random()}`;
+  const run = {
+    mode, dateKey, seed,
+    rng: { boss: makeRng(seed + ':boss'), type: makeRng(seed + ':type'), mods: makeRng(seed + ':mods') },
+    state: 'play', endReason: null, events: [],
+    t: 0, clockOffset: 0,
+    score: 0, pocket: 0, holdTime: 0, holding: false, locked: false,
+    lives: CONFIG.lives, shields: 0,
+    mods: [], mod: null,
+    pendingPick: false, pickIdx: 0, pick: null,
+    nextBossAt: CONFIG.bossEvery, pendingBoss: false,
+    boss: { typeId: 'lead', style: 'lead', phase: 'away', t: 0, dur: 0, next: null, quick: false, shrug: 0, swap: 0 },
+    log: [],              // her basışın sonucu: ok | close | caught | shield
+    bossesMet: ['lead'],
+    stats: { presses: 0, banks: 0, caught: 0, close: 0, fakes: 0, bestBank: 0, longestHold: 0, firstCatchPress: 0, lifeBonus: 0 },
+  };
+  recomputeMods(run);
+  startCycle(run, { minAway: CONFIG.firstAway });
+  return run;
+}
+
+function emit(run, type, data) { run.events.push(Object.assign({ type }, data)); }
+function difficulty(run) { return Math.min(1, run.score / CONFIG.difficultyScore); }
+function clockProgress(run) {
+  return clamp(run.t / CONFIG.shift.seconds + run.score / CONFIG.shift.score - run.clockOffset, 0, 1);
+}
+
+function recomputeMods(run) {
+  const m = { growth: 1, awayMul: 1, fakeMul: 1, warnAdd: 0, tolerance: CONFIG.tolerance, bankMul: 1, insurance: false };
+  for (const id of run.mods) {
+    if (id === 'insurance') { m.growth *= 0.65; m.insurance = true; }
+    if (id === 'espresso') m.growth *= 1.5;
+    if (id === 'mirror') m.warnAdd += 0.2;
+    if (id === 'overtime') m.awayMul *= 0.85;
+    if (id === 'interest') { m.bankMul *= 1.2; m.tolerance = 0; }
+    if (id === 'earplugs') m.fakeMul *= 0.5;
+  }
+  run.mod = m;
+}
+
+/* Yeni patron döngüsü: her döngü RNG'den tam 5 sayı çeker (günlük görevde herkes aynı diziyi görür) */
+function startCycle(run, opts = {}) {
+  const b = run.boss, c = CONFIG, m = run.mod, r = run.rng.boss;
+  const u = [r(), r(), r(), r(), r()];
+  if (run.pendingBoss) {
+    run.pendingBoss = false;
+    const pool = Object.keys(BOSSES).filter(id => id !== b.typeId && run.score >= (BOSSES[id].minScore || 0));
+    const from = b.typeId;
+    b.typeId = pool[Math.floor(run.rng.type() * pool.length)];
+    b.swap = c.swapTime;
+    run.bossesMet.push(b.typeId);
+    opts.minAway = Math.max(opts.minAway || 0, c.swapTime + 0.9);
+    emit(run, 'newboss', { from, to: b.typeId });
+  }
+  const type = BOSSES[b.typeId];
+  b.style = type.mix ? MIX_POOL[Math.floor(u[4] * MIX_POOL.length)] : b.typeId;
+  const st = BOSSES[b.style];
+  const d = difficulty(run);
+  let away = (lerp(c.away.min[0], c.away.min[1], d) + u[0] * lerp(c.away.rand[0], c.away.rand[1], d)) * st.away * m.awayMul;
+  let fakeP = (c.fake.base + c.fake.perD * d + st.fake) * m.fakeMul;
+  let warn = Math.max(c.warnFloor, lerp(c.warn[0], c.warn[1], d) * st.warn);
+  const look = (lerp(c.look.min[0], c.look.min[1], d) + u[3] * c.look.rand) * st.look;
+  if (b.quick) { // Kurnaz Direktör'ün çifte dönüşü
+    b.quick = false;
+    away = 0.45 + u[0] * 0.35; fakeP = 0; warn = Math.max(c.warnFloor, warn * 0.8);
+  }
+  if (opts.minAway) away = Math.max(away, opts.minAway);
+  b.phase = 'away'; b.t = 0; b.dur = away;
+  b.next = { fake: u[1] < fakeP, warn: warn + m.warnAdd, look, doubleTake: !!st.doubleTake && u[2] < st.doubleTake };
+  if (run.pendingPick && !run.holding && run.state === 'play') openPick(run);
+}
+
+function bank(run) {
+  const b = run.boss;
+  const gain = Math.round(run.pocket * run.mod.bankMul);
+  const held = run.holdTime;
+  run.pocket = 0; run.holdTime = 0;
+  if (gain <= 0) return;
+  const close = b.phase === 'warn' || b.phase === 'look';
+  run.score += gain;
+  run.log.push(close ? 'close' : 'ok');
+  run.stats.banks++;
+  if (close) run.stats.close++;
+  run.stats.bestBank = Math.max(run.stats.bestBank, gain);
+  run.stats.longestHold = Math.max(run.stats.longestHold, held);
+  emit(run, 'bank', { gain, close });
+  // kilometre taşları
+  if (run.score >= run.nextBossAt) { run.pendingBoss = true; run.nextBossAt += CONFIG.bossEvery; }
+  if (run.pickIdx < CONFIG.pickAt.length && run.score >= CONFIG.pickAt[run.pickIdx]) run.pendingPick = true;
+  if (b.phase === 'away' && b.swap <= 0 && (run.pendingBoss || run.pendingPick)) {
+    if (run.pendingBoss) startCycle(run, { minAway: b.dur - b.t });
+    else if (run.pendingPick) openPick(run);
+  }
+}
+
+function catchPlayer(run) {
+  const b = run.boss;
+  const lost = Math.round(run.pocket);
+  const saved = run.mod.insurance ? Math.round(lost * 0.5) : 0;
+  run.score += saved;
+  const shielded = run.shields > 0;
+  if (shielded) run.shields--; else run.lives--;
+  run.log.push(shielded ? 'shield' : 'caught');
+  run.stats.caught++;
+  if (!run.stats.firstCatchPress && !shielded) run.stats.firstCatchPress = run.stats.presses;
+  run.stats.longestHold = Math.max(run.stats.longestHold, run.holdTime);
+  run.pocket = 0; run.holdTime = 0; run.holding = false; run.locked = true;
+  b.phase = 'scold'; b.t = 0; b.dur = CONFIG.scoldTime;
+  emit(run, 'caught', { lost, saved, shielded });
+}
+
+function openPick(run) {
+  run.pendingPick = false;
+  const pool = MODS.filter(md => md.stack || !run.mods.includes(md.id)).map(md => md.id);
+  const options = [];
+  while (options.length < 3 && pool.length) options.push(pool.splice(Math.floor(run.rng.mods() * pool.length), 1)[0]);
+  run.pick = { options, hi: 0, t: 0, chosen: -1, doneT: 0, pointerIdx: -1 };
+  run.state = 'pick';
+  emit(run, 'pick');
+}
+
+function choosePick(run, idx) {
+  const pk = run.pick;
+  if (!pk || pk.chosen >= 0 || pk.t < CONFIG.pickGrace) return false;
+  idx = clamp(idx, 0, pk.options.length - 1);
+  const id = pk.options[idx];
+  pk.chosen = idx; pk.doneT = 0.7;
+  run.mods.push(id);
+  if (id === 'shield') run.shields++;
+  if (id === 'overtime') run.lives++;
+  if (id === 'lunch') run.clockOffset += 45 / ((CONFIG.endHour - CONFIG.startHour) * 60);
+  recomputeMods(run);
+  run.pickIdx++;
+  run.locked = true;
+  emit(run, 'chosen', { id });
+  return true;
+}
+
+function endRun(run, reason) {
+  if (run.state === 'over') return;
+  if (run.holding || run.pocket > 0) { run.holding = false; bank(run); }
+  run.state = 'over'; run.endReason = reason;
+  if (reason === 'shift') { run.stats.lifeBonus = run.lives * CONFIG.shift.lifeBonus; run.score += run.stats.lifeBonus; }
+  emit(run, 'over', { reason });
+}
+
+/* Bir adım: held = oyuncu şu an basılı tutuyor mu */
+function updateRun(run, dt, held) {
+  if (run.state === 'over') return;
+  if (!held) run.locked = false;
+
+  if (run.state === 'pick') {
+    const pk = run.pick;
+    pk.t += dt;
+    if (pk.chosen < 0) {
+      pk.hi = Math.floor(pk.t / CONFIG.pickCycle) % pk.options.length;
+      if (held && !run.locked) choosePick(run, pk.pointerIdx >= 0 ? pk.pointerIdx : pk.hi);
+    } else if ((pk.doneT -= dt) <= 0) {
+      run.state = 'play'; run.pick = null; run.locked = held;
+      const b = run.boss;
+      if (b.phase === 'away') b.dur = Math.max(b.dur, b.t + CONFIG.afterPickAway);
+    }
+    return;
+  }
+
+  const b = run.boss, c = CONFIG;
+  run.t += dt;
+
+  // --- giriş: tut / bırak ---
+  const was = run.holding;
+  run.holding = held && !run.locked && b.phase !== 'scold';
+  if (run.holding && !was) { run.stats.presses++; emit(run, 'press'); }
+  if (run.holding) {
+    run.holdTime += dt;
+    run.pocket += (c.rate.base + run.holdTime * c.rate.perSec * run.mod.growth) * dt;
+  } else if (was) {
+    bank(run);
+    if (run.state !== 'play') return; // seçim ekranı açıldı
+  }
+
+  // --- patron ---
+  b.t += dt;
+  if (b.shrug > 0) b.shrug -= dt;
+  if (b.swap > 0) b.swap -= dt;
+  switch (b.phase) {
+    case 'away':
+      if (b.t >= b.dur) { b.phase = 'warn'; b.t = 0; b.dur = b.next.warn; emit(run, 'warn', { fake: b.next.fake }); }
+      break;
+    case 'warn':
+      if (b.t >= b.dur) {
+        if (b.next.fake) {
+          run.stats.fakes++;
+          b.quick = b.next.doubleTake;
+          b.shrug = c.shrugTime;
+          emit(run, 'fake', { doubleTake: b.quick });
+          startCycle(run);
+        } else { b.phase = 'look'; b.t = 0; b.dur = b.next.look; emit(run, 'look'); }
+      }
+      break;
+    case 'look':
+      if (run.holding && b.t > run.mod.tolerance) catchPlayer(run);
+      else if (b.t >= b.dur) startCycle(run);
+      break;
+    case 'scold':
+      if (b.t >= b.dur) {
+        if (run.lives <= 0) { endRun(run, 'fired'); return; }
+        startCycle(run, { minAway: c.afterScoldAway });
+      }
+      break;
+  }
+
+  // --- mesai saati ---
+  if (run.state === 'play' && b.phase !== 'scold' && clockProgress(run) >= 1) endRun(run, 'shift');
+}
+
+function clockString(p) {
+  const total = CONFIG.startHour * 60 + Math.floor(clamp(p, 0, 1) * (CONFIG.endHour - CONFIG.startHour) * 60);
+  return String(Math.floor(total / 60)).padStart(2, '0') + ':' + String(total % 60).padStart(2, '0');
+}
+
+const fmt = n => Math.floor(n).toLocaleString('tr-TR');
+
+function shareText(run, tries) {
+  const em = { ok: '🟩', close: '🟨', caught: '🟥', shield: '🟦' };
+  const date = run.dateKey.split('-').reverse().join('.');
+  const head = run.mode === 'daily'
+    ? `BOSS TURNS 📅 Günlük #${dailyNumber(run.dateKey)} (${date})${tries > 1 ? ` · ${tries}. deneme` : ''}`
+    : `BOSS TURNS · Serbest mesai`;
+  const hearts = '❤️'.repeat(Math.max(0, run.lives)) + '🖤'.repeat(Math.max(0, CONFIG.lives - run.lives));
+  const lines = [head, `💼 ${fmt(run.score)} · ⏰ ${clockString(clockProgress(run))} · ${hearts}`];
+  const cells = run.log.map(k => em[k]);
+  const MAX = 50;
+  const shown = cells.length > MAX ? cells.slice(0, MAX) : cells;
+  for (let i = 0; i < shown.length; i += 10) lines.push(shown.slice(i, i + 10).join(''));
+  if (cells.length > MAX) lines.push(`… +${cells.length - MAX}`);
+  if (!cells.length) lines.push('⬜ (hiç oynamadım, çalıştım)');
+  lines.push('👔 ' + run.bossesMet.map(id => BOSSES[id].name.split(' ')[0]).join(' → '));
+  if (run.mods.length) lines.push(run.mods.map(id => MOD_BY_ID[id].icon).join(' '));
+  return lines.join('\n');
+}
+
+const BT = { CONFIG, BOSSES, MODS, createRun, updateRun, choosePick, clockProgress, clockString, shareText, makeRng, todayKey, dailyNumber };
+if (typeof module === 'object' && module.exports) module.exports = BT;
+
+/* =====================================================================
+   4. TARAYICI KATMANI (ses, çizim, giriş, arayüz)
+   ===================================================================== */
+if (typeof window !== 'undefined' && typeof document !== 'undefined') (function boot() {
+  window.BT = BT;
+  const $ = id => document.getElementById(id);
+  const canvas = $('game'), ctx = canvas.getContext('2d'), stage = $('stage');
+  const FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+  const W = CONFIG.W, H = CONFIG.H;
+
+  /* ---------- depolama (try/catch) ---------- */
+  const store = {
+    get(k, def) { try { const v = localStorage.getItem(k); return v == null ? def : JSON.parse(v); } catch (e) { return def; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* gizli mod vb. */ } },
+  };
+
+  /* ---------- hareket azaltma ---------- */
+  const rmQuery = window.matchMedia ? matchMedia('(prefers-reduced-motion: reduce)') : null;
+  let RM = !!(rmQuery && rmQuery.matches);
+  if (rmQuery) (rmQuery.addEventListener ? rmQuery.addEventListener('change', e => (RM = e.matches)) : rmQuery.addListener(e => (RM = e.matches)));
+
+  /* ---------- SES: WebAudio, asset yok, varsayılan KAPALI ---------- */
+  const Sound = {
+    ctx: null, master: null, on: false,
+    ensure() {
+      if (!this.ctx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return false;
+        this.ctx = new AC();
+        this.master = this.ctx.createGain();
+        this.master.gain.value = 0.22;
+        this.master.connect(this.ctx.destination);
+      }
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+      return true;
+    },
+    tone(freq, dur, { type = 'square', vol = 0.3, to = null, delay = 0, attack = 0.005 } = {}) {
+      if (!this.on || !this.ctx) return;
+      const t0 = this.ctx.currentTime + delay;
+      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+      o.type = type; o.frequency.setValueAtTime(freq, t0);
+      if (to) o.frequency.exponentialRampToValueAtTime(to, t0 + dur);
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(vol, t0 + attack);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g); g.connect(this.master);
+      o.start(t0); o.stop(t0 + dur + 0.02);
+    },
+    noise(dur, { vol = 0.2, freq = 1200, delay = 0 } = {}) {
+      if (!this.on || !this.ctx) return;
+      const t0 = this.ctx.currentTime + delay, len = Math.ceil(this.ctx.sampleRate * dur);
+      const buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+      const src = this.ctx.createBufferSource(), f = this.ctx.createBiquadFilter(), g = this.ctx.createGain();
+      src.buffer = buf; f.type = 'bandpass'; f.frequency.value = freq; g.gain.value = vol;
+      src.connect(f); f.connect(g); g.connect(this.master); src.start(t0);
+    },
+    play(name, a = 0) {
+      if (!this.on) return;
+      switch (name) {
+        case 'tick':   this.tone(520 + a * 90, 0.035, { type: 'square', vol: 0.06 }); break;
+        case 'press':  this.tone(300, 0.05, { type: 'triangle', vol: 0.15 }); break;
+        case 'bank':   this.tone(880, 0.08, { type: 'square', vol: 0.12 }); this.tone(1320, 0.16, { type: 'square', vol: 0.12, delay: 0.07 }); break;
+        case 'close':  this.tone(660, 0.07, { type: 'square', vol: 0.12 }); this.tone(990, 0.07, { type: 'square', vol: 0.12, delay: 0.06 }); this.tone(1480, 0.18, { type: 'square', vol: 0.12, delay: 0.12 }); break;
+        case 'warn':   this.tone(196, 0.12, { type: 'triangle', vol: 0.35 }); this.tone(247, 0.16, { type: 'triangle', vol: 0.35, delay: 0.11 }); break;
+        case 'fake':   this.tone(330, 0.18, { type: 'sine', vol: 0.18, to: 260 }); break;
+        case 'caught': this.tone(420, 0.55, { type: 'sawtooth', vol: 0.22, to: 70 }); this.noise(0.3, { vol: 0.25, freq: 600 }); break;
+        case 'shield': this.tone(500, 0.1, { type: 'triangle', vol: 0.25 }); this.tone(1000, 0.25, { type: 'sine', vol: 0.2, delay: 0.08 }); break;
+        case 'pick':   this.tone(740, 0.06, { type: 'triangle', vol: 0.15 }); break;
+        case 'chosen': [523, 659, 784, 1047].forEach((f, i) => this.tone(f, 0.12, { type: 'square', vol: 0.1, delay: i * 0.06 })); break;
+        case 'boss':   [392, 330, 262].forEach((f, i) => this.tone(f, 0.16, { type: 'triangle', vol: 0.25, delay: i * 0.12 })); break;
+        case 'over':   [523, 440, 349, 262].forEach((f, i) => this.tone(f, 0.22, { type: 'triangle', vol: 0.22, delay: i * 0.15 })); break;
+        case 'shift':  [523, 659, 784, 1047, 784, 1047].forEach((f, i) => this.tone(f, 0.14, { type: 'square', vol: 0.1, delay: i * 0.09 })); break;
+      }
+    },
+  };
+
+  /* ---------- görünüm durumu ---------- */
+  let run = null;
+  const view = {
+    time: 0, paceT: 0, bossX: 180, turn: 0, walking: false, walkPhase: 0,
+    swap: null, banner: null, flash: 0, particles: [], tickAcc: 0,
+    hiddenPause: false, sheetOpen: false, overDelay: -1, scoldLine: '', lastHi: -1,
+    displayScore: 0, catchFace: 0, bankFace: 0, warnHeld: 0,
+  };
+  const SCOLD_LINES = ['YAKALADIM!', 'Bu ne böyle?!', 'Odama gel!', 'Çalışıyoruz değil mi?', 'Rapor nerede?!'];
+
+  /* ---------- ölçekleme / döndürme ---------- */
+  function fit() {
+    const vv = window.visualViewport;
+    const vw = vv ? vv.width : window.innerWidth, vh = vv ? vv.height : window.innerHeight;
+    const s = Math.max(0.1, Math.min(vw / W, vh / H));
+    stage.style.transform = `translate(-50%, -50%) scale(${s})`;
+    const dpr = Math.min(3, window.devicePixelRatio || 1);
+    const bw = Math.round(W * s * dpr), bh = Math.round(H * s * dpr);
+    if (canvas.width !== bw || canvas.height !== bh) { canvas.width = bw; canvas.height = bh; }
+    ctx.setTransform(bw / W, 0, 0, bh / H, 0, 0);
+  }
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', () => setTimeout(fit, 150));
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', fit);
+  fit();
+
+  /* =================== ÇİZİM yardımcıları =================== */
+  function rr(x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+  function circle(x, y, r) { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); }
+  function ellipse(x, y, rx, ry) { ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); }
+  function hex2rgb(h) { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  function mix(a, b, k) {
+    const A = hex2rgb(a), B = hex2rgb(b);
+    return `rgb(${Math.round(lerp(A[0], B[0], k))},${Math.round(lerp(A[1], B[1], k))},${Math.round(lerp(A[2], B[2], k))})`;
+  }
+  function shade(h, k) { return mix(h, k < 0 ? '#000000' : '#ffffff', Math.abs(k)); }
+  function text(str, x, y, size, color, weight = 700, align = 'center', base = 'middle') {
+    ctx.font = `${weight} ${size}px ${FONT}`; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = base;
+    ctx.fillText(str, x, y);
+  }
+  function wrap(str, x, y, maxW, lh) {
+    const words = str.split(' '); let line = '';
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      if (ctx.measureText(test).width > maxW && line) { ctx.fillText(line, x, y); y += lh; line = w; } else line = test;
+    }
+    if (line) ctx.fillText(line, x, y);
+  }
+  function skyAt(p) {
+    const stops = [[0, '#bfe3f7'], [0.45, '#86c8ef'], [0.78, '#f4a261'], [1, '#4a3f6b']];
+    for (let i = 1; i < stops.length; i++) if (p <= stops[i][0]) {
+      const k = (p - stops[i - 1][0]) / (stops[i][0] - stops[i - 1][0]);
+      return mix(stops[i - 1][1], stops[i][1], k);
+    }
+    return stops[stops.length - 1][1];
+  }
+
+  /* =================== ÇİZİM: ofis =================== */
+  const FEET = 300;
+  function drawRoom(p) {
+    // arka duvar (koridor)
+    ctx.fillStyle = '#e8dcc6'; ctx.fillRect(0, 44, W, 262);
+    ctx.fillStyle = '#dccdb3'; ctx.fillRect(0, 252, W, 48);
+    ctx.fillStyle = '#cdbb9d'; ctx.fillRect(0, 250, W, 3);
+    // pencere + gökyüzü
+    const wx = 16, wy = 68, ww = 100, wh = 120;
+    ctx.fillStyle = '#f7f3ea'; rr(wx - 5, wy - 5, ww + 10, wh + 10, 4); ctx.fill();
+    const g = ctx.createLinearGradient(0, wy, 0, wy + wh);
+    g.addColorStop(0, skyAt(p)); g.addColorStop(1, skyAt(Math.min(1, p + 0.12)));
+    ctx.fillStyle = g; ctx.fillRect(wx, wy, ww, wh);
+    // güneş yay çizer
+    const sunX = wx + 10 + p * (ww - 20), sunY = wy + 70 - Math.sin(p * Math.PI) * 50 + p * 30;
+    ctx.save(); ctx.beginPath(); ctx.rect(wx, wy, ww, wh); ctx.clip();
+    ctx.fillStyle = p > 0.75 ? '#ffb347' : '#fff1a8'; circle(sunX, sunY, 11); ctx.fill();
+    // bulutlar
+    ctx.fillStyle = 'rgba(255,255,255,.75)';
+    const cx = wx + ((view.time * (RM ? 0 : 4)) % (ww + 60)) - 30;
+    ellipse(cx, wy + 30, 16, 6); ctx.fill(); ellipse(cx + 12, wy + 26, 10, 6); ctx.fill();
+    // şehir silueti
+    ctx.fillStyle = p > 0.8 ? '#2d2846' : '#7b8fa3';
+    [[0, 70], [16, 50], [30, 85], [48, 60], [62, 92], [80, 55]].forEach(([bx, bh]) => ctx.fillRect(wx + bx, wy + wh - bh * 0.6, 15, bh));
+    if (p > 0.8) { // yanan ışıklar
+      ctx.fillStyle = '#ffd166';
+      for (let i = 0; i < 14; i++) ctx.fillRect(wx + 3 + (i * 37) % 92, wy + wh - 8 - ((i * 17) % 34), 3, 3);
+    }
+    ctx.restore();
+    ctx.fillStyle = '#f7f3ea'; ctx.fillRect(wx + ww / 2 - 2, wy, 4, wh); ctx.fillRect(wx, wy + wh / 2 - 2, ww, 4);
+
+    // poster: yükselen grafik
+    ctx.fillStyle = '#fff'; rr(138, 78, 64, 52, 3); ctx.fill();
+    ctx.strokeStyle = '#e07a5f'; ctx.lineWidth = 2.5; ctx.beginPath();
+    ctx.moveTo(146, 118); ctx.lineTo(160, 110); ctx.lineTo(172, 114); ctx.lineTo(192, 92); ctx.stroke();
+    text('HEDEF %110', 170, 124, 7, '#3d405b', 800);
+
+    // toplantı odası kapısı
+    ctx.fillStyle = '#b08968'; rr(238, 150, 58, 150, 3); ctx.fill();
+    ctx.fillStyle = '#9c7656'; ctx.fillRect(244, 160, 46, 56); ctx.fillRect(244, 226, 46, 66);
+    ctx.fillStyle = '#e9c46a'; circle(286, 232, 3); ctx.fill();
+    ctx.fillStyle = '#f7f3ea'; rr(246, 132, 42, 12, 2); ctx.fill();
+    text('TOPLANTI', 267, 138.5, 7, '#3d405b', 800);
+
+    // duvar saati
+    const hx = 328, hy = 96;
+    ctx.fillStyle = '#fff'; circle(hx, hy, 19); ctx.fill();
+    ctx.strokeStyle = '#3d405b'; ctx.lineWidth = 2.5; ctx.stroke();
+    const mins = CONFIG.startHour * 60 + p * (CONFIG.endHour - CONFIG.startHour) * 60;
+    const ha = ((mins / 60) % 12) / 12 * Math.PI * 2 - Math.PI / 2, ma = (mins % 60) / 60 * Math.PI * 2 - Math.PI / 2;
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx + Math.cos(ha) * 9, hy + Math.sin(ha) * 9); ctx.stroke();
+    ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx + Math.cos(ma) * 14, hy + Math.sin(ma) * 14); ctx.stroke();
+
+    // saksı bitkisi
+    ctx.fillStyle = '#c1666b'; rr(18, 262, 30, 36, 4); ctx.fill();
+    ctx.fillStyle = '#4c956c';
+    for (let i = 0; i < 6; i++) {
+      const a = -Math.PI / 2 + (i - 2.5) * 0.35 + (RM ? 0 : Math.sin(view.time * 1.3 + i) * 0.04);
+      ctx.save(); ctx.translate(33, 264); ctx.rotate(a); ellipse(18, 0, 18, 6); ctx.fill(); ctx.restore();
+    }
+    // su sebili
+    ctx.fillStyle = '#d9e2ec'; rr(306, 238, 34, 62, 4); ctx.fill();
+    ctx.fillStyle = '#9ed0f0'; rr(310, 206, 26, 34, 8); ctx.fill();
+    ctx.fillStyle = '#5f7a99'; ctx.fillRect(318, 254, 10, 4);
+
+    // koridor zemini
+    ctx.fillStyle = '#b9ae9b'; ctx.fillRect(0, 296, W, 10);
+  }
+
+  function drawGlass() {
+    ctx.fillStyle = 'rgba(170,210,235,.13)'; ctx.fillRect(0, 44, W, 262);
+    ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.fillRect(0, 214, W, 12);      // buzlu bant
+    ctx.strokeStyle = 'rgba(255,255,255,.22)'; ctx.lineWidth = 6;
+    ctx.beginPath(); ctx.moveTo(40, 300); ctx.lineTo(100, 60); ctx.moveTo(200, 300); ctx.lineTo(250, 110); ctx.stroke();
+    ctx.fillStyle = '#8796a8'; ctx.fillRect(117, 44, 5, 262); ctx.fillRect(237, 44, 5, 262);
+    ctx.fillStyle = '#5d6b7c'; ctx.fillRect(0, 300, W, 12);
+  }
+
+  function drawFloor(p) {
+    ctx.fillStyle = '#8f9bb0'; ctx.fillRect(0, 312, W, H - 312);
+    ctx.strokeStyle = 'rgba(255,255,255,.06)'; ctx.lineWidth = 1;
+    for (let y = 330; y < H; y += 26) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    if (p > 0.8) { ctx.fillStyle = `rgba(40,30,80,${(p - 0.8) * 0.9})`; ctx.fillRect(0, 44, W, H - 44); }
+  }
+
+  /* =================== ÇİZİM: patron =================== */
+  function drawBoss(x, feet, id, turn, mood, walking, walkPhase, alpha = 1) {
+    const L = BOSSES[id].look_;
+    ctx.save(); ctx.globalAlpha = alpha;
+    const bob = walking && !RM ? Math.abs(Math.sin(walkPhase)) * 2.5 : 0;
+    const shake = mood === 'scold' && !RM ? Math.sin(view.time * 60) * 1.5 : 0;
+    x += shake;
+    const top = feet - bob;
+    // gölge
+    ctx.fillStyle = 'rgba(0,0,0,.16)'; ellipse(x, feet, 30, 5); ctx.fill();
+    // bacaklar
+    const sw = walking && !RM ? Math.sin(walkPhase) * 5 : 0;
+    ctx.fillStyle = shade(L.suit, -0.35);
+    rr(x - 15 + sw, top - 62, 13, 60, 4); ctx.fill();
+    rr(x + 2 - sw, top - 62, 13, 60, 4); ctx.fill();
+    ctx.fillStyle = '#2b2b2b';
+    ellipse(x - 8 + sw, top - 2, 9, 4); ctx.fill(); ellipse(x + 9 - sw, top - 2, 9, 4); ctx.fill();
+    // gövde
+    const ty = top - 130;
+    ctx.fillStyle = L.suit; rr(x - 32, ty, 64, 74, 15); ctx.fill();
+    const front = turn > 0.55;
+    if (front) {
+      ctx.fillStyle = '#f5f5f5';
+      ctx.beginPath(); ctx.moveTo(x - 11, ty + 2); ctx.lineTo(x + 11, ty + 2); ctx.lineTo(x, ty + 30); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = L.tie;
+      ctx.beginPath(); ctx.moveTo(x - 4, ty + 6); ctx.lineTo(x + 4, ty + 6); ctx.lineTo(x + 6, ty + 34); ctx.lineTo(x, ty + 42); ctx.lineTo(x - 6, ty + 34); ctx.closePath(); ctx.fill();
+      if (L.pin) { ctx.fillStyle = '#e9c46a'; ctx.fillRect(x - 5, ty + 22, 10, 2); }
+    } else {
+      ctx.strokeStyle = shade(L.suit, -0.25); ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(x, ty + 20); ctx.lineTo(x, ty + 72); ctx.stroke();
+      ctx.fillStyle = shade(L.suit, 0.12); rr(x - 12, ty - 2, 24, 8, 3); ctx.fill();
+    }
+    // kollar
+    ctx.fillStyle = shade(L.suit, -0.1);
+    if (mood === 'scold') {
+      rr(x - 41, ty + 6, 12, 54, 6); ctx.fill();
+      ctx.save(); ctx.translate(x + 30, ty + 10); ctx.rotate(-2.3 + (RM ? 0 : Math.sin(view.time * 20) * 0.15));
+      rr(-6, 0, 12, 50, 6); ctx.fill(); ctx.fillStyle = L.skin; circle(0, 52, 6); ctx.fill(); ctx.restore();
+      ctx.fillStyle = L.skin; circle(x - 35, ty + 62, 6); ctx.fill();
+    } else {
+      const as = walking && !RM ? Math.sin(walkPhase) * 3 : 0;
+      rr(x - 41, ty + 6 - as, 12, 56, 6); ctx.fill(); rr(x + 29, ty + 6 + as, 12, 56, 6); ctx.fill();
+      ctx.fillStyle = L.skin; circle(x - 35, ty + 64 - as, 6); ctx.fill(); circle(x + 35, ty + 64 + as, 6); ctx.fill();
+    }
+    // boyun + kafa
+    const hr = 22, hx = x, hy = ty - 18;
+    ctx.fillStyle = shade(L.skin, -0.1); ctx.fillRect(hx - 7, hy + 14, 14, 10);
+    ctx.fillStyle = L.skin; circle(hx - hr + 1, hy + 2, 5); ctx.fill(); circle(hx + hr - 1, hy + 2, 5); ctx.fill();
+    circle(hx, hy, hr); ctx.fill();
+    if (mood === 'scold') { ctx.fillStyle = 'rgba(220,50,50,.35)'; circle(hx, hy, hr); ctx.fill(); }
+    // yüz (dönüş oranına göre kayar)
+    const fa = clamp((turn - 0.12) / 0.45, 0, 1);
+    if (fa > 0) {
+      const fx = hx + (1 - turn) * hr * 0.95, sq = 0.35 + 0.65 * turn;
+      ctx.save(); ctx.globalAlpha = alpha * fa;
+      ctx.fillStyle = '#222';
+      const eyeH = mood === 'scold' ? 4 : L.mustache ? 1.6 : 2.6;
+      ellipse(fx - 8 * sq, hy - 2, 2.6 * sq + 0.6, eyeH); ctx.fill(); ellipse(fx + 8 * sq, hy - 2, 2.6 * sq + 0.6, eyeH); ctx.fill();
+      ctx.strokeStyle = shade(L.hair, -0.2); ctx.lineWidth = 2.2; ctx.lineCap = 'round';
+      const brow = mood === 'scold' ? 4 : mood === 'look' ? 2.5 : 0;
+      ctx.beginPath();
+      ctx.moveTo(fx - 13 * sq, hy - 9 - brow); ctx.lineTo(fx - 4 * sq, hy - 8 + brow);
+      ctx.moveTo(fx + 13 * sq, hy - 9 - brow); ctx.lineTo(fx + 4 * sq, hy - 8 + brow); ctx.stroke();
+      if (L.glasses) {
+        ctx.strokeStyle = '#333'; ctx.lineWidth = 1.4;
+        circle(fx - 8 * sq, hy - 2, 5.5 * sq + 1); ctx.stroke(); circle(fx + 8 * sq, hy - 2, 5.5 * sq + 1); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(fx - 2 * sq, hy - 2); ctx.lineTo(fx + 2 * sq, hy - 2); ctx.stroke();
+      }
+      if (L.mustache) { ctx.fillStyle = L.hair; ellipse(fx, hy + 7, 9 * sq, 2.6); ctx.fill(); }
+      if (mood === 'scold') { ctx.fillStyle = '#5a1a1a'; ellipse(fx, hy + 11, 6 * sq, 4.5); ctx.fill(); }
+      else { ctx.strokeStyle = '#5a2a2a'; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(fx - 5 * sq, hy + 11); ctx.lineTo(fx + 5 * sq, hy + 11); ctx.stroke(); }
+      ctx.restore();
+    }
+    // ense saçı: yüz göründükçe yana kayar
+    ctx.save(); circle(hx, hy, hr); ctx.clip();
+    const cover = (1 - turn) * hr * 2;
+    if (cover > 0.5) {
+      ctx.fillStyle = L.hairStyle === 'bald' ? L.skin : L.hair;
+      ctx.fillRect(hx - hr - 1, hy - hr - 1, cover + 1, hr * 2 + 2);
+      if (L.hairStyle === 'bald') { ctx.fillStyle = L.hair; ctx.fillRect(hx - hr - 1, hy + 2, cover + 1, 8); }
+    }
+    ctx.restore();
+    // üst saç
+    ctx.fillStyle = L.hair;
+    if (L.hairStyle === 'bald') {
+      ctx.fillStyle = L.hair; ellipse(hx - hr + 3, hy + 2, 4, 8); ctx.fill(); ellipse(hx + hr - 3, hy + 2, 4, 8); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,.35)'; ellipse(hx - 6, hy - 14, 6, 3); ctx.fill();
+    } else if (L.hairStyle === 'spiky') {
+      ctx.beginPath(); ctx.arc(hx, hy, hr + 1, Math.PI, 0);
+      for (let i = 0; i <= 6; i++) ctx.lineTo(hx + hr - i * (hr * 2 / 6), hy - hr - (i % 2 ? 8 : 0));
+      ctx.closePath(); ctx.fill();
+    } else {
+      ctx.beginPath(); ctx.arc(hx, hy - 2, hr + 1.5, Math.PI * 1.02, Math.PI * 1.98); ctx.closePath(); ctx.fill();
+      if (L.hairStyle === 'slick') { ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(hx, hy - 2, hr - 5, Math.PI * 1.2, Math.PI * 1.6); ctx.stroke(); }
+      else { ctx.fillStyle = shade(L.hair, 0.15); ctx.fillRect(hx + 4, hy - hr - 1, 2, 9); }
+    }
+    if (L.headset) {
+      ctx.strokeStyle = '#333'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(hx, hy, hr + 3, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();
+      ctx.fillStyle = '#333'; rr(hx - hr - 5, hy - 4, 7, 12, 3); ctx.fill(); rr(hx + hr - 2, hy - 4, 7, 12, 3); ctx.fill();
+    }
+    // sinir buharı
+    if (mood === 'scold' && !RM) {
+      ctx.fillStyle = 'rgba(255,255,255,.8)';
+      const s = (view.time * 2) % 1;
+      circle(hx - 18 - s * 6, hy - hr - 6 - s * 16, 4 + s * 4); ctx.fill();
+      circle(hx + 18 + s * 6, hy - hr - 6 - s * 16, 4 + s * 4); ctx.fill();
+    }
+    ctx.restore();
+    return { headX: hx, headY: hy };
+  }
+
+  function bubble(x, y, str, color = '#fff', ink = '#1b1b1b', size = 15) {
+    ctx.font = `800 ${size}px ${FONT}`;
+    const w = ctx.measureText(str).width + 18, h = size + 12;
+    const bx = clamp(x - w / 2, 6, W - w - 6);
+    ctx.fillStyle = color; rr(bx, y - h, w, h, 9); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x - 6, y - 1); ctx.lineTo(x + 2, y + 8); ctx.lineTo(x + 6, y - 1); ctx.fill();
+    text(str, bx + w / 2, y - h / 2, size, ink, 800);
+  }
+
+  /* =================== ÇİZİM: çalışan + masa =================== */
+  function drawEmployee(heat, holding, b) {
+    const x = 180, hy = 382;
+    const caught = view.catchFace > 0, nervous = holding && (b.phase === 'warn' || heat > 0.65);
+    // sandalye
+    ctx.fillStyle = '#2f3542'; rr(126, 352, 108, 120, 18); ctx.fill();
+    // gövde
+    ctx.fillStyle = '#6c9a8b'; rr(132, 412, 96, 90, 22); ctx.fill();
+    ctx.fillStyle = '#5a8577'; ctx.beginPath(); ctx.moveTo(166, 412); ctx.lineTo(180, 430); ctx.lineTo(194, 412); ctx.fill();
+    // boyun + kafa
+    ctx.fillStyle = '#d9a77c'; ctx.fillRect(172, 400, 16, 14);
+    const jx = caught && !RM ? Math.sin(view.time * 50) * 1.5 : 0;
+    const hx = x + jx;
+    ctx.fillStyle = '#e8b98f'; circle(hx, hy, 27); ctx.fill();
+    // ekran ışığı yüze vuruyor
+    if (holding) {
+      const hue = (view.time * (RM ? 30 : 160)) % 360;
+      ctx.fillStyle = `hsla(${hue},90%,62%,${0.18 + heat * 0.15})`; circle(hx, hy + 2, 27); ctx.fill();
+    } else { ctx.fillStyle = 'rgba(160,200,255,.12)'; circle(hx, hy + 2, 27); ctx.fill(); }
+    // saç
+    ctx.fillStyle = '#4a3326';
+    ctx.beginPath(); ctx.arc(hx, hy - 4, 28, Math.PI * 1.05, Math.PI * 1.95); ctx.closePath(); ctx.fill();
+    ellipse(hx - 14, hy - 20, 14, 8); ctx.fill();
+    // yüz ifadesi
+    ctx.fillStyle = '#2a1d17'; ctx.strokeStyle = '#2a1d17'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+    if (caught) {
+      circle(hx - 10, hy, 4.5); ctx.fill(); circle(hx + 10, hy, 4.5); ctx.fill();
+      ctx.fillStyle = '#fff'; circle(hx - 9, hy - 1, 1.5); ctx.fill(); circle(hx + 11, hy - 1, 1.5); ctx.fill();
+      ctx.fillStyle = '#5a1a1a'; ellipse(hx, hy + 14, 5, 6); ctx.fill();
+    } else if (holding) {
+      ellipse(hx - 10, hy + 1, 3, nervous ? 4 : 3.2); ctx.fill(); ellipse(hx + 10, hy + 1, 3, nervous ? 4 : 3.2); ctx.fill();
+      if (nervous) { ctx.beginPath(); ctx.moveTo(hx - 7, hy + 14); ctx.lineTo(hx + 7, hy + 13); ctx.stroke(); }
+      else { ctx.beginPath(); ctx.arc(hx, hy + 9, 8, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke(); }
+    } else {
+      ctx.beginPath(); ctx.moveTo(hx - 13, hy + 2); ctx.lineTo(hx - 7, hy + 2); ctx.moveTo(hx + 7, hy + 2); ctx.lineTo(hx + 13, hy + 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(hx - 4, hy + 13); ctx.lineTo(hx + 4, hy + 13); ctx.stroke();
+      if (view.bankFace > 0) { ctx.beginPath(); ctx.arc(hx, hy + 8, 6, 0.2 * Math.PI, 0.8 * Math.PI); ctx.stroke(); }
+    }
+    // ter damlası
+    if (nervous || caught) {
+      const s = RM ? 0.3 : (view.time * 1.6) % 1;
+      ctx.fillStyle = '#7ec8ff';
+      ctx.beginPath(); ctx.moveTo(hx + 24, hy - 14 + s * 10); ctx.quadraticCurveTo(hx + 29, hy - 4 + s * 10, hx + 24, hy - 2 + s * 10);
+      ctx.quadraticCurveTo(hx + 19, hy - 4 + s * 10, hx + 24, hy - 14 + s * 10); ctx.fill();
+    }
+  }
+
+  function drawDesk(heat, holding) {
+    // masa
+    ctx.fillStyle = '#c48a5a'; ctx.fillRect(0, 494, W, 16);
+    ctx.fillStyle = '#a57148'; ctx.fillRect(0, 510, W, H - 510);
+    ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.fillRect(0, 510, W, 4);
+    // laptop arkası
+    if (holding) {
+      const hue = (view.time * (RM ? 30 : 160)) % 360;
+      ctx.save(); ctx.shadowColor = `hsla(${hue},95%,60%,.9)`; ctx.shadowBlur = 10 + heat * 18;
+      ctx.fillStyle = '#d5d9e0'; rr(112, 414, 136, 84, 8); ctx.fill(); ctx.restore();
+    }
+    ctx.fillStyle = '#d5d9e0'; rr(112, 414, 136, 84, 8); ctx.fill();
+    ctx.fillStyle = '#c3c8d1'; rr(118, 420, 124, 72, 6); ctx.fill();
+    // jenerik çıkartmalar
+    ctx.fillStyle = '#f2c14e'; circle(160, 446, 9); ctx.fill();
+    ctx.fillStyle = '#2b2b2b'; circle(157, 444, 1.4); ctx.fill(); circle(163, 444, 1.4); ctx.fill();
+    ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(160, 447, 4, 0.2 * Math.PI, 0.8 * Math.PI); ctx.stroke();
+    ctx.fillStyle = '#7bdff2'; rr(192, 456, 26, 12, 3); ctx.fill();
+    ctx.fillStyle = '#9aa3b2'; ctx.fillRect(112, 494, 136, 5);
+    // kupa + buhar
+    ctx.fillStyle = '#e76f51'; rr(42, 466, 26, 30, 4); ctx.fill();
+    ctx.strokeStyle = '#e76f51'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(70, 480, 7, -Math.PI / 2, Math.PI / 2); ctx.stroke();
+    if (!RM) {
+      ctx.strokeStyle = 'rgba(255,255,255,.5)'; ctx.lineWidth = 2;
+      for (let i = 0; i < 2; i++) {
+        const s = (view.time * 0.5 + i * 0.5) % 1;
+        ctx.globalAlpha = 1 - s; ctx.beginPath();
+        ctx.moveTo(50 + i * 10, 462 - s * 22); ctx.quadraticCurveTo(46 + i * 10, 452 - s * 22, 52 + i * 10, 444 - s * 22); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+    // evrak yığını
+    ctx.fillStyle = '#f1f1f1'; for (let i = 0; i < 4; i++) { ctx.fillRect(282 + (i % 2) * 3, 488 - i * 5, 50, 6); }
+    ctx.fillStyle = '#ffd166'; ctx.fillRect(316, 470, 12, 12);
+  }
+
+  /* Cep göstergesi: masanın önündeki küçük ekran */
+  function drawPocket(heat) {
+    ctx.fillStyle = '#141821'; rr(92, 526, 176, 60, 10); ctx.fill();
+    ctx.strokeStyle = heat > 0.01 ? mix('#3fb68b', '#e5484d', heat) : '#2c3342'; ctx.lineWidth = 2; ctx.stroke();
+    if (run.holding || run.pocket > 0) {
+      const rate = (CONFIG.rate.base + run.holdTime * CONFIG.rate.perSec * run.mod.growth) / CONFIG.rate.base;
+      const pulse = RM ? 0 : Math.sin(view.time * (6 + heat * 14)) * heat * 1.5;
+      text('CEP', 106, 540, 10, '#8b93a7', 800, 'left');
+      text('+' + fmt(run.pocket), 180, 558 + pulse * 0.2, 26 + pulse, mix('#f4f1ea', '#ff6b6b', heat), 900);
+      text('×' + rate.toFixed(1), 254, 540, 11, mix('#3fb68b', '#ff6b6b', heat), 800, 'right');
+    } else if (view.catchFace > 0 && view.lastLost > 0) {
+      text('−' + fmt(view.lastLost), 180, 556, 24, '#e5484d', 900);
+    } else if (run.stats.presses < 2) {
+      const bob = RM ? 0 : Math.sin(view.time * 4) * 2;
+      text('Basılı tut = oyna', 180, 548 + bob, 15, '#f2c14e', 800);
+      text('bırak = kasaya at', 180, 568 + bob, 11, '#8b93a7', 700);
+    } else {
+      text('çalışıyormuş gibi yap…', 180, 556, 12, '#5d6577', 700);
+    }
+  }
+
+  /* =================== HUD =================== */
+  function heart(x, y, s, fill) {
+    ctx.fillStyle = fill; ctx.beginPath();
+    ctx.moveTo(x, y + s * 0.3);
+    ctx.bezierCurveTo(x, y, x - s * 0.5, y, x - s * 0.5, y + s * 0.3);
+    ctx.bezierCurveTo(x - s * 0.5, y + s * 0.6, x, y + s * 0.75, x, y + s);
+    ctx.bezierCurveTo(x, y + s * 0.75, x + s * 0.5, y + s * 0.6, x + s * 0.5, y + s * 0.3);
+    ctx.bezierCurveTo(x + s * 0.5, y, x, y, x, y + s * 0.3);
+    ctx.fill();
+  }
+  function drawHUD(p) {
+    ctx.fillStyle = '#1b1f2a'; ctx.fillRect(0, 0, W, 44);
+    text('KASA', 12, 13, 9, '#8b93a7', 800, 'left');
+    view.displayScore = RM ? run.score : lerp(view.displayScore, run.score, 0.18);
+    if (Math.abs(view.displayScore - run.score) < 1) view.displayScore = run.score;
+    text(fmt(view.displayScore), 12, 30, 20, '#f2c14e', 900, 'left');
+    // dijital saat
+    ctx.fillStyle = '#0e1118'; rr(138, 8, 84, 28, 6); ctx.fill();
+    text(clockString(p), 180, 23, 18, p > 0.85 ? '#ff9f5a' : '#7ee0b0', 800);
+    // canlar + kalkan
+    const maxL = Math.max(CONFIG.lives, run.lives);
+    for (let i = 0; i < maxL; i++) heart(16 + i * 20, 52, 15, i < run.lives ? '#e5484d' : 'rgba(0,0,0,.25)');
+    let ix = 16 + maxL * 20 + 4;
+    ctx.font = `14px ${FONT}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    for (let i = 0; i < run.shields; i++) { ctx.fillText('🛡️', ix, 60); ix += 18; }
+    // aktif modifier'lar
+    const mods = run.mods.filter(id => id !== 'shield' && id !== 'overtime' && id !== 'lunch');
+    mods.forEach((id, i) => ctx.fillText(MOD_BY_ID[id].icon, 14 + i * 20, 82));
+    // patron etiketi
+    const name = BOSSES[run.boss.typeId].name;
+    ctx.font = `800 11px ${FONT}`;
+    const w = ctx.measureText(name).width + 16;
+    ctx.fillStyle = 'rgba(27,31,42,.82)'; rr(W - w - 8, 50, w, 20, 10); ctx.fill();
+    text(name, W - 8 - w / 2, 60.5, 11, '#f4f1ea', 800);
+    if (run.mode === 'daily') { ctx.fillStyle = 'rgba(242,193,78,.9)'; rr(W - 64, 74, 56, 16, 8); ctx.fill(); text('GÜNLÜK', W - 36, 82.5, 9, '#1b1b1b', 900); }
+  }
+
+  /* =================== Seçim ekranı =================== */
+  const CARD = { x: 26, w: 308, h: 96, y0: 168, gap: 108 };
+  function cardAt(lx, ly) {
+    if (!run || !run.pick) return -1;
+    for (let i = 0; i < run.pick.options.length; i++) {
+      const y = CARD.y0 + i * CARD.gap;
+      if (lx >= CARD.x && lx <= CARD.x + CARD.w && ly >= y && ly <= y + CARD.h) return i;
+    }
+    return -1;
+  }
+  function drawPick() {
+    const pk = run.pick;
+    ctx.fillStyle = 'rgba(15,18,26,.88)'; ctx.fillRect(0, 44, W, H - 44);
+    text('☕ Kahve molası!', 180, 96, 24, '#f2c14e', 900);
+    text('Bir avantaj seç — sadece bu mesai geçerli', 180, 126, 13, '#c9cfdb', 600);
+    pk.options.forEach((id, i) => {
+      const md = MOD_BY_ID[id], y = CARD.y0 + i * CARD.gap;
+      const on = pk.chosen >= 0 ? pk.chosen === i : pk.hi === i;
+      const dim = pk.chosen >= 0 && !on;
+      ctx.save();
+      if (on && !RM && pk.chosen < 0) { ctx.translate(180, y + CARD.h / 2); ctx.scale(1.03, 1.03); ctx.translate(-180, -(y + CARD.h / 2)); }
+      ctx.globalAlpha = dim ? 0.35 : 1;
+      ctx.fillStyle = on ? '#2d3445' : '#222837'; rr(CARD.x, y, CARD.w, CARD.h, 14); ctx.fill();
+      ctx.lineWidth = on ? 3 : 1; ctx.strokeStyle = on ? '#f2c14e' : '#3a4152'; ctx.stroke();
+      ctx.font = `30px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(md.icon, CARD.x + 34, y + CARD.h / 2);
+      text(md.name, CARD.x + 66, y + 24, 17, '#f4f1ea', 800, 'left');
+      ctx.font = `500 12.5px ${FONT}`; ctx.fillStyle = '#c9cfdb'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      wrap(md.desc, CARD.x + 66, y + 48, CARD.w - 80, 16);
+      if (on && pk.chosen < 0) { // bir sonraki karta geçişe kalan süre
+        const k = (pk.t % CONFIG.pickCycle) / CONFIG.pickCycle;
+        ctx.fillStyle = '#f2c14e'; rr(CARD.x + 14, y + CARD.h - 8, (CARD.w - 28) * (1 - k), 3, 2); ctx.fill();
+      }
+      ctx.restore();
+    });
+    const msg = pk.t < CONFIG.pickGrace ? '…' : pk.chosen >= 0 ? 'Seçildi! Kimseye çaktırma.' : 'Bas: parlayanı seç  ·  ya da karta dokun';
+    text(msg, 180, 516, 13, '#8b93a7', 700);
+  }
+
+  /* =================== parçacıklar / efektler =================== */
+  function spawn(p) { if (view.particles.length < 160) view.particles.push(p); }
+  function burstCoins(n, gain) {
+    for (let i = 0; i < n; i++) {
+      const a = -Math.PI / 2 + (Math.random() - 0.5) * 1.6, sp = 120 + Math.random() * 140;
+      spawn({ kind: 'coin', x: 180 + (Math.random() - 0.5) * 40, y: 450, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 0, max: 0.9 + Math.random() * 0.3, home: 0.28 });
+    }
+    spawn({ kind: 'text', x: 180, y: 512, vx: 0, vy: -45, life: 0, max: 1.1, str: '+' + fmt(gain), color: '#f2c14e', size: 22 });
+  }
+  function burstPapers(n) {
+    for (let i = 0; i < n; i++) {
+      const a = -Math.PI / 2 + (Math.random() - 0.5) * 2.2, sp = 140 + Math.random() * 160;
+      spawn({ kind: 'paper', x: 180, y: 440, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, rot: Math.random() * 6, vr: (Math.random() - 0.5) * 10, life: 0, max: 1.3 });
+    }
+  }
+  function updateParticles(dt) {
+    for (const p of view.particles) {
+      p.life += dt;
+      if (p.kind === 'coin' && p.life > p.home) { // kasaya uç
+        const tx = 40, ty = 26, k = Math.min(1, dt * 9);
+        p.vx = lerp(p.vx, (tx - p.x) * 7, k); p.vy = lerp(p.vy, (ty - p.y) * 7, k);
+        if (Math.hypot(tx - p.x, ty - p.y) < 10) p.life = p.max;
+      } else if (p.kind !== 'text') p.vy += 420 * dt;
+      p.x += p.vx * dt; p.y += p.vy * dt;
+      if (p.rot != null) p.rot += p.vr * dt;
+    }
+    view.particles = view.particles.filter(p => p.life < p.max);
+  }
+  function drawParticles() {
+    for (const p of view.particles) {
+      const a = 1 - p.life / p.max;
+      ctx.save(); ctx.globalAlpha = Math.min(1, a * 1.5);
+      if (p.kind === 'coin') { ctx.fillStyle = '#f2c14e'; circle(p.x, p.y, 4); ctx.fill(); ctx.fillStyle = '#fff3c4'; circle(p.x - 1, p.y - 1, 1.5); ctx.fill(); }
+      else if (p.kind === 'paper') { ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = '#fff'; ctx.fillRect(-7, -9, 14, 18); ctx.fillStyle = '#c9cfdb'; ctx.fillRect(-4, -5, 8, 1.5); ctx.fillRect(-4, -1, 8, 1.5); ctx.fillRect(-4, 3, 6, 1.5); }
+      else if (p.kind === 'text') { ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,.5)'; ctx.font = `900 ${p.size}px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.strokeText(p.str, p.x, p.y); ctx.fillStyle = p.color; ctx.fillText(p.str, p.x, p.y); }
+      ctx.restore();
+    }
+  }
+  function drawVignette(heat, danger) {
+    const k = Math.max(heat * 0.55, danger);
+    if (k <= 0.01) return;
+    const pulse = RM ? 1 : 0.85 + Math.sin(view.time * (5 + heat * 10)) * 0.15;
+    const g = ctx.createRadialGradient(180, 330, 150, 180, 330, 380);
+    g.addColorStop(0, 'rgba(229,72,77,0)'); g.addColorStop(1, `rgba(229,72,77,${Math.min(0.75, k * pulse)})`);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  }
+
+  /* =================== olay → efekt/ses =================== */
+  function handleEvents() {
+    for (const ev of run.events) {
+      switch (ev.type) {
+        case 'press': Sound.play('press'); break;
+        case 'bank':
+          Sound.play(ev.close ? 'close' : 'bank');
+          view.bankFace = 0.8;
+          if (RM) spawn({ kind: 'text', x: 180, y: 512, vx: 0, vy: -25, life: 0, max: 1, str: '+' + fmt(ev.gain), color: '#f2c14e', size: 22 });
+          else burstCoins(Math.min(18, 3 + Math.floor(ev.gain / 15)), ev.gain);
+          if (ev.close) setBanner('KIL PAYI!', '', '#f2c14e', 0.9);
+          break;
+        case 'warn': Sound.play('warn'); announce('Patron dönüyor!'); break;
+        case 'fake': Sound.play('fake'); break;
+        case 'caught':
+          Sound.play(ev.shielded ? 'shield' : 'caught');
+          view.flash = 1; view.catchFace = 1.4; view.lastLost = ev.lost;
+          view.scoldLine = SCOLD_LINES[Math.floor(Math.random() * SCOLD_LINES.length)];
+          if (!RM) burstPapers(12);
+          if (ev.shielded) setBanner('KALKAN!', 'Can gitmedi', '#7bdff2', 1.3);
+          else if (ev.saved) setBanner('SİGORTA', '+' + fmt(ev.saved) + ' kurtarıldı', '#7ee0b0', 1.3);
+          announce('Yakalandın! Kalan can: ' + run.lives);
+          break;
+        case 'newboss':
+          Sound.play('boss');
+          view.swap = { t: 0, from: ev.from, to: ev.to, fromX: view.bossX };
+          setBanner('YENİ PATRON', BOSSES[ev.to].name + ' — ' + BOSSES[ev.to].desc, '#f2c14e', 2.6);
+          announce('Yeni patron: ' + BOSSES[ev.to].name);
+          break;
+        case 'pick': Sound.play('pick'); view.lastHi = -1; announce('Kahve molası, bir avantaj seç'); break;
+        case 'chosen': Sound.play('chosen'); break;
+        case 'over':
+          Sound.play(ev.reason === 'shift' ? 'shift' : 'over');
+          if (ev.reason === 'shift') setBanner('18:00 — MESAİ BİTTİ!', 'Kalan canlar bonus: +' + fmt(run.stats.lifeBonus), '#7ee0b0', 2);
+          view.overDelay = 1.3;
+          break;
+      }
+    }
+    run.events.length = 0;
+  }
+  function setBanner(title, sub, color, dur) { view.banner = { title, sub, color, t: 0, dur }; }
+  function announce(msg) { $('live').textContent = msg; }
+
+  /* =================== ana çizim =================== */
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    if (!run) { drawIdle(); return; }
+    const b = run.boss, p = clockProgress(run);
+    const heat = clamp(run.holdTime / 4, 0, 1);
+    const danger = run.holding && b.phase === 'warn' ? 0.25 + 0.35 * (b.t / b.dur) : 0;
+
+    ctx.save();
+    if (!RM && run.state === 'play') {
+      const sh = heat * heat * 2.2 + (view.flash > 0 ? view.flash * 4 : 0);
+      ctx.translate((Math.random() - 0.5) * sh, (Math.random() - 0.5) * sh);
+    }
+    drawRoom(p);
+    drawBossLayer(b);
+    drawGlass();
+    drawFloor(p);
+    drawEmployee(heat, run.holding, b);
+    drawDesk(heat, run.holding);
+    drawPocket(heat);
+    drawParticles();
+    ctx.restore();
+
+    drawVignette(heat, danger);
+    if (view.flash > 0) { ctx.fillStyle = `rgba(229,72,77,${view.flash * (RM ? 0.15 : 0.35)})`; ctx.fillRect(0, 0, W, H); }
+    drawHUD(p);
+    drawBanner();
+    if (run.state === 'pick') drawPick();
+    if (view.hiddenPause) {
+      ctx.fillStyle = 'rgba(15,18,26,.85)'; ctx.fillRect(0, 44, W, H - 44);
+      text('Duraklatıldı', 180, 280, 26, '#f4f1ea', 900);
+      text('Devam etmek için bas', 180, 316, 15, '#c9cfdb', 600);
+    }
+  }
+
+  function drawBossLayer(b) {
+    let id = b.typeId, x = view.bossX, alpha = 1;
+    // görsel stil: Genel Müdür karışık taktikte de kendi kıyafetiyle görünür
+    if (view.swap) {
+      const k = view.swap.t / CONFIG.swapTime;
+      if (k < 0.5) { id = view.swap.from; x = lerp(view.swap.fromX, 420, k * 2); }
+      else { x = lerp(-60, view.bossX, (k - 0.5) * 2); }
+    }
+    const mood = b.phase === 'scold' ? 'scold' : b.phase === 'look' ? 'look' : 'away';
+    const walking = (b.phase === 'away' && b.shrug <= 0) || !!view.swap;
+    const head = drawBoss(x, FEET, id, view.turn, mood, walking, view.walkPhase, alpha);
+    // uyarı işaretleri
+    if (b.phase === 'warn' && !view.swap) {
+      const k = clamp(b.t / b.dur, 0, 1);
+      const s = 20 + k * 30, col = mix('#f2c14e', '#e5484d', k);
+      const by = head.headY - 34 - (RM ? 0 : Math.sin(view.time * 30) * k * 2);
+      ctx.fillStyle = col; circle(head.headX, by - s * 0.15, s * 0.62); ctx.fill();
+      text('!', head.headX, by - s * 0.12, s, '#1b1b1b', 900);
+    } else if (b.shrug > 0 && b.phase === 'away') {
+      bubble(head.headX + 10, head.headY - 30, b.shrug > CONFIG.shrugTime * 0.5 || !b.quick ? 'hmm…' : '?', '#fff', '#555', 12);
+    } else if (b.phase === 'look') {
+      const k = clamp(b.t / Math.max(0.01, run.mod.tolerance), 0, 1);
+      ctx.fillStyle = '#e5484d'; ctx.globalAlpha = 0.6 + 0.4 * k;
+      ellipse(head.headX, head.headY - 40, 16, 9); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.fillStyle = '#fff'; ellipse(head.headX, head.headY - 40, 11, 6); ctx.fill();
+      ctx.fillStyle = '#1b1b1b'; circle(head.headX, head.headY - 40, 3.5); ctx.fill();
+    } else if (b.phase === 'scold') {
+      bubble(head.headX, head.headY - 30, view.scoldLine, '#e5484d', '#fff', 15);
+    }
+  }
+
+  function drawBanner() {
+    const bn = view.banner;
+    if (!bn) return;
+    const a = bn.t < 0.2 ? bn.t / 0.2 : bn.t > bn.dur - 0.4 ? Math.max(0, (bn.dur - bn.t) / 0.4) : 1;
+    ctx.save(); ctx.globalAlpha = a;
+    // patronun kafasını asla örtmesin: camın altında, masanın üstünde
+    const y = 316 + (RM ? 0 : (1 - Math.min(1, bn.t * 5)) * 10);
+    ctx.fillStyle = 'rgba(15,18,26,.86)'; rr(20, y, 320, bn.sub ? 58 : 38, 12); ctx.fill();
+    text(bn.title, 180, y + 19, 18, bn.color, 900);
+    if (bn.sub) { ctx.font = `600 11.5px ${FONT}`; ctx.fillStyle = '#c9cfdb'; ctx.textAlign = 'center'; ctx.fillText(bn.sub.length > 52 ? bn.sub.slice(0, 51) + '…' : bn.sub, 180, y + 42); }
+    ctx.restore();
+  }
+
+  function drawIdle() { // menü arkasında sakin ofis
+    drawRoom(0.1);
+    drawBoss(180 + Math.sin(view.time * 0.5) * 70, FEET, 'lead', 0, 'away', !RM, view.time * 5);
+    drawGlass(); drawFloor(0.1);
+    ctx.fillStyle = '#1b1f2a'; ctx.fillRect(0, 0, W, 44);
+    text('BOSS TURNS', 12, 23, 16, '#f2c14e', 900, 'left');
+  }
+
+  /* =================== görünüm güncelleme =================== */
+  function updateView(dt) {
+    view.time += dt;
+    if (view.flash > 0) view.flash = Math.max(0, view.flash - dt * 2.2);
+    if (view.catchFace > 0) view.catchFace -= dt;
+    if (view.bankFace > 0) view.bankFace -= dt;
+    if (view.banner && (view.banner.t += dt) > view.banner.dur) view.banner = null;
+    updateParticles(dt);
+    if (!run) return;
+    const b = run.boss;
+    const st = BOSSES[b.typeId];
+    if (view.swap && (view.swap.t += dt) >= CONFIG.swapTime) view.swap = null;
+    if (run.state === 'play') {
+      const walking = b.phase === 'away' && b.shrug <= 0;
+      if (walking || view.swap) { view.paceT += dt * st.walk; view.walkPhase += dt * 7 * st.walk; }
+    }
+    view.bossX = 180 + Math.sin(view.paceT * 0.55) * 82;
+    // kafa dönüşü hedefi
+    let target = 0;
+    if (b.phase === 'warn') target = 0.12 + 0.3 * clamp(b.t / b.dur, 0, 1);
+    else if (b.phase === 'look' || b.phase === 'scold') target = 1;
+    else if (b.shrug > 0) target = 0.3 * (b.shrug / CONFIG.shrugTime);
+    view.turn = RM ? target : lerp(view.turn, target, Math.min(1, dt * (target > view.turn ? 18 : 9)));
+    // tutma "tık"ları
+    if (run.holding) {
+      view.tickAcc += dt;
+      const iv = clamp(0.32 - run.holdTime * 0.05, 0.07, 0.32);
+      if (view.tickAcc >= iv) { view.tickAcc = 0; Sound.play('tick', Math.min(8, run.holdTime * 1.5)); }
+    } else view.tickAcc = 0;
+    // seçim vurgu sesi
+    if (run.state === 'pick' && run.pick.chosen < 0 && run.pick.hi !== view.lastHi) { view.lastHi = run.pick.hi; if (run.pick.t > 0.1) Sound.play('pick'); }
+    // tur bitişi → özet
+    if (view.overDelay > 0 && (view.overDelay -= dt) <= 0) showSummary();
+  }
+
+  /* =================== GİRİŞ =================== */
+  const Input = {
+    pointers: new Set(), key: false, tapped: false,
+    held() { return this.pointers.size > 0 || this.key; },
+    // kare içinde bas-bırak yapılan çok hızlı dokunuş da en az bir kare "basılı" sayılsın
+    frameHeld() { const h = this.held() || this.tapped; this.tapped = false; return h; },
+    clear() { this.pointers.clear(); this.key = false; this.tapped = false; },
+  };
+  const overlayOpen = () => !$('title').classList.contains('hidden') || !$('summary').classList.contains('hidden');
+  function toLogical(e) {
+    const r = canvas.getBoundingClientRect();
+    return { x: (e.clientX - r.left) / r.width * W, y: (e.clientY - r.top) / r.height * H };
+  }
+  function onPress(pos) {
+    if (Sound.on) Sound.ensure();
+    if (!run || run.state === 'over') return;
+    Input.tapped = true;
+    if (view.hiddenPause) { view.hiddenPause = false; run.locked = true; Input.tapped = false; return; }
+    if (run.state === 'pick' && run.pick && pos) run.pick.pointerIdx = cardAt(pos.x, pos.y);
+  }
+  canvas.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    e.preventDefault();
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* yok say */ }
+    Input.pointers.add(e.pointerId);
+    onPress(toLogical(e));
+  });
+  const release = e => Input.pointers.delete(e.pointerId);
+  canvas.addEventListener('pointerup', release);
+  canvas.addEventListener('pointercancel', release);   // sistem iptal ederse: bırakmış say (cep kasaya girer)
+  canvas.addEventListener('lostpointercapture', release);
+  canvas.addEventListener('contextmenu', e => e.preventDefault());   // uzun basma menüsü
+  ['touchstart', 'touchmove', 'touchend'].forEach(t => canvas.addEventListener(t, e => e.preventDefault(), { passive: false }));
+  document.addEventListener('gesturestart', e => e.preventDefault()); // iOS pinch
+  document.addEventListener('dblclick', e => e.preventDefault());
+  window.addEventListener('blur', () => Input.clear());
+  document.addEventListener('visibilitychange', () => {
+    Input.clear();
+    if (document.hidden && run && run.state !== 'over' && !view.sheetOpen) view.hiddenPause = true;
+  });
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); togglePanic(); return; }
+    if (e.code === 'Space' || e.key === ' ') {
+      if (view.sheetOpen || overlayOpen()) return;
+      e.preventDefault();
+      if (e.repeat) return;
+      Input.key = true; onPress(null);
+    }
+  });
+  window.addEventListener('keyup', e => { if (e.code === 'Space' || e.key === ' ') Input.key = false; });
+
+  /* =================== PATRON TUŞU =================== */
+  function buildSheet() {
+    const t = $('sheetTable');
+    const cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    const rows = ['Kalem', 'Personel', 'Kira', 'Lisanslar', 'Seyahat', 'Eğitim', 'Pazarlama', 'Ofis malz.', 'Danışmanlık', 'Bakım', 'Sigorta', 'Diğer', 'TOPLAM', '', 'Artış %', 'Not:'];
+    const r = makeRng('sheet');
+    let html = '<tr><th></th>' + cols.map(c => `<th>${c}</th>`).join('') + '</tr>';
+    for (let i = 0; i < 34; i++) {
+      const label = rows[i] ?? '';
+      html += `<tr class="${i === 0 ? 'h' : ''}"><th>${i + 1}</th>`;
+      cols.forEach((c, j) => {
+        let v = '';
+        if (i === 0) v = ['Kalem', 'Ocak', 'Şubat', 'Mart', 'Q1', 'Q2 (tah.)', 'Sapma', 'Durum'][j];
+        else if (j === 0) v = label;
+        else if (i < 13 && label) v = j === 7 ? ['✓ Onaylı', 'İncelemede', 'Revize'][Math.floor(r() * 3)] : (j === 6 ? (r() * 18 - 6).toFixed(1).replace('.', ',') + '%' : fmt(2000 + r() * 90000));
+        else if (i === 14 && j === 1) v = '4,5%';
+        else if (i === 15 && j === 1) v = 'Revize Cuma\'ya kadar';
+        const cls = (j === 0 || j === 7 || i === 0) ? 't' : '';
+        html += `<td class="${cls}${i === 6 && j === 5 ? ' sel' : ''}">${v}</td>`;
+      });
+      html += '</tr>';
+    }
+    t.innerHTML = html;
+  }
+  let realTitle = document.title;
+  function togglePanic() {
+    view.sheetOpen = !view.sheetOpen;
+    $('sheet').classList.toggle('hidden', !view.sheetOpen);
+    Input.clear();
+    if (view.sheetOpen) {
+      realTitle = document.title; document.title = 'Q3_Butce_Revize_v7_SON_son.xlsx';
+      if (Sound.ctx) Sound.ctx.suspend();
+    } else {
+      document.title = realTitle;
+      if (Sound.ctx && Sound.on) Sound.ctx.resume();
+      if (run) run.locked = true;
+    }
+    $('btnPanic').blur();
+  }
+  $('btnPanic').addEventListener('click', togglePanic);
+  $('sheetBack').addEventListener('click', togglePanic);
+  buildSheet();
+
+  /* =================== SES DÜĞMESİ =================== */
+  $('btnSound').addEventListener('click', () => {
+    Sound.on = !Sound.on;
+    if (Sound.on && !Sound.ensure()) Sound.on = false;
+    $('btnSound').textContent = Sound.on ? '🔊' : '🔇';
+    $('btnSound').setAttribute('aria-pressed', String(Sound.on));
+    $('btnSound').setAttribute('aria-label', Sound.on ? 'Sesi kapat' : 'Sesi aç');
+    if (Sound.on) Sound.play('bank');
+    $('btnSound').blur();
+  });
+
+  /* =================== MENÜ / ÖZET =================== */
+  function refreshTitle() {
+    const key = todayKey(), daily = store.get('bossturns.daily.' + key, null);
+    $('btnDaily').textContent = `📅 Günlük görev #${dailyNumber(key)}`;
+    $('titleBest').textContent = `En iyi: ${fmt(store.get('bossturns.best', 0))}` + (daily ? ` · Bugünkü günlük: ${fmt(daily.best)}` : '');
+  }
+  function start(mode) {
+    run = createRun(mode);
+    if (mode === 'daily') {
+      const key = 'bossturns.daily.' + run.dateKey, d = store.get(key, { best: 0, tries: 0 });
+      d.tries++; store.set(key, d); run.tries = d.tries;
+    }
+    view.paceT = 0; view.turn = 0; view.swap = null; view.banner = null; view.particles = []; view.overDelay = -1;
+    view.displayScore = 0; view.hiddenPause = false; view.flash = 0; view.catchFace = 0;
+    $('title').classList.add('hidden'); $('summary').classList.add('hidden');
+    Input.clear(); run.locked = true;
+    setBanner(BOSSES.lead.name + ' koridorda', 'Basılı tut, oyna. ❗ görünce bırak!', '#f2c14e', 2.8);
+    document.activeElement && document.activeElement.blur && document.activeElement.blur();
+  }
+  function showSummary() {
+    const best = store.get('bossturns.best', 0);
+    const isRecord = run.score > best;
+    if (run.mode === 'free' && isRecord) store.set('bossturns.best', run.score);
+    let dailyRecord = false;
+    if (run.mode === 'daily') {
+      const key = 'bossturns.daily.' + run.dateKey, d = store.get(key, { best: 0, tries: 1 });
+      if (run.score > d.best) { d.best = run.score; dailyRecord = true; store.set(key, d); }
+      if (isRecord) store.set('bossturns.best', run.score);
+    }
+    const fired = run.endReason === 'fired';
+    $('sumTitle').textContent = fired ? 'Eve gönderildin!' : 'Mesai bitti!';
+    $('sumTitle').style.color = fired ? '#e5484d' : '#7ee0b0';
+    $('sumReason').textContent = fired
+      ? `Saat ${clockString(clockProgress(run))} — ${BOSSES[run.boss.typeId].name} seni üçüncü kez yakaladı.`
+      : `18:00! Kalan ${run.lives} can için +${fmt(run.stats.lifeBonus)} bonus.`;
+    $('sumScore').textContent = fmt(run.score);
+    $('sumRecord').textContent = isRecord ? '🏆 Yeni rekor!' : dailyRecord ? '📅 Günün en iyisi!' : `En iyi: ${fmt(Math.max(best, run.score))}`;
+    const s = run.stats, mm = Math.floor(run.t / 60), ss = Math.floor(run.t % 60);
+    const rows = [
+      ['Süre', `${mm}:${String(ss).padStart(2, '0')}`], ['Saat', clockString(clockProgress(run))],
+      ['Basış', s.presses], ['Kasaya', s.banks],
+      ['Yakalanma', s.caught], ['Kıl payı', s.close],
+      ['En büyük vurgun', fmt(s.bestBank)], ['En uzun tutuş', s.longestHold.toFixed(1) + ' sn'],
+      ['Blöf gördün', s.fakes], ['Patron', run.bossesMet.length],
+    ];
+    $('sumStats').innerHTML = rows.map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join('');
+    $('sumEmoji').textContent = shareText(run, run.tries || 1);
+    $('btnCopy').textContent = '📋 Kopyala';
+    $('summary').classList.remove('hidden');
+    $('btnAgain').focus({ preventScroll: true });
+    refreshTitle();
+  }
+  async function copyShare() {
+    const str = shareText(run, run.tries || 1);
+    let ok = false;
+    try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(str); ok = true; } } catch (e) { /* fallback */ }
+    if (!ok) {
+      const ta = document.createElement('textarea');
+      ta.value = str; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      ta.remove();
+    }
+    $('btnCopy').textContent = ok ? '✅ Kopyalandı' : '⚠️ Elle seç';
+  }
+  $('btnFree').addEventListener('click', () => start('free'));
+  $('btnDaily').addEventListener('click', () => start('daily'));
+  $('btnAgain').addEventListener('click', () => start(run ? run.mode : 'free'));
+  $('btnMenu').addEventListener('click', () => { run = null; $('summary').classList.add('hidden'); $('title').classList.remove('hidden'); refreshTitle(); });
+  $('btnCopy').addEventListener('click', copyShare);
+  refreshTitle();
+
+  /* =================== DÖNGÜ =================== */
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
+    last = now;
+    if (run && !view.sheetOpen && !view.hiddenPause && run.state !== 'over') updateRun(run, dt, Input.frameHeld());
+    if (run) handleEvents();
+    updateView(view.sheetOpen ? 0 : dt);
+    draw();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // test kancası
+  window.__bt = { get run() { return run; }, view, start, Input, Sound };
+})();
+</script>
+</body>
+</html>
