@@ -1,7 +1,7 @@
 # BOSS TURNS — Patron Dönüyor!
 
 Ofiste sıkılanlar için 1–3 dakikalık, tek tuşlu bir "şansını zorla" oyunu.
-Laptopta gizlice oyun oynuyorsun, patronun **Yağmur** arkandaki koridorda geziyor.
+**Çağrı Merkezi Edition:** kuyrukta 47 çağrı var, hedef 10.000, sen kulaklığın altından gizlice oyun oynuyorsun. Takım liderin **Yağmur** arkandaki koridorda geziyor.
 
 3D sahne, Clash tarzı arayüz. PC'de yatay (1920×1080), telefonda dikey yerleşim.
 
@@ -27,7 +27,7 @@ Exe imzasız olduğu için Windows ilk açılışta "Bilgisayarınız korundu" d
 |---|---|
 | **Basılı tut** (dokun / fare / Boşluk) | Gizlice oynarsın, **cep** dolar. Ne kadar uzun tutarsan o kadar hızlı dolar. |
 | **Bırak** | Cep **kasaya** girer, artık güvende. |
-| Patronun üstünde **❗** | Kafasını çeviriyor, hemen bırak! Bazen blöftür. |
+| Yağmur'un üstünde **❗** | Kafasını çeviriyor, hemen bırak! Bazen blöftür. |
 | Patron **bakarken** basılıysan | Yakalanırsın: cepteki puan gider, bir can gider. Tekrar oynamak için önce bırakman gerekir. |
 | Saat **18:00** | Mesai biter, kalan her can +100 puan. |
 

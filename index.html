@@ -192,10 +192,10 @@ html, body {
 #hud.tall #sumStats { font-size: 34px; grid-template-columns: 1fr; }
 #hud.tall #sumEmoji { font-size: 36px; }
 #hud.tall .overlay { padding-top: 110px; }
-.logo { font-size: 150px; line-height: .95; margin: 0; color: var(--gold2); transform: rotate(-3deg); }
-.logo span { display: block; font-size: 64px; color: #fff; transform: rotate(2deg); margin-top: 10px; }
-.menu .rules { text-align: left; font-family: 'Nunito', sans-serif; font-weight: 600; letter-spacing: 0; font-size: 28px; line-height: 1.4;
-  background: rgba(0,0,0,.22); border-radius: 18px; padding: 22px 28px; margin: 34px 0 30px; }
+.logo { font-size: 118px; line-height: .95; margin: 0; color: var(--gold2); transform: rotate(-3deg); }
+.logo span { display: block; font-size: 50px; color: #fff; transform: rotate(2deg); margin-top: 8px; }
+.menu .rules { text-align: left; font-family: 'Nunito', sans-serif; font-weight: 600; letter-spacing: 0; font-size: 25px; line-height: 1.35;
+  background: rgba(0,0,0,.22); border-radius: 18px; padding: 16px 26px; margin: 26px 0 22px; }
 .menu .rules div { display: flex; gap: 16px; margin: 6px 0; }
 .menu .rules b { color: var(--gold1); font-weight: 800; }
 .menu .btn.big { width: 100%; height: 120px; font-size: 56px; margin: 12px 0; }
@@ -398,14 +398,15 @@ html, body {
 
   <div id="title" class="overlay">
     <div class="menu panel">
-      <h1 class="logo t">BOSS TURNS<span class="t">Patron Dönüyor!</span></h1>
+      <h1 class="logo t">BOSS TURNS<span class="t">Çağrı Merkezi Edition</span></h1>
       <div class="kombin body" id="kombin"></div>
       <div class="careerBar h" id="titleCareer"></div>
       <div class="rules body">
-        <div><span>🖐️</span><span><b>Basılı tut:</b> gizlice oyna, cebin dolar. Uzun tuttukça hızlanır.</span></div>
-        <div><span>✋</span><span><b>Bırak:</b> cepteki puan kasaya girer, güvende.</span></div>
-        <div><span>🎯</span><span><b>Kota &amp; Görevler:</b> mesai kotasını doldurup terfi al, anlık görevlerle ekstra maaş kazan!</span></div>
+        <div><span>🎧</span><span><b>Basılı tut:</b> kuyruk beklesin, sen gizlice oyna. Uzun tuttukça cep hızlı dolar.</span></div>
+        <div><span>✋</span><span><b>Bırak:</b> "Size nasıl yardımcı olabilirim?" moduna dön, cep kasaya girer.</span></div>
+        <div><span>❗</span><span><b>Takım lideri Yağmur dönüyor:</b> hemen bırak! Bazen blöftür.</span></div>
         <div><span>👀</span><span><b>Sana bakarken basılıysan</b> yakalanırsın: cep ve bir can gider.</span></div>
+        <div><span>🎯</span><span><b>Kota ve görevler:</b> vardiya kotasını doldurup terfi al. Hedef: 10.000.</span></div>
       </div>
       <button class="btn gold big h" id="btnFree">MESAİYE BAŞLA<small id="freeWho" class="body"></small></button>
       <div class="row3">
@@ -474,12 +475,12 @@ html, body {
 <div class="sr" id="live" aria-live="assertive"></div>
 
 <div id="sheet" class="hidden" aria-label="Tablo">
-  <div class="titlebar"><span>▦</span><span class="fname">Q3_Butce_Revize_v7_SON_son.xlsx — Kaydedildi</span><button id="sheetBack" aria-label="Geri dön (Esc)" title="Geri dön (Esc)">↩</button></div>
+  <div class="titlebar"><span>▦</span><span class="fname">Cagri_KPI_Raporu_Ekim_SON_v3.xlsx — Kaydedildi</span><button id="sheetBack" aria-label="Geri dön (Esc)" title="Geri dön (Esc)">↩</button></div>
   <div class="menu2"><b>Dosya</b><span>Giriş</span><span>Ekle</span><span>Sayfa Düzeni</span><span>Formüller</span><span>Veri</span><span>Gözden Geçir</span></div>
-  <div class="fbar"><div class="ref">F7</div><div class="fx">fx&nbsp;&nbsp;=TOPLA(F2:F6)*(1+$B$15)</div></div>
+  <div class="fbar"><div class="ref">F7</div><div class="fx">fx&nbsp;&nbsp;=ORTALAMA(D2:D15)</div></div>
   <div class="grid"><table id="sheetTable"></table></div>
-  <div class="tabs"><span class="on">Q3 Bütçe</span><span>Özet</span><span>Varsayımlar</span><span>Sayfa4</span></div>
-  <div class="status"><span>Hazır</span><span>Ortalama: 48.213,7 · Toplam: 1.446.411 · %100</span></div>
+  <div class="tabs"><span class="on">Günlük KPI</span><span>Haftalık</span><span>Kalite Dinleme</span><span>Mola Planı</span></div>
+  <div class="status"><span>Hazır</span><span>Ortalama: 76,4 · Sayım: 14 · %100</span></div>
 </div>
 
 <script id="logic">
@@ -522,15 +523,15 @@ const CONFIG = {
 /* Patron: Yağmur (her zaman sarışın, 20'li yaşlarında bir kadın). "Tipler" onun ruh halleri;
    çarpanlar temel değerlere uygulanır. Kimlikler (lead, turtle…) kayıt/test uyumluluğu için sabit. */
 const BOSSES = {
-  lead:   { name: 'Sakin Yağmur',    emoji: '🙂', desc: 'Dengeli. Klasik.',                      prop: 'none',
+  lead:   { name: 'Sakin Yağmur',    emoji: '🙂', desc: 'Salonu dolaşıyor. Dengeli, klasik.',     prop: 'none',
             away: 1, warn: 1, look: 1, fake: 0, walk: 1 },
-  turtle: { name: 'Kahvesiz Yağmur', emoji: '😴', desc: 'Yavaş döner ama uzun bakar.',           prop: 'mug',
+  turtle: { name: 'Kahvesiz Yağmur', emoji: '😴', desc: 'Sabah vardiyası: yavaş döner ama uzun bakar.', prop: 'mug',
             away: 1.1, warn: 1.45, look: 1.7, fake: -0.08, walk: 0.55 },
-  flash:  { name: 'Telaşlı Yağmur',  emoji: '📱', desc: 'Toplantıya geç kaldı: hızlı döner, kısa bakar.', prop: 'phone',
+  flash:  { name: 'Telaşlı Yağmur',  emoji: '📱', desc: 'Müdür aradı: hızlı döner, kısa bakar.',   prop: 'phone',
             away: 0.8, warn: 0.72, look: 0.55, fake: 0, walk: 1.7 },
-  sly:    { name: 'Şüpheci Yağmur',  emoji: '🤨', desc: 'Blöf ustası. Bazen çifte döner!',       prop: 'folder',
+  sly:    { name: 'Şüpheci Yağmur',  emoji: '🤨', desc: 'Kalite dinlemesinde. Blöf ustası, bazen çifte döner!', prop: 'folder',
             away: 0.95, warn: 1, look: 0.9, fake: 0.25, doubleTake: 0.45, walk: 0.8 },
-  gm:     { name: 'Patron Modu',     emoji: '😎', desc: 'Her seferinde başka taktik.',           prop: 'shades', mix: true, minScore: 1800,
+  gm:     { name: 'Hedef Toplantısı Sonrası',     emoji: '😎', desc: 'HEDEF 10.000! Her seferinde başka taktik.', prop: 'shades', mix: true, minScore: 1800,
             away: 1, warn: 1, look: 1, fake: 0, walk: 0.9 },
 };
 const MIX_POOL = ['lead', 'turtle', 'flash', 'sly'];
@@ -628,16 +629,17 @@ const SHOP_BY_ID = Object.fromEntries(SHOP_ITEMS.map(i => [i.id, i]));
    2B. KARİYER MERDİVENİ, MESAİ KOTALARI, ANLIK GÖREVLER VE GİZLİ PROJELER
    ===================================================================== */
 const CAREER_RANKS = [
-  { level: 1,  icon: '🌱', title: 'Stajyer',             quota: 350,  salaryMul: 1.0,  promoBonus: 80 },
-  { level: 2,  icon: '☕', title: 'Junior Kaytarıcı',    quota: 600,  salaryMul: 1.1,  promoBonus: 120 },
-  { level: 3,  icon: '⌨️', title: 'Tablo Sihirbazı',     quota: 900,  salaryMul: 1.2,  promoBonus: 170 },
-  { level: 4,  icon: '🎧', title: 'Kıdemli Oyuncu',      quota: 1250, salaryMul: 1.35, promoBonus: 230 },
-  { level: 5,  icon: '🕶️', title: 'Mesai Korsanı',       quota: 1650, salaryMul: 1.5,  promoBonus: 300 },
-  { level: 6,  icon: '🛋️', title: 'Ofis Hayaleti',       quota: 2100, salaryMul: 1.65, promoBonus: 400 },
-  { level: 7,  icon: '🎩', title: 'Departman Baronu',    quota: 2600, salaryMul: 1.85, promoBonus: 520 },
-  { level: 8,  icon: '🚀', title: 'Kaytarma Direktörü',  quota: 3200, salaryMul: 2.05, promoBonus: 650 },
-  { level: 9,  icon: '💎', title: 'Yönetim Kurulu Üyesi', quota: 3900, salaryMul: 2.3,  promoBonus: 850 },
-  { level: 10, icon: '🐐', title: 'Gizli CEO',           quota: 4800, salaryMul: 2.6,  promoBonus: 1200 },
+  // kotalar tools/sim.js skor dağılımına göre: ortalama oyuncu ~4–5. kademeye, en dikkatli oyuncular tepeye ulaşabilir
+  { level: 1,  icon: '🌱', title: 'Stajyer Temsilci',      quota: 300,  salaryMul: 1.0,  promoBonus: 80 },
+  { level: 2,  icon: '🎧', title: 'Deneme Süresinde',      quota: 450,  salaryMul: 1.1,  promoBonus: 110 },
+  { level: 3,  icon: '☎️', title: 'Müşteri Temsilcisi',    quota: 600,  salaryMul: 1.2,  promoBonus: 150 },
+  { level: 4,  icon: '📞', title: 'Kıdemli Temsilci',      quota: 800,  salaryMul: 1.3,  promoBonus: 200 },
+  { level: 5,  icon: '⏱️', title: 'Kuyruk Ustası',         quota: 1000, salaryMul: 1.45, promoBonus: 260 },
+  { level: 6,  icon: '📋', title: 'Script Bilmez',         quota: 1200, salaryMul: 1.6,  promoBonus: 330 },
+  { level: 7,  icon: '🔇', title: 'Mute Tuşu Profesörü',   quota: 1400, salaryMul: 1.75, promoBonus: 420 },
+  { level: 8,  icon: '🕶️', title: 'Mola Odası Efsanesi',   quota: 1650, salaryMul: 1.9,  promoBonus: 520 },
+  { level: 9,  icon: '💎', title: 'Gölge Takım Lideri',    quota: 1900, salaryMul: 2.1,  promoBonus: 700 },
+  { level: 10, icon: '🐐', title: 'Hedef 10.000 Efsanesi', quota: 2200, salaryMul: 2.4,  promoBonus: 1000 },
 ];
 function rankFor(level) {
   const idx = clamp((Number(level) || 1) - 1, 0, CAREER_RANKS.length - 1);
@@ -714,8 +716,8 @@ const ACHIEVEMENTS = [
   { id: 'tasks_3',     icon: '📋', name: 'Görev Adamı',       desc: 'Tek mesaide 3 anlık görev tamamla.',             reward: 220, check: (r, c) => r.contractsDone >= 3 },
   { id: 'shift_end',   icon: '🕕', name: '18:00 Çıkışlı',     desc: 'Kovulmadan saat 18:00\'e kadar mesaiyi bitir.',   reward: 300, check: (r, c) => r.endReason === 'shift' },
   { id: 'proj_5',      icon: '🐉', name: 'Zindan Ustası',     desc: 'Laptop oyununda 5. Bölüme (2.100 puan) ulaş.',   reward: 350, check: (r, c) => r.projectLv >= 5 },
-  { id: 'rank_5',      icon: '🕶️', name: 'Mesai Korsanı',     desc: 'Kariyerde 5. kademeye (Mesai Korsanı) yüksel.',  reward: 450, check: (r, c) => c.level >= 5 },
-  { id: 'rank_10',     icon: '🐐', name: 'Gizli CEO',         desc: 'Şirketin zirvesi olan 10. kademeye ulaş.',       reward: 1000, check: (r, c) => c.level >= 10 },
+  { id: 'rank_5',      icon: '⏱️', name: 'Kuyruk Ustası',     desc: 'Kariyerde 5. kademeye (Kuyruk Ustası) yüksel.',  reward: 450, check: (r, c) => c.level >= 5 },
+  { id: 'rank_10',     icon: '🐐', name: 'Hedef 10.000',      desc: 'Zirve: 10. kademe, Hedef 10.000 Efsanesi.',      reward: 1000, check: (r, c) => c.level >= 10 },
 ];
 
 function evaluateCareerRun(run, prevCareer) {
@@ -5355,6 +5357,7 @@ void main() {
       if (!this.on) return;
       switch (name) {
         case 'tick':   this.tone(520 + a * 90, 0.035, { type: 'square', vol: 0.06 }); break;
+        case 'ring':   for (let i = 0; i < 8; i++) this.tone(i % 2 ? 1180 : 940, 0.045, { type: 'square', vol: 0.05, delay: i * 0.05 + (i > 3 ? 0.25 : 0) }); break;
         case 'press':  this.tone(300, 0.05, { type: 'triangle', vol: 0.15 }); break;
         case 'bank':   this.tone(880, 0.08, { type: 'square', vol: 0.12 }); this.tone(1320, 0.16, { type: 'square', vol: 0.12, delay: 0.07 }); break;
         case 'close':  this.tone(660, 0.07, { type: 'square', vol: 0.12 }); this.tone(990, 0.07, { type: 'square', vol: 0.12, delay: 0.06 }); this.tone(1480, 0.18, { type: 'square', vol: 0.12, delay: 0.12 }); break;
@@ -5382,7 +5385,7 @@ void main() {
     p: { bob: 0 },
     hud: {},
   };
-  const SCOLD_LINES = ['YAKALADIM!', 'Bu ne böyle?!', 'Odama gel!', 'Çalışıyoruz değil mi?', 'Rapor nerede?!'];
+  const SCOLD_LINES = ['YAKALADIM!', 'Kuyrukta 47 çağrı var!', 'AHT\'n uçmuş!', 'Script\'i okudun mu?!', 'Hedef 10.000, sen oyunda!', 'Molan bitmedi mi?', 'Mute\'a basma!'];
 
   /* =================== RENDERER =================== */
   let renderer;
@@ -5472,6 +5475,30 @@ void main() {
     mesh(new T.PlaneGeometry(1.5, 2.75), new T.MeshBasicMaterial({ map: skyTex, toneMapped: false }), x, 3.55, -3.4).castShadow = false;
     mesh(rbox(0.07, 2.75, 0.06, 0.02), '#fff8ee', x, 3.55, -3.36); mesh(rbox(1.5, 0.07, 0.06, 0.02), '#fff8ee', x, 3.55, -3.36);
   }
+  // çağrı merkezi duvar ekranı: canlı KPI (bekleyen çağrı oyuncu kaytardıkça artar)
+  const board = { c: document.createElement('canvas'), last: '' };
+  board.c.width = 640; board.c.height = 360;
+  board.tex = new T.CanvasTexture(board.c); board.tex.colorSpace = T.SRGBColorSpace;
+  mesh(rbox(2.55, 1.55, 0.12, 0.05), '#14182b', -1.6, 3.75, -3.48);
+  mesh(new T.PlaneGeometry(2.38, 1.34), new T.MeshBasicMaterial({ map: board.tex, toneMapped: false }), -1.6, 3.75, -3.41).castShadow = false;
+  function drawBoard(queue, aht, done) {
+    const key = queue + '|' + aht + '|' + done;
+    if (key === board.last) return;
+    board.last = key;
+    const g = board.c.getContext('2d'), w = 640;
+    g.fillStyle = '#0f1424'; g.fillRect(0, 0, w, 360);
+    g.fillStyle = '#1d2a4f'; g.fillRect(0, 0, w, 56);
+    g.textAlign = 'left'; g.textBaseline = 'middle';
+    g.font = '700 30px Fredoka, sans-serif'; g.fillStyle = '#7dfcff'; g.fillText('● CANLI · ÇAĞRI MERKEZİ', 20, 29);
+    g.font = '700 26px Nunito, sans-serif'; g.fillStyle = '#c9d4f5'; g.fillText('BEKLEYEN ÇAĞRI', 24, 92); g.fillText('ORT. GÖRÜŞME', 360, 92);
+    g.font = '800 110px Nunito, sans-serif'; g.fillStyle = queue > 40 ? '#ff4d5e' : queue > 20 ? '#ffcf2e' : '#3fe08f'; g.fillText(String(queue), 24, 168);
+    g.font = '800 64px Nunito, sans-serif'; g.fillStyle = '#ffffff'; g.fillText(aht, 360, 152);
+    g.font = '700 34px Fredoka, sans-serif'; g.fillStyle = '#ffcf2e'; g.fillText('HEDEF 10.000', 24, 262);
+    g.fillStyle = '#26304f'; g.fillRect(24, 290, 592, 36);
+    g.fillStyle = '#3fe08f'; g.fillRect(24, 290, 592 * Math.min(1, done / 10000), 36);
+    g.font = '800 26px Nunito, sans-serif'; g.fillStyle = '#ffffff'; g.textAlign = 'right'; g.fillText(fmt(done) + ' / 10.000', 616, 262);
+    board.tex.needsUpdate = true;
+  }
   // toplantı odası kapısı
   mesh(rbox(1.5, 3.2, 0.2, 0.06), '#b5713f', 3.6, 1.6, -3.45);
   mesh(rbox(1.2, 1.2, 0.08, 0.04), '#9b5c30', 3.6, 2.4, -3.33); mesh(rbox(1.2, 1.3, 0.08, 0.04), '#9b5c30', 3.6, 0.9, -3.33);
@@ -5489,10 +5516,11 @@ void main() {
   const hourHand = hand(0.26, 0.07), minHand = hand(0.38, 0.045);
   mesh(sph(0.05), '#ff4d5e', 0, 0, 0.13, clock3);
   // poster
-  mesh(rbox(1.35, 1.1, 0.06, 0.03), '#2a2f5c', -1.4, 3.9, -3.5);
-  const posterMesh = mesh(new T.PlaneGeometry(1.25, 1.0), new T.MeshBasicMaterial({ toneMapped: false }), -1.4, 3.9, -3.45);
+  mesh(rbox(1.35, 1.1, 0.06, 0.03), '#2a2f5c', 5.6, 3.65, -3.5);
+  const posterMesh = mesh(new T.PlaneGeometry(1.25, 1.0), new T.MeshBasicMaterial({ toneMapped: false }), 5.6, 3.65, -3.45);
   function paintLabels() { // yazı tipi yüklendikten sonra
-    signMesh.material.map = label(512, 128, 'TOPLANTI', '#2a2f5c', '#ffd33d', 72); signMesh.material.needsUpdate = true;
+    board.last = '';
+    signMesh.material.map = label(512, 128, 'MOLA ODASI', '#2a2f5c', '#ffd33d', 64); signMesh.material.needsUpdate = true;
     posterMesh.material.map = canvasTex(512, 400, (g, w, h) => {
       g.fillStyle = '#fffdf6'; g.fillRect(0, 0, w, h);
       g.strokeStyle = '#ff4d5e'; g.lineWidth = 22; g.lineCap = 'round'; g.lineJoin = 'round';
@@ -5763,6 +5791,15 @@ void main() {
       for (const s of [-1, 1]) mesh(new T.TorusGeometry(0.12, 0.022, 8, 24), '#1e1a2a', s * 0.18, 0.55, 0.49, head);
       mesh(rbox(0.12, 0.03, 0.03, 0.01), '#1e1a2a', 0, 0.57, 0.5, head);
     }
+    // çağrı merkezi kulaklığı + mikrofon
+    const hs = new T.Group(); head.add(hs); P.headset = hs;
+    mesh(new T.TorusGeometry(0.53, 0.035, 8, 32, Math.PI), '#23232f', 0, 0.47, -0.02, hs);
+    mesh(cyl(0.14, 0.14, 0.12).rotateZ(Math.PI / 2), '#23232f', -0.53, 0.45, 0, hs);
+    mesh(cyl(0.15, 0.15, 0.06).rotateZ(Math.PI / 2), '#ff4d5e', -0.6, 0.45, 0, hs);
+    const from = new T.Vector3(-0.5, 0.4, 0.06), to = new T.Vector3(-0.12, 0.26, 0.47);
+    const boom = mesh(cap(0.02, from.distanceTo(to)), '#23232f', (from.x + to.x) / 2, (from.y + to.y) / 2, (from.z + to.z) / 2, hs);
+    boom.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), to.clone().sub(from).normalize());
+    mesh(sph(0.05), '#120d2b', to.x, to.y, to.z, hs);
     P.drop = mesh(sph(0.07), M('#8fe0ff', { roughness: 0.1, emissive: '#2a9fd8', emissiveIntensity: 0.3 }), 0.47, 0.75, 0.25, head);
     P.drop.scale.set(1, 1.5, 1);
     return P;
@@ -5792,6 +5829,13 @@ void main() {
     mesh(new T.ExtrudeGeometry(star, { depth: 0.02, bevelEnabled: false }), '#ff4d5e', 0.32, 0.72, 0.03, lid);
     PL.laptop = lap;
     mesh(cyl(0.13, 0.12, 0.3), '#ff6a4d', -1.15, 1.8, 0.1, D);
+    // masa telefonu + ara bölmeler
+    const ph = new T.Group(); ph.position.set(-0.78, 1.66, 0.3); D.add(ph);
+    mesh(rbox(0.36, 0.1, 0.28, 0.04), '#2a2f45', 0, 0.05, 0, ph);
+    mesh(rbox(0.16, 0.02, 0.1, 0.01), M('#7dfcff', { emissive: '#3fb8d8', emissiveIntensity: 0.5 }), 0.06, 0.11, 0.06, ph);
+    mesh(cap(0.045, 0.26).rotateZ(Math.PI / 2), '#2a2f45', 0, 0.15, -0.08, ph);
+    mesh(rbox(0.1, 1.0, 1.5, 0.04), '#56648a', 1.85, 2.15, 0.1, D);
+    mesh(rbox(0.1, 0.6, 1.5, 0.04), '#56648a', -1.85, 1.95, 0.1, D);
     mesh(new T.TorusGeometry(0.08, 0.03, 10, 20), '#ff6a4d', -1.0, 1.81, 0.1, D);
     for (let i = 0; i < 6; i++) mesh(rbox(0.55, 0.04, 0.42, 0.01), i === 5 ? '#ffe9a8' : '#fbfbf7', 1.15 + (i % 2) * 0.03, 1.68 + i * 0.04, 0.05, D);
     PL.scr1 = new T.PointLight('#ff4fd8', 0, 3.2); PL.scr1.position.set(-0.3, 2.15, 0.95); g.add(PL.scr1);
@@ -5897,6 +5941,7 @@ void main() {
       const g = new T.Group(); parent.add(g); COSMETIC[id](g); PL[field] = g;
     };
     add('hat', PL.head, 'hatG'); add('sticker', PL.lid, 'stickerG'); add('desk', PL.desk, 'deskG');
+    if (PL.headset) PL.headset.visible = !['headphones', 'vr'].includes(eq.hat);
     PL.chair.material = CHAIR_COLORS[eq.chair] || CHAIR_DEFAULT;
   }
 
@@ -6338,6 +6383,10 @@ void main() {
   let lastSkyBucket = -1;
   function animateWorld(dt) {
     const p = run ? clockProgress(run) : 0.15;
+    // duvar ekranı: oyuncu kaytardıkça kuyruk büyür
+    view.queue = clamp((view.queue == null ? 12 : view.queue) + dt * (run && run.holding ? 4 : -2.2), 3, 99);
+    const ahtSec = 190 + Math.round(view.queue * 3);
+    drawBoard(Math.round(view.queue), `${Math.floor(ahtSec / 60)}:${String(ahtSec % 60).padStart(2, '0')}`, run ? Math.min(10000, Math.round(run.score)) : 0);
     const bucket = Math.round(p * 40);
     if (bucket !== lastSkyBucket) { lastSkyBucket = bucket; drawSky(p); }
     const mins = CONFIG.startHour * 60 + p * (CONFIG.endHour - CONFIG.startHour) * 60;
@@ -6372,6 +6421,7 @@ void main() {
     animateYagmur(dt);
     animatePlayer(dt);
     if (run) {
+      if (run.state === 'play' && (view.ringT = (view.ringT == null ? 8 : view.ringT) - dt) <= 0) { view.ringT = 12 + Math.random() * 14; Sound.play('ring'); }
       if (run.holding) {
         view.tickAcc += dt;
         const iv = clamp(0.32 - run.holdTime * 0.05, 0.07, 0.32);
@@ -6444,23 +6494,34 @@ void main() {
 
   /* =================== PATRON TUŞU =================== */
   function buildSheet() {
+    // patron tuşu ekranı: sıradan bir çağrı merkezi KPI raporu
     const t = $('sheetTable');
     const cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-    const rows = ['Kalem', 'Personel', 'Kira', 'Lisanslar', 'Seyahat', 'Eğitim', 'Pazarlama', 'Ofis malz.', 'Danışmanlık', 'Bakım', 'Sigorta', 'Diğer', 'TOPLAM', '', 'Artış %', 'Not:'];
+    const head = ['Temsilci', 'Çağrı', 'AHT', 'FCR %', 'CSAT', 'Mola (dk)', 'Hedef', 'Durum'];
     const r = makeRng('sheet');
+    const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
     let html = '<tr><th></th>' + cols.map(c => `<th>${c}</th>`).join('') + '</tr>';
     for (let i = 0; i < 34; i++) {
-      const label = rows[i] ?? '';
       html += `<tr class="${i === 0 ? 'h' : ''}"><th>${i + 1}</th>`;
       cols.forEach((c, j) => {
         let v = '';
-        if (i === 0) v = ['Kalem', 'Ocak', 'Şubat', 'Mart', 'Q1', 'Q2 (tah.)', 'Sapma', 'Durum'][j];
-        else if (j === 0) v = label;
-        else if (i < 13 && label) v = j === 7 ? ['✓ Onaylı', 'İncelemede', 'Revize'][Math.floor(r() * 3)] : (j === 6 ? (r() * 18 - 6).toFixed(1).replace('.', ',') + '%' : fmt(2000 + r() * 90000));
-        else if (i === 14 && j === 1) v = '4,5%';
-        else if (i === 15 && j === 1) v = 'Revize Cuma\'ya kadar';
+        if (i === 0) v = head[j];
+        else if (i <= 14) {
+          if (j === 0) v = `Temsilci ${100 + i}`;
+          else if (j === 1) v = fmt(60 + r() * 140);
+          else if (j === 2) v = mmss(150 + r() * 220);
+          else if (j === 3) v = (62 + r() * 30).toFixed(1).replace('.', ',');
+          else if (j === 4) v = (3.4 + r() * 1.5).toFixed(2).replace('.', ',');
+          else if (j === 5) v = fmt(30 + r() * 45);
+          else if (j === 6) v = '10.000';
+          else v = ['✓ Hedefte', 'Koçluk', 'Takipte'][Math.floor(r() * 3)];
+        } else if (i === 15 && j === 0) v = 'TOPLAM';
+        else if (i === 15 && j === 1) v = fmt(1847);
+        else if (i === 15 && j === 6) v = '10.000';
+        else if (i === 17 && j === 0) v = 'Not:';
+        else if (i === 17 && j === 1) v = 'Hedef 10.000 — Cuma\'ya kadar!';
         const cls = (j === 0 || j === 7 || i === 0) ? 't' : '';
-        html += `<td class="${cls}${i === 6 && j === 5 ? ' sel' : ''}">${v}</td>`;
+        html += `<td class="${cls}${i === 6 && j === 3 ? ' sel' : ''}">${v}</td>`;
       });
       html += '</tr>';
     }
@@ -6472,7 +6533,7 @@ void main() {
     $('sheet').classList.toggle('hidden', !view.sheetOpen);
     Input.clear();
     if (view.sheetOpen) {
-      realTitle = document.title; document.title = 'Q3_Butce_Revize_v7_SON_son.xlsx';
+      realTitle = document.title; document.title = 'Cagri_KPI_Raporu_Ekim_SON_v3.xlsx';
       if (Sound.ctx) Sound.ctx.suspend();
     } else {
       document.title = realTitle;
