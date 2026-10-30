@@ -31,14 +31,15 @@ Exe imzasız olduğu için Windows ilk açılışta "Bilgisayarınız korundu" d
 | Patron **bakarken** basılıysan | Yakalanırsın: cepteki puan gider, bir can gider. Tekrar oynamak için önce bırakman gerekir. |
 | Saat **18:00** | Mesai biter, kalan her can +100 puan. |
 
-- **🐒 Keleşli Maymunlar + misafir Kaan: 5 oyuncu, her birinin yeteneği var** (ana menü → 👥 KARAKTERLER; seçimin hatırlanır):
+- **🐒 Keleşli Maymunlar + misafirler Kaan ve Gökberk: 6 oyuncu, her birinin yeteneği var** (ana menü → 👥 KARAKTERLER; seçimin hatırlanır):
   | Karakter | Yetenek |
   |---|---|
   | ALP | ⚡ **Hızlı El:** Yağmur bakınca kaçış payı %25 daha geniş |
   | FURKAN | 👂 **Kulağı Delik:** blöflerin çoğunu sezer, ünlem gri **?** olur |
   | BARANSEL | 🙇 **Yalaka:** "Hocam kombin efsane!" Yağmur ondan daha az şüphelenir |
   | BULUT | ☁️ **Soğukkanlı:** yakalanınca cebin yarısı kasaya girer |
-  | KAAN (misafir) | 🖥️ **ATS Bozuldu:** onun olduğu yerde ATS sık çöker, Yağmur uğraşırken oynarsın |
+  | KAAN "Cısdık" (misafir) | 🖥️ **ATS Bozuldu:** onun olduğu yerde ATS sık çöker, Yağmur uğraşırken oynarsın |
+  | GÖKBERK (misafir) | 🏋️ **Basıyo:** mesaiye spordan geliyor, cep %12 daha hızlı dolar |
 
   Yetenekler simülasyonla dengelendi (her biri ortalama ≈ +%5). Her gün sırayla biri **günün karakteri** olur; günlük görevde herkes onunla oynar, böylece skorlar adil karşılaştırılır.
 - **3 can** var. Her tur sıfırdan başlar; turlar arasında yalnızca en iyi skor, cüzdan ve marketten aldıkların saklanır.

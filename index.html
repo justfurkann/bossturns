@@ -282,16 +282,18 @@ html, body {
 /* karakter seçimi */
 #chars h2 { margin: 0; font-size: 72px; }
 #chars > p { margin: 10px 0 44px; padding: 0 40px; text-align: center; font-size: 30px; color: #e6ecff; }
-#charCards { display: flex; gap: 26px; }
-.charCard { width: 330px; height: 560px; padding: 0; position: relative; border-radius: 30px; display: flex; flex-direction: column; align-items: center; }
-.charCard img, .charCard .ph { width: 260px; height: 260px; margin-top: 28px; border-radius: 26px; border: 5px solid var(--ink);
+#charCards { display: flex; gap: 18px; }
+.charCard { width: 290px; height: 560px; padding: 0; position: relative; border-radius: 30px; display: flex; flex-direction: column; align-items: center; }
+.charCard img, .charCard .ph { width: 236px; height: 236px; margin-top: 28px; border-radius: 26px; border: 5px solid var(--ink);
   background: radial-gradient(circle at 50% 35%, #8fb4ff, #3d5bd0 70%); box-shadow: inset 0 -8px 0 rgba(0,0,0,.2); }
-.charCard .nm { font-size: 50px; margin-top: 14px; }
-.charCard .ab { font-size: 23px; color: #e6ecff; padding: 4px 22px 0; line-height: 1.3; text-shadow: none; }
+.charCard .nm { font-size: 46px; margin-top: 12px; line-height: 1; }
+.charCard .nick { font-size: 20px; color: #ffe36b; margin-top: 2px; text-shadow: none; }
+.charCard.gold .nick { color: #7a3d00; }
+.charCard .ab { font-size: 21px; color: #e6ecff; padding: 4px 22px 0; line-height: 1.3; text-shadow: none; }
 .charCard.gold .ab { color: #4a2a00; }
 .charCard .sel { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 24px; padding: 4px 18px 7px; }
 .charCard .star { position: absolute; top: 14px; right: 14px; font-size: 22px; padding: 4px 10px; border-radius: 12px; background: rgba(18,13,43,.55); color: #ffe36b; text-shadow: none; }
-.charCard .abn { font-size: 30px; margin-top: 4px; }
+.charCard .abn { font-size: 28px; margin-top: 4px; }
 #charsBtns { margin-top: 46px; width: 760px; }
 #charsBtns .btn { height: 100px; font-size: 34px; white-space: nowrap; }
 #hud.tall #charCards { display: grid; grid-template-columns: 1fr 1fr; gap: 44px 34px; }
@@ -527,6 +529,7 @@ const CONFIG = {
     baransel: { awayMul: 1.05 },     // Yalaka: Yağmur ondan daha az şüphelenir, dönüşleri biraz seyrek
     bulut:    { saveRatio: 0.5 },    // Soğukkanlı: yakalanınca cebin yarısı kasaya girer (can yine gider)
     kaan:     { atsP: 0.25 },        // ATS Bozuldu: onun olduğu yerde ATS daha sık çöker
+    gokberk:  { growth: 1.12 },      // Basıyo: cep %12 daha hızlı dolar (skor da saati ilerlettiği için etkisi ≈ +%5)
   },
 };
 
@@ -600,7 +603,8 @@ const CHARACTERS = [
   { id: 'furkan',   name: 'FURKAN',   ability: { icon: '👂', name: 'Kulağı Delik', desc: 'Topuk sesinden blöfü sezer: çoğu blöfte ünlem gri "?" olur.' } },
   { id: 'baransel', name: 'BARANSEL', ability: { icon: '🙇', name: 'Yalaka',       desc: '"Hocam kombin efsane!" Yağmur ondan daha az şüphelenir, daha seyrek döner.' } },
   { id: 'bulut',    name: 'BULUT',    ability: { icon: '☁️', name: 'Soğukkanlı',   desc: 'Yakalanınca cebin yarısı kasaya girer (can yine gider).' } },
-  { id: 'kaan',     name: 'KAAN',     guest: true, ability: { icon: '🖥️', name: 'ATS Bozuldu', desc: 'Onun olduğu yerde ATS sık sık çöker; Yağmur uğraşırken oyna!' } },
+  { id: 'kaan',     name: 'KAAN',     nick: 'Cısdık', guest: true, ability: { icon: '🖥️', name: 'ATS Bozuldu', desc: 'Onun olduğu yerde ATS sık sık çöker; Yağmur uğraşırken oyna!' } },
+  { id: 'gokberk',  name: 'GÖKBERK',  guest: true, ability: { icon: '🏋️', name: 'Basıyo',      desc: 'Mesaiye spordan geliyor: cep %12 daha hızlı dolar.' } },
 ];
 const CHAR_BY_ID = Object.fromEntries(CHARACTERS.map(c => [c.id, c]));
 function dailyCharFor(dateKey) {
@@ -5752,15 +5756,24 @@ void main() {
   badge.visible = false;
   const badgeLight = new T.PointLight('#ffb020', 0, 3); scene.add(badgeLight);
 
-  /* =================== OYUNCULAR: ALP, FURKAN, BARANSEL, BULUT ===================
-     Görünümler şimdilik yer tutucu (fotoğraflara göre yalnızca bu tablo güncellenecek).
-     style: quiff | short | curly | side · beard: none | stubble | full */
+  /* =================== OYUNCULAR: ALP, FURKAN, BARANSEL, BULUT (+ misafirler KAAN, GÖKBERK) ===================
+     Görünümler gerçek kişilerin fotoğraflarına göre stilize edildi (fotoğraflar repoda yok; yalnızca bu tablo).
+     style: quiff | short | curly | side | fade | pomp | swept | messy | wavy
+     beard: none | stubble | short | full | goatee | wisp · glasses: false | 'thick' | 'wire'
+     head: [en, boy] yüz oranı · brow: kaş kalınlığı · bulk: gövde genişliği · band: alın bandı rengi */
   const LOOKS = {
-    alp:      { skin: '#e9b48a', hair: '#1f1712', style: 'short', beard: 'stubble', glasses: false, shirt: '#e5484d', iris: '#3a2618' },
-    furkan:   { skin: '#f0b88c', hair: '#3b2620', style: 'quiff', beard: 'none',    glasses: false, shirt: '#25b8a8', iris: '#5a3a24' },
-    baransel: { skin: '#d9a27a', hair: '#2a1c14', style: 'curly', beard: 'none',    glasses: true,  shirt: '#7a4fd0', iris: '#3a2618' },
-    bulut:    { skin: '#f2c29c', hair: '#6b4a2e', style: 'side',  beard: 'full',    glasses: false, shirt: '#f2a33a', iris: '#4a6a3a' },
-    kaan:     { skin: '#eab38c', hair: '#15100c', style: 'short', beard: 'stubble', glasses: false, shirt: '#3fae6e', iris: '#3a2618' },
+    // fade traş, koyu kısa sakal, siyah fermuarlı hırka, yana bakan bakış
+    alp:      { skin: '#dcab84', hair: '#16100c', style: 'fade',  beard: 'short',    glasses: false,   shirt: '#2c2c38', iris: '#2e1d12', brow: 1.25 },
+    // kalın siyah çerçeve, dağınık kahve saç, ince bıyık + çene tüyü, yeşil tişört
+    furkan:   { skin: '#f0c4a2', hair: '#3a281d', style: 'messy', beard: 'wisp',    glasses: 'thick', shirt: '#3e7a52', iris: '#3a2618', brow: 1.15 },
+    // ince yuvarlak tel çerçeve, geriye taranmış koyu saç, uzunca yüz, lacivert yarım fermuar
+    baransel: { skin: '#eec09c', hair: '#1c1511', style: 'swept', beard: 'none',    glasses: 'wire',  shirt: '#26355f', iris: '#3a2618', head: [0.97, 1.05] },
+    // hep gülen, dolgun yüz, kısa koyu saç, hafif sakal, kahverengi polo
+    bulut:    { skin: '#e4b08a', hair: '#1e1712', style: 'short', beard: 'stubble', glasses: false,   shirt: '#7b3f22', iris: '#2e1d12', head: [1.08, 1.0] },
+    // namıdiğer Cısdık: kabarık fönlü saç + fade, keçi sakal, kalın kaşlar, beyaz tişört
+    kaan:     { skin: '#e2ab86', hair: '#201610', style: 'pomp',  beard: 'goatee',  glasses: false,   shirt: '#f1eee6', iris: '#3a2618', brow: 1.4 },
+    // sporcu: dalgalı koyu saç, sakal-bıyık, geniş omuz, ter bandı
+    gokberk:  { skin: '#e0aa82', hair: '#1a130e', style: 'wavy',  beard: 'full',    glasses: false,   shirt: '#d8413a', iris: '#2e1d12', bulk: 1.12, band: '#ffffff' },
   };
   // yüzün önünü (+z) ortalayan küre dilimi: phi = π/2 tam önü gösterir
   const frontShell = (r, width, t0, t1) => new T.SphereGeometry(r, 36, 24, Math.PI / 2 - width / 2, width, t0 * Math.PI, (t1 - t0) * Math.PI);
@@ -5769,27 +5782,30 @@ void main() {
     const P = { look };
     const skin = M(look.skin, { roughness: 0.7 });
     const shirtDark = new T.Color(look.shirt).multiplyScalar(0.8).getStyle();
+    const bulk = look.bulk || 1;
     const body = new T.Group(); body.position.y = 0.42; parent.add(body); P.body = body;
-    const tb = mesh(cap(0.45, 0.4), look.shirt, 0, 1.28, 0, body); tb.scale.set(1.12, 1, 0.8);
-    mesh(rbox(0.36, 0.36, 0.05, 0.02), shirtDark, 0, 1.56, 0.33, body).rotation.z = Math.PI / 4;
+    const tb = mesh(cap(0.45, 0.4), look.shirt, 0, 1.28, 0, body); tb.scale.set(1.12 * bulk, 1, 0.8 * bulk);
+    mesh(rbox(0.36, 0.36, 0.05, 0.02), shirtDark, 0, 1.56, 0.33 * bulk, body).rotation.z = Math.PI / 4;
     P.arms = [];
     for (const s of [-1, 1]) {
-      const sh = new T.Group(); sh.position.set(s * 0.56, 1.62, 0); body.add(sh);
-      mesh(cap(0.13, 0.5), look.shirt, 0, -0.3, 0.1, sh).rotation.x = -0.5;
+      const sh = new T.Group(); sh.position.set(s * 0.56 * bulk, 1.62, 0); body.add(sh);
+      const arm = mesh(cap(0.13, 0.5), look.shirt, 0, -0.3, 0.1, sh); arm.rotation.x = -0.5; arm.scale.set(bulk, 1, bulk);
       mesh(sph(0.13), skin, 0, -0.55, 0.38, sh);
       P.arms.push(sh);
     }
-    mesh(cyl(0.15, 0.17, 0.2), skin, 0, 1.8, 0, body);
+    mesh(cyl(0.15 * bulk, 0.17 * bulk, 0.2), skin, 0, 1.8, 0, body);
     const head = new T.Group(); head.position.y = 1.86; body.add(head); P.head = head;
+    if (look.head) head.scale.set(look.head[0], look.head[1], 1);
     const sk = mesh(sph(0.5, 40, 28), skin, 0, 0.45, 0, head); sk.scale.set(1, 1.03, 0.95);
     for (const s of [-1, 1]) { const e = mesh(sph(0.11), skin, s * 0.49, 0.45, 0, head); e.scale.z = 0.6; }
     mesh(sph(0.1), M(look.skin, { roughness: 0.6 }), 0, 0.4, 0.47, head).scale.set(1, 0.95, 1.1);
     P.eyes = eyes(head, { y: 0.55, x: 0.18, z: 0.41, iris: look.iris, size: 0.1 });
     const browCol = new T.Color(look.hair).multiplyScalar(0.85).getStyle();
-    P.brows = [-1, 1].map(s => mesh(rbox(0.24, 0.065, 0.06, 0.03), browCol, s * 0.19, 0.73, 0.43, head));
+    P.brows = [-1, 1].map(s => mesh(rbox(0.24, 0.065 * (look.brow || 1), 0.06, 0.03), browCol, s * 0.19, 0.73, 0.43, head));
     P.mouth = mouths(head, '#5a1f2a', 0.26, 0.45, 1.3);
     const hairM = M(look.hair, { roughness: 0.75 });
-    if (look.style === 'curly') {
+    const st = look.style;
+    if (st === 'curly') {
       // bukleler: üst yarım küreye serpilmiş küçük toplar
       const back = mesh(backShell(0.52, 1.6, 0.55), hairM, 0, 0.45, 0, head); back.material.side = 2;
       for (let i = 0; i < 26; i++) {
@@ -5798,22 +5814,76 @@ void main() {
         if (z > 0.3 && th > 0.9) continue;                              // alnı açık bırak
         mesh(sph(0.15, 14, 10), hairM, x, 0.45 + Math.cos(th) * 0.52, z, head);
       }
+    } else if (st === 'fade' || st === 'pomp') {
+      // yanlar sıfıra yakın (yarı saydam ince kabuk), üstte kısa/kabarık saç
+      const sides = mesh(backShell(0.506, 1.7, 0.6), M(look.hair, { transparent: true, opacity: 0.45, roughness: 1 }), 0, 0.45, 0, head);
+      sides.material.side = 2; sides.castShadow = false;
+      const top = mesh(new T.SphereGeometry(0.52, 40, 24, 0, Math.PI * 2, 0, Math.PI * 0.27), hairM, 0, 0.5, -0.02, head);
+      top.rotation.x = -0.3; top.scale.set(0.98, 1.0, 1.0);
+      if (st === 'fade') { const t2 = mesh(sph(0.42, 28, 18), hairM, 0, 0.8, 0.0, head); t2.scale.set(1.08, 0.55, 1.1); }
+      else {
+        // fönlü kabarık ön perçem (Cısdık imzası)
+        const pomp = mesh(sph(0.3, 24, 16), hairM, 0, 1.0, 0.12, head); pomp.scale.set(1.5, 0.78, 1.3); pomp.rotation.x = -0.35;
+        const lift = mesh(sph(0.2, 20, 14), hairM, -0.05, 1.06, 0.3, head); lift.scale.set(1.6, 0.7, 0.9); lift.rotation.z = 0.12;
+      }
     } else {
-      const top = mesh(new T.SphereGeometry(0.525, 40, 28, 0, Math.PI * 2, 0, Math.PI * (look.style === 'short' ? 0.36 : 0.42)), hairM, 0, 0.47, -0.02, head);
-      top.rotation.x = -0.32; top.scale.set(1, 1.05, 0.98);
-      const back = mesh(backShell(0.515, 1.9, 0.58), hairM, 0, 0.45, -0.01, head); back.material.side = 2;
-      if (look.style === 'quiff') { const q = mesh(sph(0.22), hairM, -0.12, 0.92, 0.18, head); q.scale.set(1.5, 0.7, 1); q.rotation.z = 0.3; }
-      if (look.style === 'side') { const sw = mesh(sph(0.26), hairM, 0.08, 0.86, 0.22, head); sw.scale.set(1.8, 0.5, 0.9); sw.rotation.z = -0.18; }
+      const top = mesh(new T.SphereGeometry(0.525, 40, 28, 0, Math.PI * 2, 0, Math.PI * (st === 'short' ? 0.36 : 0.42)), hairM, 0, 0.47, -0.02, head);
+      top.rotation.x = -0.32; top.scale.set(1, st === 'swept' ? 1.12 : 1.05, 0.98);
+      const back = mesh(backShell(0.515, 1.9, st === 'swept' ? 0.62 : 0.58), hairM, 0, 0.45, -0.01, head); back.material.side = 2;
+      if (st === 'quiff') { const q = mesh(sph(0.22), hairM, -0.12, 0.92, 0.18, head); q.scale.set(1.5, 0.7, 1); q.rotation.z = 0.3; }
+      if (st === 'side') { const sw = mesh(sph(0.26), hairM, 0.08, 0.86, 0.22, head); sw.scale.set(1.8, 0.5, 0.9); sw.rotation.z = -0.18; }
+      if (st === 'swept') {
+        // geriye taranmış hacim: alından tepeye uzanan yassı kütle
+        const sw = mesh(sph(0.3, 24, 16), hairM, 0.03, 0.96, 0.06, head); sw.scale.set(1.55, 0.55, 1.45); sw.rotation.x = 0.25;
+      }
+      if (st === 'messy') {
+        // dağınık perçem: alna düşen tutamlar + tepede kalkık uçlar
+        [[-0.2, 0.86, 0.33, 0.5], [0.0, 0.88, 0.36, 0.2], [0.18, 0.84, 0.34, -0.2], [0.32, 0.78, 0.26, -0.5]].forEach(([x, y, z, r]) => {
+          const t = mesh(sph(0.13, 14, 10), hairM, x, y, z, head); t.scale.set(1.3, 0.65, 0.9); t.rotation.z = r;
+        });
+        [[-0.12, 0.98, -0.05], [0.14, 0.99, 0.05], [0.0, 0.97, -0.22]].forEach(([x, y, z]) => mesh(sph(0.11, 12, 8), hairM, x, y, z, head).scale.set(1, 0.8, 1));
+      }
+      if (st === 'wavy') {
+        // dalgalı üst: tepede iri, gelişigüzel dalgalar
+        [[-0.22, 0.9, 0.18], [0.02, 0.97, 0.2], [0.24, 0.9, 0.14], [-0.12, 0.98, -0.1], [0.16, 0.97, -0.12], [0.36, 0.76, 0.0], [-0.36, 0.78, 0.02]].forEach(([x, y, z], i) => {
+          const w = mesh(sph(0.15, 14, 10), hairM, x, y, z, head); w.scale.set(1.2, 0.7, 1.1); w.rotation.z = i % 2 ? 0.3 : -0.3;
+        });
+      }
     }
-    if (look.beard === 'full') {
-      mesh(frontShell(0.505, 2.6, 0.56, 0.86), hairM, 0, 0.45, 0, head).material.side = 2;
+    const bd = look.beard;
+    if (bd === 'full' || bd === 'short') {
+      // short: kısa kesilmiş sakal, ten hafifçe görünür
+      const bm = bd === 'short' ? M(look.hair, { transparent: true, opacity: 0.8, roughness: 1 }) : hairM;
+      mesh(frontShell(0.505, 2.6, 0.56, 0.86), bm, 0, 0.45, 0, head).material.side = 2;
       const mu = mesh(cap(0.055, 0.22), hairM, 0, 0.33, 0.47, head); mu.rotation.z = Math.PI / 2;
-    } else if (look.beard === 'stubble') {
-      mesh(frontShell(0.503, 2.4, 0.58, 0.84), M(look.hair, { transparent: true, opacity: 0.35, roughness: 1 }), 0, 0.45, 0, head).castShadow = false;
+    } else if (bd === 'stubble' || bd === 'goatee') {
+      mesh(frontShell(0.503, 2.4, 0.58, 0.84), M(look.hair, { transparent: true, opacity: bd === 'goatee' ? 0.28 : 0.35, roughness: 1 }), 0, 0.45, 0, head).castShadow = false;
+    }
+    if (bd === 'goatee') {
+      // keçi sakal: dolgun bıyık + çene sakalı
+      const mu = mesh(cap(0.05, 0.2), hairM, 0, 0.33, 0.47, head); mu.rotation.z = Math.PI / 2;
+      const ch = mesh(sph(0.13, 20, 14), hairM, 0, 0.11, 0.37, head); ch.scale.set(1.05, 0.95, 0.65); ch.rotation.x = 0.5;
+    } else if (bd === 'wisp') {
+      // ince, yarı saydam bıyık + çenede küçük tutam
+      const wm = M(look.hair, { transparent: true, opacity: 0.55, roughness: 1 });
+      const mu = mesh(cap(0.025, 0.2), wm, 0, 0.33, 0.475, head); mu.rotation.z = Math.PI / 2; mu.castShadow = false;
+      const ch = mesh(sph(0.06, 14, 10), wm, 0, 0.12, 0.4, head); ch.scale.set(1, 1.3, 0.6); ch.castShadow = false;
     }
     if (look.glasses) {
-      for (const s of [-1, 1]) mesh(new T.TorusGeometry(0.12, 0.022, 8, 24), '#1e1a2a', s * 0.18, 0.55, 0.49, head);
-      mesh(rbox(0.12, 0.03, 0.03, 0.01), '#1e1a2a', 0, 0.57, 0.5, head);
+      const thick = look.glasses !== 'wire';
+      const fc = thick ? '#141018' : '#5c544c', tube = thick ? 0.03 : 0.011;
+      for (const s of [-1, 1]) {
+        const rim = mesh(new T.TorusGeometry(thick ? 0.125 : 0.115, tube, 8, 28), fc, s * 0.18, 0.55, 0.49, head);
+        if (thick) rim.scale.set(1.12, 0.92, 1);                       // köşeli kalın çerçeve
+        const arm = mesh(rbox(0.02, tube * 1.4, 0.36, 0.008), fc, s * (thick ? 0.335 : 0.31), 0.57, 0.3, head);
+        arm.rotation.y = s * -0.32;
+      }
+      mesh(rbox(0.11, tube * 1.2, 0.03, 0.008), fc, 0, 0.57, 0.5, head);
+    }
+    if (look.band) {
+      const band = mesh(new T.TorusGeometry(0.515, 0.045, 10, 40), look.band, 0, 0.74, 0.02, head);
+      band.rotation.x = Math.PI / 2 - 0.3; band.scale.set(1, 1, 1.4);
+      mesh(rbox(0.16, 0.06, 0.02, 0.01), '#d8413a', 0, 0.84, 0.5, head);  // bandın ortasındaki kırmızı şerit
     }
     // çağrı merkezi kulaklığı + mikrofon
     const hs = new T.Group(); head.add(hs); P.headset = hs;
@@ -5979,7 +6049,7 @@ void main() {
     sc.add(new T.HemisphereLight('#e6efff', '#6a5a7a', 1.4));
     const key = new T.DirectionalLight('#fff0dc', 2.4); key.position.set(-2, 4, 5); sc.add(key);
     const rimL = new T.DirectionalLight('#9fc4ff', 1.6); rimL.position.set(3, 3, -4); sc.add(rimL);
-    const cam = new T.PerspectiveCamera(24, 1, 0.1, 50); cam.position.set(0.55, 2.9, 3.6); cam.lookAt(0, 2.62, 0);
+    const cam = new T.PerspectiveCamera(24, 1, 0.1, 50); cam.position.set(0.6, 3.05, 4.0); cam.lookAt(0, 2.74, 0);
     for (const c of CHARACTERS) {
       const g = new T.Group(); sc.add(g);
       const P = buildPerson(LOOKS[c.id], g);
@@ -6662,7 +6732,7 @@ void main() {
       (c.id === today.id ? '<span class="star body" title="Bugünün karakteri">⭐ Bugün</span>' : '') +
       (c.guest ? '<span class="guest body">misafir</span>' : '') +
       (PORTRAITS[c.id] ? `<img src="${PORTRAITS[c.id]}" alt="">` : '<span class="ph"></span>') +
-      `<span class="nm h">${c.name}</span><span class="abn h">${c.ability.icon} ${c.ability.name}</span>` +
+      `<span class="nm h">${c.name}</span>` + (c.nick ? `<span class="nick body">namıdiğer ${c.nick}</span>` : '') + `<span class="abn h">${c.ability.icon} ${c.ability.name}</span>` +
       `<span class="ab body">${c.ability.desc}</span></button>`).join('');
     $('btnCharsPlay').textContent = `${CHAR_BY_ID[charsSel].name} İLE OYNA`;
   }

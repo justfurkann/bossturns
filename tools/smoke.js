@@ -48,7 +48,7 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     await page.waitForSelector('#chars:not(.hidden) .charCard');
     const cards = await page.evaluate(() => [...document.querySelectorAll('.charCard')].map(b => ({ id: b.dataset.id, img: !!b.querySelector('img'), today: !!b.querySelector('.star'), ab: !!b.querySelector('.abn') })));
     check('karakterler sekmesi: 5 karakter, 3D portre, yetenek, "bugün" rozeti',
-      cards.map(c => c.id).join() === 'alp,furkan,baransel,bulut,kaan' && cards.every(c => c.img && c.ab) && cards.filter(c => c.today).length === 1, JSON.stringify(cards.map(c => c.id + (c.today ? '*' : ''))));
+      cards.map(c => c.id).join() === 'alp,furkan,baransel,bulut,kaan,gokberk' && cards.every(c => c.img && c.ab) && cards.filter(c => c.today).length === 1, JSON.stringify(cards.map(c => c.id + (c.today ? '*' : ''))));
     await page.click('.charCard[data-id="bulut"]');
     check('karta basınca seçilir ve kaydedilir (oyun başlamaz)', await page.evaluate(() => !document.getElementById('chars').classList.contains('hidden') &&
       document.querySelector('.charCard[data-id="bulut"]').classList.contains('gold') && localStorage.getItem('bossturns.char') === '"bulut"'));
