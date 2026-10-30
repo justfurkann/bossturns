@@ -56,6 +56,8 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     await page.click('#btnCharsPlay');
     await waitGame(page, 0.1);
     check('seçilen karakterle tur başlar (BULUT)', (await page.evaluate(() => __bt.run.charId)) === 'bulut');
+    const deskAndTicks = await page.evaluate(() => ({ prop: !!__bt.PL.charPropG, ticks: document.querySelectorAll('#questBox .qTick').length }));
+    check('karakter masa eşyası (CHAR_DESK_PROPS) ve 1★/2★ kota çentikleri (.qTick) var', deskAndTicks.prop && deskAndTicks.ticks === 2, JSON.stringify(deskAndTicks));
     await freezeAway(page);
     const cx = 480, cy = 330;
     await page.mouse.move(cx, cy); await page.mouse.down();
@@ -173,11 +175,12 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
 
     // leveller: harita, kilitler, yıldız kaydı ve sonraki levelin açılması
     await page.evaluate(() => { __bt.run.t = 999; }); await waitGame(page, 1.8);
+    check('günlük görev özetinde emoji şeridi (#sumEmoji) görünür', await page.isVisible('#sumEmoji'));
     await page.click('#btnMenu'); await wait(100);
     await page.evaluate(() => localStorage.removeItem('bossturns.levels'));
     await page.click('#btnLevels'); await wait(150);
-    const lv = await page.evaluate(() => ({ tiles: document.querySelectorAll('.lvTile').length, locked: document.querySelectorAll('.lvTile.locked').length }));
-    check('level haritası: bölümde 5 level, yalnızca ilki açık', lv.tiles === 5 && lv.locked === 4, JSON.stringify(lv));
+    const lv = await page.evaluate(() => ({ tiles: document.querySelectorAll('.lvTile').length, locked: document.querySelectorAll('.lvTile.locked').length, qt: document.querySelector('.lvTile.next .qt')?.textContent || '', desc: document.getElementById('lvChapterDesc')?.textContent || '' }));
+    check('level haritası: bölümde 5 level, yalnızca ilki açık, kota ve açıklama yazar', lv.tiles === 5 && lv.locked === 4 && /600/.test(lv.qt) && lv.desc.length > 5, JSON.stringify(lv));
     await page.click('.lvTile.next'); await waitGame(page, 0.1);
     await page.evaluate(() => { __bt.run.score = 2000; __bt.run.t = 999; }); await waitGame(page, 1.8);
     const lr = await page.evaluate(() => ({ n: __bt.run.level.n, st: __bt.run.levelStars, best: JSON.parse(localStorage.getItem('bossturns.levels')).best, again: document.getElementById('btnAgain').textContent }));
