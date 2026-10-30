@@ -1266,6 +1266,11 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') (function 
   document.addEventListener('gesturestart', e => e.preventDefault()); // iOS pinch
   document.addEventListener('dblclick', e => e.preventDefault());
   window.addEventListener('blur', () => Input.clear());
+  // Masaüstü sürümü (Tauri) global patron tuşuyla pencereyi gizlerken bunu çağırır; tarayıcıda kullanılmaz.
+  window.__btDesktopHide = () => {
+    Input.clear();
+    if (run && run.state !== 'over' && !view.sheetOpen) view.hiddenPause = true;
+  };
   document.addEventListener('visibilitychange', () => {
     Input.clear();
     if (document.hidden && run && run.state !== 'over' && !view.sheetOpen) view.hiddenPause = true;

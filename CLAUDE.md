@@ -16,4 +16,6 @@
 - `index.html`: CONFIG → RNG → oyun mantığı (DOM'suz, `module.exports` ile Node'dan yüklenebilir) → tarayıcı katmanı.
 - `tools/sim.js`: denge simülasyonu (`node tools/sim.js 2000`).
 - `tools/smoke.js`: Playwright testleri (`node tools/smoke.js`). Değişiklikten sonra ikisini de çalıştır.
+- `src-tauri/`: Tauri 2 masaüstü kılıfı. `tools/build-dist.js` index.html'i `dist/` klasörüne kopyalar. `main.rs`'te global patron tuşu (Ctrl+Shift+Boşluk) ve tepsi var; pencere gizlenirken `window.__btDesktopHide()` çağrılır.
+- `.github/workflows/desktop.yml`: Windows exe derlemesi. `v*` etiketi atılınca Releases'a yükler.
 - Denge sabitleri yalnızca `CONFIG`'te. Hedef: ortalama oyuncu ilk canını medyan ~6. basışta kaybetsin.

@@ -224,6 +224,11 @@ const freezeAway = page => page.evaluate(() => { const b = __bt.run.boss; b.phas
     await touch('touchEnd');
     check('sekme gizlenince duraklar; dokununca devam eder (o dokunuş oynamaz)', paused && !resumed.p && !resumed.holding);
 
+    // masaüstü (exe) patron tuşu kancası: oyunu duraklatır
+    await page.evaluate(() => { __bt.view.hiddenPause = false; window.__btDesktopHide(); });
+    check('masaüstü kancası: global patron tuşu oyunu duraklatır', await page.evaluate(() => __bt.view.hiddenPause));
+    await touch('touchStart'); await touch('touchEnd'); await wait(100);
+
     check('mobil: konsol/JS hatası yok', errs.length === 0, errs.join(' | '));
     await ctxM.close();
   }
