@@ -384,11 +384,6 @@ html, body {
         <g id="sndOn" style="display:none"><path d="M34 17c4 4 4 12 0 16M39 12c7 7 7 19 0 26" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/></g></svg>
       <span class="cap h">SES</span>
     </button>
-    <button class="btn red" id="btnPanic" aria-label="Patron tuşu: ekranı sahte bir tabloyla gizle (Esc)" title="Patron tuşu: ekranı sahte tabloyla gizle (Esc)">
-      <svg viewBox="0 0 50 50"><path d="M4 25c6-10 13-15 21-15s15 5 21 15c-6 10-13 15-21 15S10 35 4 25z" fill="#fff" stroke="#120d2b" stroke-width="4" stroke-linejoin="round"/>
-        <circle cx="25" cy="25" r="7" fill="#120d2b"/><path d="M9 41L41 9" stroke="#120d2b" stroke-width="9" stroke-linecap="round"/><path d="M9 41L41 9" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
-      <span class="cap h">GİZLE</span>
-    </button>
   </div>
   <div id="banner"><div class="ribbon h" id="bannerTitle"></div><div class="sub body" id="bannerSub"></div></div>
   <div id="bubble" class="h"></div>
@@ -5502,7 +5497,7 @@ void main() {
       g.fillStyle = '#fffdf6'; g.fillRect(0, 0, w, h);
       g.strokeStyle = '#ff4d5e'; g.lineWidth = 22; g.lineCap = 'round'; g.lineJoin = 'round';
       g.beginPath(); g.moveTo(60, 290); g.lineTo(170, 220); g.lineTo(260, 250); g.lineTo(430, 80); g.stroke();
-      g.font = '700 60px Fredoka, sans-serif'; g.fillStyle = '#2a2f5c'; g.textAlign = 'center'; g.fillText('HEDEF %110', w / 2, 370);
+      g.font = '700 60px Fredoka, sans-serif'; g.fillStyle = '#2a2f5c'; g.textAlign = 'center'; g.fillText('HEDEF 10.000', w / 2, 370);
     });
     posterMesh.material.needsUpdate = true;
   }
@@ -6484,9 +6479,7 @@ void main() {
       if (Sound.ctx && Sound.on) Sound.ctx.resume();
       if (run) run.locked = true;
     }
-    $('btnPanic').blur();
   }
-  $('btnPanic').addEventListener('click', togglePanic);
   $('sheetBack').addEventListener('click', togglePanic);
   buildSheet();
 
