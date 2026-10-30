@@ -29,7 +29,7 @@ Exe imzasız olduğu için Windows ilk açılışta "Bilgisayarınız korundu" d
 | **Bırak** | Cep **kasaya** girer, artık güvende. |
 | Yağmur'un üstünde **❗** | Kafasını çeviriyor, hemen bırak! Bazen blöftür. |
 | Patron **bakarken** basılıysan | Yakalanırsın: cepteki puan gider, bir can gider. Tekrar oynamak için önce bırakman gerekir. |
-| Saat **17:00** | Mesai biter (mesai 8-5), kalan her can +100 puan. |
+| Saat **17:00** | Mesai biter (mesai 8-5, bir level ~1 dakika). Kotayı tuttuysan level geçilir. |
 
 - **🐒 Keleşli Maymunlar + misafirler Kaan ve Gökberk: 6 oyuncu, her birinin yeteneği var** (ana menü → 👥 KARAKTERLER; seçimin hatırlanır):
   | Karakter | Yetenek |
@@ -42,11 +42,13 @@ Exe imzasız olduğu için Windows ilk açılışta "Bilgisayarınız korundu" d
   | GÖKBERK (misafir) | 🏋️ **Basıyo:** mesaiye spordan geliyor, cep %12 daha hızlı dolar |
 
   Yetenekler simülasyonla dengelendi (her biri ortalama ≈ +%5). Her gün sırayla biri **günün karakteri** olur; günlük görevde herkes onunla oynar, böylece skorlar adil karşılaştırılır.
+- **🗺️ Leveller:** 5 bölüm × 5 level. Her bölümde Yağmur'un başka bir ruh hali var ve her level biraz daha zor: 😴 Kahvesiz → 🙂 Sakin → 🤨 Şüpheci → 😎 Hedef Toplantısı Sonrası → 📱 Telaşlı. Kotayı tutarsan ⭐, daha fazlasına ⭐⭐ ve ⭐⭐⭐. Geçtiğin level bir sonrakini açar; ana menüdeki büyük buton seni hep sıradaki levele götürür.
+- **🏆 Kariyer:** toplam yıldızın arttıkça terfi edersin (Stajyer Temsilci → Hedef 10.000 Efsanesi); başarımlar ve maaş çarpanı burada.
 - **3 can** var. Her tur sıfırdan başlar; turlar arasında yalnızca en iyi skor, cüzdan ve marketten aldıkların saklanır.
 - **🛒 Market:** her tur sonunda kasanın onda biri **maaş** olarak cüzdana girer. Marketten şapka (kep, bere, kulaklık, taç), laptop çıkartması, masa süsü ve sandalye rengi alırsın. Sadece görünüm; oyuna avantaj vermez.
-- Puan arttıkça **Yağmur'un ruh hali değişir**: 🙂 Sakin, 😴 Kahvesiz (yavaş döner, uzun bakar), 📱 Telaşlı (hızlı döner, kısa bakar), 🤨 Şüpheci (blöf ustası, bazen çifte döner), 😎 Patron Modu (her seferinde başka taktik).
+- Günlük görevde puan arttıkça **Yağmur'un ruh hali değişir**: 🙂 Sakin, 😴 Kahvesiz (yavaş döner, uzun bakar), 📱 Telaşlı (hızlı döner, kısa bakar), 🤨 Şüpheci (blöf ustası, bazen çifte döner), 😎 Patron Modu (her seferinde başka taktik).
 - **Yağmur'un kombini her gün değişir:** ceketli günler ya da siyah tişört + bol pantolon; ortadan ayrık uzun sarı saç, dağınık topuz ya da at kuyruğu. Kulaklığı ve kırmızı boyun askısı hep üstünde. Aynı gün herkes aynı kombini görür.
-- **Bi kısa mola:** 250, 800 ve 1600 puanda 3 avantajdan birini seçersin. Seçim yalnızca o tur için geçerli. Parlayan kart sırayla değişir: basınca parlayan seçilir ya da istediğin karta doğrudan dokunabilirsin.
+- **Bi kısa mola:** levelde kotanın yarısında bir kez, günlük görevde 250, 800 ve 1600 puanda 3 avantajdan birini seçersin. Seçim yalnızca o tur için geçerli. Parlayan kart sırayla değişir: basınca parlayan seçilir ya da istediğin karta doğrudan dokunabilirsin.
 - **📅 Günlük görev:** Seçenekler tarihe bağlı. Aynı gün oynayan herkes aynı patron sırasını ve aynı rastgele diziyi görür. Tur sonunda Wordle tarzı emoji özetini **Kopyala** ile paylaşabilirsin
   (🟩 kasaya attın · 🟨 kıl payı · 🟥 yakalandın · 🟦 kalkan kurtardı).
 - **Esc = patron tuşu:** Ekranı sahte bir tabloyla kaplar ve oyunu durdurur. Tekrar Esc'e basınca geri dönersin.

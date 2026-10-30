@@ -11,7 +11,7 @@
 
 ## Oyuncular (sahibinin kararı)
 - Takımın adı **🐒 Keleşli Maymunlar**: ALP, FURKAN, BARANSEL, BULUT. Misafirler: **KAAN** (namıdiğer Cısdık) ve **GÖKBERK** (sporcu). Sıra: ALP, FURKAN, BARANSEL, BULUT, KAAN, GÖKBERK (`CHARACTERS`, logic bloğu). Silah çizme; sadece isim ve 🐒.
-- Serbest modda oyuncu seçer; **günlük görevde herkes "günün karakteri" ile oynar** (tarihe göre sırayla döner, `dailyCharFor`).
+- Levellerde oyuncu karakterini seçer; **günlük görevde herkes "günün karakteri" ile oynar** (tarihe göre sırayla döner, `dailyCharFor`).
 - Görünümler `LOOKS` tablosunda (app bloğu); gerçek kişilerin fotoğraflarına göre stilize edildi (ALP: fade + kısa sakal, siyah hırka · FURKAN: kalın siyah gözlük, dağınık kahve saç, yeşil · BARANSEL: ince tel gözlük, geriye taranmış saç, lacivert · BULUT: dolgun yüz, kahverengi polo · KAAN: fönlü kabarık saç, keçi sakal, beyaz · GÖKBERK: dalgalı saç, sakal, ter bandı, kırmızı). Fotoğrafları repoya koyma, yalnızca tablodaki parametreleri güncelle.
 - Yetenekler (pasif, çekirdek döngüyü değiştirmez): ALP ⚡ Hızlı El (tolerans 0,15 sn) · FURKAN 👂 Kulağı Delik (blöflerin ~3'te 2'sini sezer, ünlem gri "?") · BARANSEL 🙇 Yalaka (Yağmur %5 daha seyrek döner; bakarken çalışıyorsa "Şefim kombin efsane!" balonu; Baransel herkese "şefim" der) · BULUT ☁️ Soğukkanlı (yakalanınca cebin yarısı kasaya) · KAAN 🖥️ ATS Bozuldu (ATS çökme olasılığı %3 yerine %25) · GÖKBERK 🏋️ Basıyo (cep %12 daha hızlı dolar). Sayılar `CONFIG.abilities`'te; hedef her birinin ortalama oyuncuya ≈ +%5 vermesi (`node tools/sim.js` tablosu). Oyun zamanlamaya çok duyarlı: tolerans/uyarıya 0,03 sn bile ≈ +%5 eder.
 - Ana menüde "KARAKTERLER" sekmesi: seçim kaydedilir, "Mesaiye başla" doğrudan seçili karakterle başlar.
@@ -24,13 +24,15 @@
 - Duvar ekranı (`drawBoard`): bekleyen çağrı oyuncu basılı tuttukça artar, bıraktıkça azalır (yalnızca görsel).
 - Esc tablosu çağrı merkezi KPI raporu (AHT, FCR, CSAT).
 - İç şakalar: "KAAN ATS BOZULDU" (ATS olayı: Yağmur uzun süre meşgul, `CONFIG.ats`) · "Primler 5'e katlanacak" (tur ortası duyuru, sonda İPTAL EDİLDİ) · "Bi kısa mola" (kahve molası ekranı) · "Bi terasa çıkalım" (kapı tabelası TERAS, son canda banner) · Yağmur ofiste oyun oynayana kızar.
-- Kariyer kotaları (`CAREER_RANKS`) sim skor dağılımına göre: 30 turda dikkatli oyuncu zirveye, ortalama ~8. kademeye ulaşır.
+- **LEVELLER (sahibinin kararı, Cut the Rope mantığı):** ana oyun 5 bölüm × 5 level (`CHAPTERS`, `LEVELS`, `LEVEL_QUOTAS`). Her bölüm Yağmur'un bir ruh hali (zorluk sırası simle ölçüldü): Kahvesiz → Sakin → Şüpheci → Hedef Toplantısı Sonrası → Telaşlı (final). Level = ~60 sn'lik kısa mesai (`CONFIG.level`), Yağmur'un ruh hali bölüme sabit, zorluk `d` levelle artar. Kota = 1★, 2★/3★ kotanın 1,15/1,3 katı; kovulursan 0★. Geçince sonraki level açılır. İlerleme `bossturns.levels` (localStorage). Kotalar `node tools/sim.js 400 --levels` tablosuyla ayarlanır: ortalama oyuncu 1. bölümü ~%85, son leveli ~%12 geçer.
+- Kariyer artık genel ilerleme: terfi, leveller boyunca toplanan **toplam yıldıza** göre (`CAREER_RANKS[].stars`, 75 yıldız üzerinden).
+- Günlük görev ayrı mod olarak kalır (tarihe bağlı seed, günün karakteri), mesaisi kısaltıldı (`CONFIG.shift`, ≤ ~80 sn).
 
 ## Kısıtlar
 - Tek giriş: basılı tut / bırak. Yeni kontrol ekleme.
 - Çekirdek döngüyü (tut/bırak/patron) değiştirmeden önce sahibine sor.
 - Arayüz Türkçe. Telifli karakter veya marka yok. `prefers-reduced-motion`'a saygı göster.
-- Bir tur 1–3 dakikayı geçmemeli. Ses varsayılan olarak kapalı. Mesai saati 08:00–17:00 (`CONFIG.startHour/endHour`).
+- Bir level ~1 dakika, günlük tur ~1,5 dakikayı geçmemeli. Ses varsayılan olarak kapalı. Mesai saati 08:00–17:00 (`CONFIG.startHour/endHour`).
 - `index.html` tek dosya ve internetsiz çalışır: CDN yok. Three.js (3D) ve Lilita One yazı tipi dosyanın İÇİNE gömülüdür (`npm install && npm run vendor` yeniden üretir; `/*VENDOR:…*/` işaretleri arasına elle dokunma).
 
 ## Yapı

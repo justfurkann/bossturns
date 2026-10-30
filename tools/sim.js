@@ -55,11 +55,11 @@ function makePlayer(P, r) {
   };
 }
 
-function simulate(BT, profile, n, seed = 1, setup = null, charId = 'none') {
+function simulate(BT, profile, n, seed = 1, setup = null, charId = 'none', level = 0) {
   const r = BT.makeRng('player' + seed);
-  const res = { first: [], dur: [], score: [], shift: 0, presses: [] };
+  const res = { first: [], dur: [], score: [], shift: 0, presses: [], stars: [], ends: [] };
   for (let i = 0; i < n; i++) {
-    const run = BT.createRun('free', { seed: seed * 100000 + i, charId });
+    const run = level ? BT.createRun('level', { seed: seed * 100000 + i, charId, level }) : BT.createRun('free', { seed: seed * 100000 + i, charId });
     if (setup) setup(run);
     const player = makePlayer(PROFILES[profile], r);
     const dt = 1 / 60;
@@ -71,6 +71,8 @@ function simulate(BT, profile, n, seed = 1, setup = null, charId = 'none') {
     if (run.stats.firstCatchPress) res.first.push(run.stats.firstCatchPress);
     res.dur.push(run.t); res.score.push(run.score); res.presses.push(run.stats.presses);
     if (run.endReason === 'shift') res.shift++;
+    if (level) res.stars.push(run.levelStars || 0);
+    res.ends.push(run.endReason);
   }
   return res;
 }
@@ -80,7 +82,7 @@ const pct = (a, q) => { const s = [...a].sort((x, y) => x - y); return s[Math.fl
 
 if (require.main === module) {
   const n = Number(process.argv[2] || 1500);
-  const overrides = process.argv[3] ? JSON.parse(process.argv[3]) : null;
+  const overrides = process.argv[3] && process.argv[3][0] === '{' ? JSON.parse(process.argv[3]) : null;
   const BT = loadGame(overrides);
   console.log(`CONFIG.warn=${JSON.stringify(BT.CONFIG.warn)} tolerance=${BT.CONFIG.tolerance}  (${n} tur/profil)`);
   for (const p of Object.keys(PROFILES)) {
@@ -89,6 +91,19 @@ if (require.main === module) {
       `${p.padEnd(9)} ilk can: ort ${avg(s.first).toFixed(1)} basış (medyan ${pct(s.first, 0.5)}) | ` +
       `tur: ort ${avg(s.dur).toFixed(0)} sn, p90 ${pct(s.dur, 0.9).toFixed(0)} sn, max ${Math.max(...s.dur).toFixed(0)} sn | ` +
       `skor ort ${avg(s.score).toFixed(0)} | 17:00'ye varan %${(100 * s.shift / n).toFixed(0)}`);
+  }
+  // leveller: geçme (≥1 yıldız) ve 3 yıldız oranı
+  if (process.argv.includes('--levels')) {
+    const ln = Math.min(n, 600);
+    console.log(`\nLeveller (${ln} tur/level) — geçme% / 3★% / ort. skor:`);
+    for (const L of BT.LEVELS) {
+      const row = Object.keys(PROFILES).map(p => {
+        const s = simulate(BT, p, ln, 1, null, 'none', L.n);
+        const pass = s.stars.filter(x => x >= 1).length / ln, three = s.stars.filter(x => x >= 3).length / ln;
+        return `${p.slice(0, 4)} %${(pass * 100).toFixed(0).padStart(3)} / %${(three * 100).toFixed(0).padStart(3)} / ${avg(s.score).toFixed(0).padStart(4)}`;
+      });
+      console.log(`  L${String(L.n).padEnd(3)} kota ${String(L.quota).padStart(4)} d=${L.d.toFixed(2)} | ${row.join(' | ')}`);
+    }
   }
   // karakter yetenekleri: "ortalama" oyuncu, yeteneksiz tabana göre
   const base = avg(simulate(BT, 'ortalama', n).score);
