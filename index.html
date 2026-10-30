@@ -36,18 +36,25 @@ html, body {
 #hud button, #hud .overlay, #hud .overlay * { pointer-events: auto; }
 
 /* ---------- Cut the Rope / Om Nom Run tarzı şeker & ahşap yapı taşları ---------- */
-/* Kontur: gerçek çizgi (stroke), harfin ARKASINA çizilir (paint-order). Eskiden metin 4 yöne kaydırılıp
-   kopyalanıyordu; köşelerde çentik ve harf içinde incelme yapıyordu. */
+/* Kontur: yalnızca koyu/renkli zemin üzerindeki BEYAZ/ALTIN başlıklara ince kontur verilir.
+   Açık krem kart veya beyaz konuşma balonundaki koyu yazılara ASLA kontur verilmez. */
 .h { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 700; color: #fff; letter-spacing: .01em;
-  -webkit-text-stroke: 6px var(--ink); paint-order: stroke fill; text-shadow: 0 4px 0 rgba(59,29,8,.55); }
+  -webkit-text-stroke: 3.5px var(--ink); paint-order: stroke fill; text-shadow: 0 3px 0 rgba(59,29,8,.5); }
 .num { font-family: 'Nunito', sans-serif; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums;
-  -webkit-text-stroke: 5px var(--ink); paint-order: stroke fill; text-shadow: 0 3px 0 rgba(59,29,8,.5); }
-.body { font-family: 'Nunito', sans-serif; font-weight: 600; letter-spacing: 0; -webkit-text-stroke: 0; }
-.ic { -webkit-text-stroke: 0; }
-/* küçük yazıya ince kontur (kalın kontur küçük harfi boğuyor) */
-.qBarTxt, #mult, .qStreak, .qReward, #pfMult, .charCard .sel, .ribbon.small { -webkit-text-stroke-width: 3px; }
-.t { font-family: 'Lilita', sans-serif; font-weight: 400; color: #fff;   /* Lilita'nın tek kalınlığı 400 */
-  -webkit-text-stroke: 14px var(--ink); paint-order: stroke fill; text-shadow: 0 8px 0 var(--ink); }
+  -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; text-shadow: 0 3px 0 rgba(59,29,8,.45); }
+.body, small, .ic { font-family: 'Nunito', sans-serif; font-weight: 700; letter-spacing: 0; -webkit-text-stroke: 0 !important; text-shadow: none; }
+/* küçük yazıya çok ince kontur (kalın kontur küçük harfi boğar ve diken yapar) */
+.qBarTxt, #mult, .qStreak, .qReward, #pfMult, .charCard .sel, .charCard .abn, .item .nm, .item .pr, #title .row3 .lb, .ribbon.small {
+  -webkit-text-stroke-width: 2.2px; text-shadow: 0 2px 0 rgba(59,29,8,.4);
+}
+/* açık zemin üzerindeki koyu/renkli metinlerde kontur tamamen sıfırlanır */
+#bubble.white, #bubble2, #action small, .shopSlot, .careerHero .rk,
+.ladItem:not(.done) .nm, .ladItem:not(.done) .qt, .achCard .nm, .achCard .rw,
+#sumRecord, #sumSalary, #sumCareer .promo, .item .on {
+  -webkit-text-stroke: 0 !important; text-shadow: none !important;
+}
+.t { font-family: 'Lilita', sans-serif; font-weight: 400; color: #fff;
+  -webkit-text-stroke: 10px var(--ink); paint-order: stroke fill; text-shadow: 0 8px 0 var(--ink); }
 .panel { border: 4px solid rgba(255,255,255,.85); border-radius: 30px;
   background: rgba(24, 30, 68, .72); backdrop-filter: blur(8px);
   box-shadow: 0 8px 20px rgba(10,12,35,.38), inset 0 2px 0 rgba(255,255,255,.35); }
@@ -106,22 +113,22 @@ html, body {
 #pocketHint { position: absolute; inset: 14px 20px 36px; font-size: 24px; line-height: 1.25; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; }
 #pocketHint br { display: none; }
 #pocketHint b { color: var(--gold1); font-weight: 800; }
-#action { width: 380px; height: 96px; text-align: center; font-size: 44px; line-height: 84px; border-width: 5px; border-radius: 999px; pointer-events: none !important; transition: transform .08s; }
-#action small { display: block; font-size: 24px; line-height: 0; margin-top: -16px; }
+#action { width: 380px; height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 42px; line-height: 1.05; border-width: 5px; border-radius: 999px; pointer-events: none !important; transition: transform .08s; }
+#action small { display: block; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.1; margin-top: 2px; color: #4a2508; }
 #btns { display: flex; gap: 14px; }
 #btns .btn { width: 86px; height: 86px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 #btns svg { width: 44px; height: 44px; }
 #btns .cap { display: none; }
-#banner { left: 50%; transform: translateX(-50%); text-align: center; opacity: 0; transition: opacity .2s, transform .2s; white-space: nowrap; }
+#banner { left: 50%; transform: translateX(-50%); text-align: center; opacity: 0; transition: opacity .2s, transform .2s; white-space: nowrap; z-index: 12; }
 #banner.on { opacity: 1; }
 #banner .ribbon { font-size: 42px; }
-#banner .sub { display: inline-block; margin-top: 10px; padding: 6px 20px; border-radius: 999px; background: rgba(24,30,68,.82); border: 3px solid rgba(255,255,255,.5); font-size: 24px; }
+#banner .sub { display: inline-block; margin-top: 10px; padding: 6px 20px; border-radius: 999px; background: rgba(24,30,68,.88); border: 3px solid rgba(255,255,255,.55); font-size: 24px; color: #fff; }
 #banner .sub:empty { display: none; }
-#bubble { transform: translate(-50%, -100%); padding: 8px 24px 12px; font-size: 36px; border: 4px solid var(--ink); border-radius: 26px; white-space: nowrap; display: none;
-  box-shadow: 0 7px 0 var(--ink); }
+#bubble { transform: translate(-50%, -100%); padding: 10px 26px 12px; font-size: 32px; border: 4px solid var(--ink); border-radius: 26px; white-space: nowrap; display: none;
+  box-shadow: 0 7px 0 var(--ink); z-index: 14; }
 #bubble::after { content: ''; position: absolute; left: 50%; bottom: -22px; margin-left: -14px; border: 14px solid transparent; border-top: 18px solid var(--ink); }
-#bubble.white { background: #fff; color: var(--ink); text-shadow: none; }
-#bubble.red { color: #fff; }
+#bubble.white { background: #fffdf7; color: var(--ink); font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 700; }
+#bubble.red { color: #fff; -webkit-text-stroke: 3px var(--ink); }
 
 /* ---------- geniş yerleşim (PC) ---------- */
 #hud.wide #kasa     { left: 36px; top: 26px; }
@@ -143,7 +150,7 @@ html, body {
 #hud.tall #clockVal { font-size: 40px; line-height: 48px; }
 #hud.tall #mood     { right: 28px; top: 208px; }
 #hud.tall #pocket   { left: 50%; margin-left: -230px; width: 460px; bottom: 174px; }
-#hud.tall #action   { left: 50%; margin-left: -230px; width: 460px; height: 108px; font-size: 50px; line-height: 96px; bottom: 48px; }
+#hud.tall #action   { left: 50%; margin-left: -230px; width: 460px; height: 108px; font-size: 48px; line-height: 1.05; bottom: 48px; }
 #hud.tall #btns     { right: 28px; bottom: 58px; }
 #hud.tall #btns .btn { width: 96px; height: 96px; }
 #hud.tall #banner   { top: 310px; }
@@ -175,8 +182,8 @@ html, body {
   padding: 50px 0 24px; overflow-y: auto; touch-action: pan-y; }
 .overlay.hidden, #sheet.hidden, .hidden { display: none !important; }
 #pick h2, #pause h2 { margin: 0; font-size: 68px; }
-#bubble2 { transform: translate(-50%, -100%); padding: 8px 22px 12px; font-size: 32px; border: 4px solid var(--ink); border-radius: 24px; white-space: nowrap; display: none;
-  background: #fff; color: var(--ink); text-shadow: none; box-shadow: 0 7px 0 var(--ink); }
+#bubble2 { transform: translate(-50%, -100%); padding: 10px 24px 12px; font-size: 30px; border: 4px solid var(--ink); border-radius: 24px; white-space: nowrap; display: none;
+  background: #fffdf7; color: var(--ink); font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 700; box-shadow: 0 7px 0 var(--ink); z-index: 14; }
 #bubble2::after { content: ''; position: absolute; left: 50%; bottom: -20px; margin-left: -12px; border: 12px solid transparent; border-top: 16px solid var(--ink); }
 /* Sade oyun ekranı (Cut the Rope gibi): oyun sırasında yalnızca skor, saat, can ve tek buton.
    Cep artık kutuda değil, oyuncunun kafasının üstünde yüzer; göz sahnede kalır. */
@@ -188,12 +195,11 @@ html, body {
 #hud.wide #questBox { left: 96px; top: 112px; }
 #hud.tall #questBox { left: 90px; top: 118px; transform: none; }
 #pocketFloat { position: absolute; transform: translate(-50%, -100%); display: none; white-space: nowrap; pointer-events: none;
-  font-size: 76px; line-height: 1; color: var(--gold1);
-  -webkit-text-stroke: 10px var(--ink); paint-order: stroke fill; text-shadow: 0 7px 0 var(--ink); }
+  font-size: 72px; line-height: 1; color: var(--gold1);
+  -webkit-text-stroke: 5px var(--ink); paint-order: stroke fill; text-shadow: 0 5px 0 var(--ink); z-index: 13; }
 #pocketFloat.lost { color: #ff6b7a; }
-#pocketFloat small { font-size: 34px; margin-left: 10px; color: #fff; vertical-align: 6px; }
-#hud.tall #pocketFloat { font-size: 88px; }
-#action small { display: block; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 20px; line-height: 1; margin-top: -14px; text-shadow: none; color: rgba(59,29,8,.75); }
+#pocketFloat small { font-size: 32px; margin-left: 10px; color: #fff; vertical-align: 6px; -webkit-text-stroke: 2.5px var(--ink) !important; paint-order: stroke fill; }
+#hud.tall #pocketFloat { font-size: 84px; }
 #pick p, #pause p { margin: 10px 0 36px; font-size: 28px; color: #fff4d6; }
 #pickCards { display: flex; gap: 32px; }
 .card { width: 430px; height: 520px; padding: 0; position: relative; text-align: center; border-radius: 36px; }
@@ -213,13 +219,13 @@ html, body {
 
 /* Ana Menü & Özet Kartı: Cut the Rope sıcak krem kutu */
 .menu {
-  width: 820px; max-width: calc(100% - 60px); padding: 32px 42px 36px; text-align: center; position: relative;
+  width: 660px; max-width: calc(100% - 60px); padding: 34px 38px 30px; text-align: center; position: relative;
   border-radius: 42px; border: 7px solid var(--wood);
   background: linear-gradient(180deg, var(--cream) 0%, var(--cream2) 100%);
   box-shadow: inset 0 6px 0 #ffffff, inset 0 -10px 0 #ebd29b, 0 14px 0 #361904, 0 26px 50px rgba(0,0,0,.55);
   color: #4a2508;
 }
-#hud.tall .menu { width: 920px; }
+#hud.tall .menu { width: 820px; }
 #hud.tall .overlay { padding-top: 80px; }
 .menu .presents { font-size: 22px; color: #8c4a15; margin-bottom: 2px; letter-spacing: .05em; text-shadow: none; }
 .logo { font-size: 108px; line-height: .92; margin: 0; color: #ffbf1f; transform: rotate(-2deg); }
@@ -232,28 +238,16 @@ html, body {
 }
 .menu .careerBar div { font-weight: 800; color: #b85600; }
 .menu .careerBar span { color: #6e380f; font-size: 20px; }
+.menu .rules { display: none; }
 
-/* 3'lü görsel nasıl oynanır şeridi (uzun metin duvarı yerine) */
-.menu .rules {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
-  margin: 14px 0 20px; padding: 0; background: transparent;
-}
-.menu .rules div {
-  background: #fffdf7; border: 4px solid #dec086; border-radius: 24px;
-  padding: 14px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-  text-align: center; font-size: 20px; line-height: 1.2; color: #5a2d0c; box-shadow: 0 5px 0 rgba(90,45,12,.12);
-}
-.menu .rules div > span:first-child { font-size: 44px; line-height: 1; }
-.menu .rules b { display: block; color: #2a1405; font-family: 'Fredoka', sans-serif; font-size: 23px; margin-bottom: 2px; }
-
-.menu .btn.big { width: 100%; height: 112px; font-size: 52px; margin: 8px 0 14px; border-radius: 999px; }
-.menu .btn.mid { height: 92px; font-size: 34px; border-radius: 26px; }
+.menu .btn.big { width: 100%; height: 104px; font-size: 44px; margin: 8px 0 14px; border-radius: 999px; }
+.menu .btn.mid { height: 84px; font-size: 30px; border-radius: 26px; }
 #btnFree {
-  height: 124px; line-height: 1.05;
+  height: 124px; line-height: 1.05; display: flex; flex-direction: column; align-items: center; justify-content: center;
   background: linear-gradient(180deg, var(--green1) 0%, var(--green2) 50%, var(--green3) 100%);
   box-shadow: inset 0 7px 0 rgba(255,255,255,.7), inset 0 -10px 0 rgba(0,80,20,.35), 0 10px 0 var(--ink), 0 16px 26px rgba(32,158,9,.35);
 }
-#btnFree small { display: block; font-size: 23px; color: #fff; opacity: .95; margin-top: 4px; text-shadow: 0 2px 0 rgba(0,0,0,.35); }
+#btnFree small { display: block; font-size: 22px; color: #fff; opacity: .96; margin-top: 4px; text-shadow: 0 2px 0 rgba(0,50,10,.6); }
 .row3 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .row3 .btn { height: 86px; font-size: 25px !important; padding: 0 6px; border-radius: 24px; white-space: nowrap; }
 .menu .dailyInfo { font-size: 20px; color: #7a4419; margin-top: 12px; }
@@ -270,32 +264,36 @@ html, body {
 #title #btnFree { width: 640px; max-width: 100%; margin: auto 0 18px; }
 #title .row3 { display: flex; gap: 26px; justify-content: center; }
 #title .row3 .btn { width: 116px; height: 116px; border-radius: 50%; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-#title .row3 .ic { font-size: 50px; line-height: 1; text-shadow: none; }
-#title .row3 .lb { font-size: 18px; line-height: 1; margin-top: 4px; -webkit-text-stroke-width: 4px; }
+#title .row3 .ic { font-size: 48px; line-height: 1; }
+#title .row3 .lb { font-size: 18px; line-height: 1; margin-top: 4px; }
 #title .meta { color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.6); margin-top: 14px; }
 #title .tiny { color: #ffe9b0; text-shadow: 0 2px 0 rgba(0,0,0,.6); }
 #hud.tall #title .menu { width: 100%; padding: 120px 40px 70px; }
 #hud.tall #title .logo { font-size: 150px; }
-#hud.tall #title #btnFree { width: 900px; height: 150px; font-size: 64px; }
+#hud.tall #title #btnFree { width: 900px; height: 150px; font-size: 62px; }
 #hud.tall #title .row3 .btn { width: 150px; height: 150px; }
-#hud.tall #title .row3 .ic { font-size: 64px; }
+#hud.tall #title .row3 .ic { font-size: 62px; }
 #hud.tall #title .row3 .lb { font-size: 22px; }
 
-/* Özet ekranı */
-#sumTitle { position: absolute; left: 50%; top: -42px; transform: translateX(-50%); white-space: nowrap; font-size: 48px; }
-#sumReason { font-size: 24px; color: #6e380f; margin: 18px 0 0; }
-#sumScore { font-size: 104px; line-height: 1.0; color: #f08c00; -webkit-text-stroke: 8px #fff; paint-order: stroke fill; text-shadow: 0 6px 0 rgba(90,45,12,.25); }
-#sumRecord { font-size: 26px; color: #209e09; min-height: 34px; text-shadow: none; }
-#sumSalary { font-size: 28px; color: #b85600; min-height: 34px; text-shadow: none; }
-#sumCareer { margin: 8px 0 10px; padding: 12px 18px; border-radius: 20px; background: #fffdf7; border: 4px solid #dec086; font-size: 21px; line-height: 1.35; color: #4a2508; text-align: left; }
-#sumCareer .promo { color: #209e09; font-size: 25px; margin-bottom: 4px; display: block; text-align: center; text-shadow: none; }
-#sumStats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 26px; margin: 10px 0; text-align: left; font-size: 21px; color: #4a2508; }
-#sumStats div { display: flex; justify-content: space-between; border-bottom: 2px solid rgba(90,45,12,.14); padding: 4px 0; }
-#sumStats span { color: #7a4419; }
-#sumStats b { font-weight: 800; color: #3b1d08; }
-#sumEmoji { white-space: pre-wrap; text-align: left; font-size: 21px; line-height: 1.28; margin: 8px 0 16px; color: #3b1d08;
-  background: #fffdf7; border: 3px solid #dec086; border-radius: 18px; padding: 14px 18px; -webkit-user-select: text; user-select: text; }
-.row2 { display: flex; gap: 20px; }
+/* Özet ekranı (Cut the Rope 2 tarzı sade, görsel bölüm sonu kartı) */
+#sumTitle { position: absolute; left: 50%; top: -40px; transform: translateX(-50%); white-space: nowrap; font-size: 44px; padding: 8px 42px 12px; }
+#sumStars { display: flex; justify-content: center; gap: 14px; margin: 10px 0 4px; font-size: 58px; line-height: 1; filter: drop-shadow(0 5px 0 rgba(59,29,8,.2)); }
+#sumStars .stOff { opacity: .28; filter: grayscale(1); }
+#sumReason { font-size: 22px; color: #7a4419; margin: 4px 0 6px; }
+#sumScore { font-family: 'Lilita', sans-serif; font-weight: 400; font-size: 112px; line-height: .96; color: #ffca28;
+  -webkit-text-stroke: 7px var(--ink) !important; paint-order: stroke fill; text-shadow: 0 7px 0 var(--ink) !important; margin: 2px 0 6px; }
+#sumRecord { display: inline-block; font-size: 22px; color: #1b8a06; background: rgba(60,214,27,.14); border: 2px solid rgba(32,158,9,.3);
+  padding: 3px 18px; border-radius: 999px; margin-bottom: 10px; }
+#sumSalary { display: none; }
+#sumCareer { margin: 6px 0 12px; padding: 10px 18px; border-radius: 22px; background: #fffdf7; border: 3px solid #e0c389; font-size: 20px; line-height: 1.3; color: #4a2508; text-align: center; }
+#sumCareer .promo { color: #1b8a06; font-size: 23px; font-weight: 800; display: block; }
+#sumStats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 8px 0 18px; }
+#sumStats .sCard { background: #fffdf7; border: 3px solid #e0c389; border-radius: 22px; padding: 12px 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 4px 0 rgba(90,45,12,.08); }
+#sumStats .sCard .sIco { font-size: 32px; line-height: 1; margin-bottom: 2px; }
+#sumStats .sCard b { font-size: 25px; font-weight: 800; color: #3b1d08; line-height: 1.1; }
+#sumStats .sCard span { font-size: 17px; color: #7a4419; }
+#sumEmoji { display: none; }
+.row2 { display: flex; gap: 16px; }
 .row2 .btn { flex: 1; }
 
 /* Market & Kariyer panelleri (sıcak krem & karamel) */
@@ -311,30 +309,30 @@ html, body {
 .shopHead h2 { margin: 0; font-size: 54px; color: #ffbf1f; }
 .wallet { font-size: 40px; padding: 6px 24px; border-radius: 999px; background: #3b1d08; color: #ffe36b; border: 4px solid #d9b87c; }
 .shopNote { font-size: 21px; color: #6e380f; margin: 8px 0 14px; }
-.shopSlot { font-size: 26px; margin: 16px 0 10px; color: #b85600; text-shadow: none; }
+.shopSlot { font-size: 25px; margin: 16px 0 10px; color: #9c4700; font-weight: 800; }
 .shopRow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 .item { height: 186px; padding: 0; border-radius: 26px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; position: relative; }
 .item .ic { font-size: 60px; line-height: 1.1; }
 .item .nm { font-size: 22px; }
-.item .pr { font-size: 23px; }
+.item .pr { font-size: 22px; }
 .item.owned .pr { color: #d4ffe4; }
 .item.poor { filter: saturate(.55) brightness(.88); }
-.item .on { position: absolute; top: 8px; right: 10px; font-size: 18px; padding: 2px 10px; border-radius: 999px; background: #2fd07a; color: #fff; text-shadow: none; }
+.item .on { position: absolute; top: 8px; right: 10px; font-size: 18px; padding: 2px 10px; border-radius: 999px; background: #2fd07a; color: #fff; }
 .shopMsg { min-height: 32px; font-size: 24px; text-align: center; margin: 12px 0 6px; color: #b85600; }
 #btnShopBack, #btnCareerBack { width: 100%; height: 88px; font-size: 36px; margin-top: 12px; border-radius: 999px; }
 #hud.tall #shop { align-items: center; justify-content: flex-end; padding: 30px 30px 40px; }
 #hud.tall .shopPanel { width: 100%; max-height: 54%; }
 .careerHero { background: #fffdf7; border: 4px solid #dec086; border-radius: 24px; padding: 16px 24px; margin: 14px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.careerHero .rk { font-size: 38px; color: #f08c00; }
+.careerHero .rk { font-size: 34px; color: #d46b00; font-weight: 800; }
 .careerHero .sub { font-size: 20px; color: #6e380f; margin-top: 4px; }
-.ladderGrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 18px; }
+.ladderGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
 #hud.tall .ladderGrid { grid-template-columns: repeat(2, 1fr); }
 .ladItem { padding: 10px 8px 12px; border-radius: 20px; border: 4px solid #dec086; background: #fffdf7; text-align: center; color: #4a2508; }
 .ladItem.done { background: linear-gradient(180deg, #96ff54, #24a80d); border-color: var(--ink); color: #fff; }
 .ladItem.curr { background: linear-gradient(180deg, var(--gold1), var(--gold3)); border-color: var(--ink); color: #4a2508; outline: 4px solid #fff; }
 .ladItem .ic { font-size: 36px; line-height: 1.1; }
-.ladItem .nm { font-size: 19px; margin-top: 4px; }
-.ladItem .qt { font-size: 16px; color: #7a4419; margin-top: 2px; text-shadow: none; }
+.ladItem .nm { font-size: 20px; margin-top: 4px; font-weight: 800; }
+.ladItem .qt { font-size: 17px; color: #7a4419; margin-top: 2px; font-weight: 800; }
 .ladItem.done .qt { color: #eaffea; }
 .ladItem.curr .qt { color: #4a2508; }
 .achGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -343,9 +341,9 @@ html, body {
 .achCard.done { background: #e8ffe8; border-color: #24a80d; }
 .achCard .ic { font-size: 40px; min-width: 50px; text-align: center; }
 .achCard .info { flex: 1; }
-.achCard .nm { font-size: 22px; color: #4a2508; text-shadow: none; }
+.achCard .nm { font-size: 22px; color: #3b1d08; font-weight: 800; }
 .achCard .ds { font-size: 18px; color: #6e380f; }
-.achCard .rw { font-size: 20px; color: #b85600; white-space: nowrap; text-shadow: none; }
+.achCard .rw { font-size: 20px; color: #b85600; white-space: nowrap; font-weight: 800; }
 /* menülerde oyun içi HUD gizlenir */
 #hud[data-menu="1"] :is(#kasa, #kasaLbl, #chips, #questBox, #clock, #lives, #mood, #pocket, #action) { display: none; }
 #hud.tall .shopRow { grid-template-columns: repeat(3, 1fr); }
@@ -357,7 +355,7 @@ html, body {
 .charCard { width: 286px; height: 530px; padding: 0; position: relative; border-radius: 34px; display: flex; flex-direction: column; align-items: center; }
 .charCard img, .charCard .ph { width: 228px; height: 228px; margin-top: 26px; border-radius: 28px; border: 5px solid var(--ink);
   background: radial-gradient(circle at 50% 35%, #fff9e6, #ffd57e 75%); box-shadow: inset 0 -8px 0 rgba(0,0,0,.15); }
-.charCard .nm { font-size: 42px; margin-top: 12px; line-height: 1; }
+.charCard .nm { font-size: 40px; margin-top: 12px; line-height: 1; }
 .charCard .nick { font-size: 19px; color: #ffe36b; margin-top: 2px; text-shadow: none; }
 .charCard.gold .nick { color: #7a3d00; }
 .charCard .ab { font-size: 20px; color: #eef6ff; padding: 4px 20px 0; line-height: 1.28; text-shadow: none; }
@@ -365,7 +363,7 @@ html, body {
 .charCard .sel { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 22px; padding: 4px 18px 6px; }
 .charCard .star { position: absolute; top: 14px; right: 14px; font-size: 20px; padding: 4px 10px; border-radius: 999px; background: rgba(59,29,8,.75); color: #ffe36b; text-shadow: none; }
 .charCard .guest { position: absolute; top: 14px; left: 14px; font-size: 18px; padding: 4px 10px; border-radius: 999px; background: rgba(59,29,8,.75); color: #96ff54; text-shadow: none; }
-.charCard .abn { font-size: 26px; margin-top: 4px; }
+.charCard .abn { font-size: 25px; margin-top: 4px; }
 #charsBtns { margin-top: 38px; width: 720px; }
 #charsBtns .btn { height: 92px; font-size: 34px; border-radius: 999px; white-space: nowrap; }
 #hud.tall #charCards { display: grid; grid-template-columns: 1fr 1fr; gap: 36px 28px; }
@@ -534,18 +532,19 @@ html, body {
   <div id="summary" class="overlay hidden" aria-live="polite">
     <div class="menu panel">
       <div id="sumTitle" class="ribbon h">MESAİ BİTTİ!</div>
+      <div id="sumStars" aria-hidden="true"></div>
       <div id="sumReason" class="body"></div>
       <div id="sumScore" class="num">0</div>
-      <div id="sumRecord" class="h"></div>
+      <div id="sumRecord" class="body"></div>
       <div id="sumSalary" class="num"></div>
       <div id="sumCareer" class="body"></div>
       <div id="sumStats" class="body"></div>
       <div id="sumEmoji" class="body"></div>
+      <button class="btn green big h" id="btnAgain">▶ BİR TUR DAHA</button>
       <div class="row2">
-        <button class="btn blue mid h" id="btnCopy">📋 KOPYALA</button>
-        <button class="btn gold mid h" id="btnAgain">BİR TUR DAHA</button>
+        <button class="btn gray mid h" id="btnMenu">🏠 ANA MENÜ</button>
+        <button class="btn blue mid h" id="btnCopy">📋 PAYLAŞ</button>
       </div>
-      <button class="btn gray mid h" id="btnMenu" style="width:100%; margin-top:22px;">ANA MENÜ</button>
     </div>
   </div>
   <div id="err" class="hidden h"></div>
@@ -6322,6 +6321,7 @@ void main() {
     if (run.state === 'pick') updatePick();
     $('pause').classList.toggle('hidden', !view.hiddenPause);
     // konuşma balonu
+    const refW = view.layout === 'wide' ? 1920 : 1080;
     const bub = $('bubble');
     let bt = '', bc = '';
     if (b.phase === 'scold') { bt = view.scoldLine; bc = 'red h'; }
@@ -6329,15 +6329,19 @@ void main() {
     else if (b.phase === 'away' && b.ats && b.t < 2.4) { bt = 'KAAN! ATS BOZULDU!'; bc = 'white h'; }
     if (bt && Y) {
       const sp = toScreen(Y.head, 1.25);
-      bub.style.display = 'block'; bub.style.left = sp.x / view.hudScale + 'px'; bub.style.top = sp.y / view.hudScale + 'px';
+      bub.style.display = 'block';
+      bub.style.left = clamp(sp.x / view.hudScale, 240, refW - 240) + 'px';
+      bub.style.top = Math.max(90, sp.y / view.hudScale) + 'px';
       setText('bubble', bt); setClass('bubble', bc);
     } else bub.style.display = 'none';
     // Baransel'in yalakalığı: Yağmur bakarken çalışıyor görünüyorsa
     const bub2 = $('bubble2');
-    if (run.charId === 'baransel' && b.phase === 'look' && !run.holding && PL.head) {
+    if (run.charId === 'baransel' && b.phase === 'look' && !run.holding && !showPocket && PL.head) {
       if (!view.yalaka) view.yalaka = YALAKA_LINES[Math.floor(Math.random() * YALAKA_LINES.length)];
-      const sp = toScreen(PL.head, 1.25);
-      bub2.style.display = 'block'; bub2.style.left = sp.x / view.hudScale + 'px'; bub2.style.top = sp.y / view.hudScale + 'px';
+      const sp = toScreen(PL.head, 1.3);
+      bub2.style.display = 'block';
+      bub2.style.left = clamp(sp.x / view.hudScale, 260, refW - 260) + 'px';
+      bub2.style.top = Math.max(110, sp.y / view.hudScale) + 'px';
       setText('bubble2', view.yalaka);
     } else { bub2.style.display = 'none'; view.yalaka = null; }
   }
@@ -6917,8 +6921,8 @@ void main() {
     $('sumTitle').textContent = fired ? 'EVE GÖNDERİLDİN!' : 'MESAİ BİTTİ!';
     $('sumTitle').className = 'ribbon h ' + (fired ? 'red' : 'green');
     $('sumReason').textContent = fired
-      ? `Saat ${clockString(clockProgress(run))} — ${BOSSES[run.boss.typeId].name} seni üçüncü kez yakaladı.`
-      : `17:00! Kalan ${run.lives} can için +${fmt(run.stats.lifeBonus)} bonus.`;
+      ? `Saat ${clockString(clockProgress(run))} — ${BOSSES[run.boss.typeId].name} seni yakaladı`
+      : `Saat 17:00 — Mesai tamamlandı (+${fmt(run.stats.lifeBonus)} can bonusu)`;
     $('sumScore').textContent = fmt(run.score);
     $('sumRecord').textContent = isRecord ? '🏆 YENİ REKOR!' : dailyRecord ? '📅 GÜNÜN EN İYİSİ!' : `En iyi: ${fmt(Math.max(best, run.score))}`;
     if (!run.paid) {
@@ -6929,31 +6933,28 @@ void main() {
       store.set('bossturns.wallet', wallet() + run.salary);
     }
     const ev = run.careerEval || evaluateCareerRun(run, careerState());
-    $('sumSalary').textContent = `💰 +${fmt(run.salary)} toplam kazanç · cüzdan ${fmt(wallet())}`;
-    const starTxt = '⭐'.repeat(ev.starsEarned) + '☆'.repeat(3 - ev.starsEarned);
-    const parts = [];
-    if (ev.promoted) parts.push(`<span class="promo h">🎉 TERFİ ETTİN! ${ev.startRank.icon} ${ev.startRank.title} ➜ ${ev.newRank.icon} ${ev.newRank.title} (+${ev.promoBonus} 💰)</span>`);
-    else parts.push(`<div><b>${ev.startRank.icon} ${ev.startRank.title}</b> · Kota: ${fmt(run.score)} / ${fmt(ev.startRank.quota)} (${starTxt})</div>`);
-    const bonusBreak = [`Maaş +${fmt(ev.baseSalary)} 💰`];
-    if (ev.rankBonus > 0) bonusBreak.push(`Kademe farkı +${fmt(ev.rankBonus)} 💰`);
-    if (ev.contractCash > 0) bonusBreak.push(`${run.contractsDone} Görev +${fmt(ev.contractCash)} 💰`);
-    if (ev.achBonus > 0) bonusBreak.push(`Başarım +${fmt(ev.achBonus)} 💰`);
-    parts.push(`<div>📊 ${bonusBreak.join(' · ')}</div>`);
-    if (ev.unlockedAch.length) parts.push(`<div>🎖️ Yeni Başarım: <b>${ev.unlockedAch.map(a => `${a.icon} ${a.name}`).join(', ')}</b></div>`);
-    if (run.primPromised) parts.push('<div>📢 Primler 5\'e katlanacaktı: <b>❌ İPTAL EDİLDİ</b> (zaten vermeyecekleri belliydi)</div>');
-    $('sumCareer').innerHTML = parts.join('');
-    const s = run.stats, mm = Math.floor(run.t / 60), ss = Math.floor(run.t % 60);
-    const prj = projectForScore(run.score);
-    const rows = [
-      ['Süre', `${mm}:${String(ss).padStart(2, '0')}`], ['Saat', clockString(clockProgress(run))],
-      ['Basış / Kasa', `${s.presses} / ${s.banks}`], ['En iyi seri', `🔥 ×${run.bestStreak || 0}`],
-      ['Yakalanma / Kıl payı', `${s.caught} / ${s.close}`], ['Tamamlanan görev', `📋 ${run.contractsDone || 0}`],
-      ['En büyük vurgun', fmt(s.bestBank)], ['En uzun tutuş', s.longestHold.toFixed(1).replace('.', ',') + ' sn'],
-      ['Laptop oyunu', `${prj.icon} Bölüm ${prj.lv}`], ['Ruh hali', run.bossesMet.length], ['Oyuncu', CHAR_BY_ID[run.charId].name], ['Mod', run.mode === 'daily' ? 'Günlük' : 'Serbest'],
-    ];
-    $('sumStats').innerHTML = rows.map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join('');
+    $('sumStars').innerHTML = [0, 1, 2].map(i => `<span class="${i < ev.starsEarned ? 'stOn' : 'stOff'}">⭐</span>`).join('');
+    $('sumSalary').textContent = `💰 +${fmt(run.salary)}`;
+    const highlights = [];
+    if (ev.promoted) highlights.push(`<span class="promo">🎉 TERFİ! ${ev.startRank.icon} ${ev.startRank.title} ➜ ${ev.newRank.icon} ${ev.newRank.title} (+${ev.promoBonus} 💰)</span>`);
+    if (ev.unlockedAch.length) highlights.push(`<div>🎖️ Yeni Başarım: <b>${ev.unlockedAch.map(a => `${a.icon} ${a.name}`).join(', ')}</b></div>`);
+    const sumCareerEl = $('sumCareer');
+    if (highlights.length) {
+      sumCareerEl.style.display = 'block';
+      sumCareerEl.innerHTML = highlights.join('');
+    } else {
+      sumCareerEl.style.display = 'none';
+      sumCareerEl.innerHTML = '';
+    }
+    const s = run.stats;
+    const rk = ev.promoted ? ev.newRank : ev.startRank;
+    $('sumStats').innerHTML = [
+      ['💰', `+${fmt(run.salary)} 💰`, `Cüzdan: ${fmt(wallet())}`],
+      [rk.icon, rk.title, `Kota: ${fmt(run.score)} / ${fmt(ev.startRank.quota)}`],
+      ['⚡', `+${fmt(s.bestBank)}`, `${s.banks} kasa · ${s.close} kıl payı`],
+    ].map(([ico, big, sub]) => `<div class="sCard"><span class="sIco">${ico}</span><b>${big}</b><span>${sub}</span></div>`).join('');
     $('sumEmoji').textContent = shareText(run, run.tries || 1);
-    $('btnCopy').textContent = '📋 KOPYALA';
+    $('btnCopy').textContent = '📋 PAYLAŞ';
     $('summary').classList.remove('hidden');
     $('btnAgain').focus({ preventScroll: true });
   }
