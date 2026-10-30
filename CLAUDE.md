@@ -17,6 +17,13 @@
 - Ekrandaki GİZLE butonu sahibinin isteğiyle kaldırıldı; patron tuşu yalnızca klavyede (Esc) ve masaüstünde (Ctrl+Shift+Boşluk) duruyor. Butonu geri ekleme.
 - **Market (sahibinin kararı): yalnızca görünüm satar** (şapka, laptop çıkartması, masa süsü, sandalye). Oyun avantajı satma; günlük görev adil kalmalı. Para = maaş: her tur sonunda kasanın onda biri (`salaryFor`). Katalog `SHOP_ITEMS` (logic), 3D parçalar `COSMETIC` (app). Kalıcı veriler: `bossturns.wallet`, `bossturns.shop` (localStorage).
 
+## Tema: çağrı merkezi (sahibinin kararı)
+- Oyun bir **çağrı merkezi ofisi** simülasyonu. Yağmur = takım lideri. Oyuncular kulaklıklı temsilciler.
+- İç şaka: **"HEDEF 10.000"** (poster + duvardaki canlı çağrı ekranı + kariyerin zirvesi). Gerçek şirket adı/logosu kullanma.
+- Duvar ekranı (`drawBoard`): bekleyen çağrı oyuncu basılı tuttukça artar, bıraktıkça azalır (yalnızca görsel).
+- Esc tablosu çağrı merkezi KPI raporu (AHT, FCR, CSAT).
+- Kariyer kotaları (`CAREER_RANKS`) sim skor dağılımına göre: 30 turda dikkatli oyuncu zirveye, ortalama ~8. kademeye ulaşır.
+
 ## Kısıtlar
 - Tek giriş: basılı tut / bırak. Yeni kontrol ekleme.
 - Çekirdek döngüyü (tut/bırak/patron) değiştirmeden önce sahibine sor.
